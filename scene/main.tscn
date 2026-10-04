@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://blr6qhc24xqxi" path="res://scene/prefebs/foods/Cabbage.tscn" id="9_b5f6u"]
 [ext_resource type="PackedScene" uid="uid://bgj34sc80sv41" path="res://scene/prefebs/foods/Tray.tscn" id="10_tqoya"]
 [ext_resource type="PackedScene" uid="uid://0j8ejpgoda1b" path="res://scene/prefebs/foods/Rice.tscn" id="11_wscrc"]
+[ext_resource type="PackedScene" uid="uid://u6skf1wj0hv2" path="res://scene/prefebs/foods/Bottle.tscn" id="12_mswub"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_itxqv"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -95,6 +96,10 @@ food_scene = ExtResource("9_b5f6u")
 [node name="FoodBox4" parent="." unique_id=936008067 instance=ExtResource("3_wp4xf")]
 transform = Transform3D(0.8827798, 0, -0.469787, 0, 1, 0, 0.469787, 0, 0.8827798, 2.5756512, 0.5324235, -4.0044937)
 food_scene = ExtResource("11_wscrc")
+
+[node name="FoodBox5" parent="." unique_id=612294559 instance=ExtResource("3_wp4xf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1091352, 0.56967735, -4.348176)
+food_scene = ExtResource("12_mswub")
 
 [node name="Tray" parent="." unique_id=662994443 instance=ExtResource("10_tqoya")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0648766, 0.23268127, -4.5671453)
