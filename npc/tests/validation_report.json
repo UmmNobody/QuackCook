@@ -1,0 +1,9 @@
+{
+  "checks": 1278,
+  "engine": "4.7-stable (official)",
+  "errors": [],
+  "max_bone_error_m": 0.000000181060215709294,
+  "max_mesh_error_m": 0.000000478696165373549,
+  "mesh_samples_checked": 783,
+  "passed": true
+}
