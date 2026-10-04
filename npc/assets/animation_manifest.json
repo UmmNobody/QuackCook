@@ -1,0 +1,200 @@
+[
+  {
+	"action": "P1_Boxing_Flurry",
+	"start": 1,
+	"end": 82,
+	"export_end": 83,
+	"fps": 24,
+	"loop": false,
+	"mode": 2,
+	"events": []
+  },
+  {
+	"action": "P1_Idle",
+	"start": 1,
+	"end": 72,
+	"export_end": 73,
+	"fps": 24,
+	"loop": true,
+	"mode": 0,
+	"events": []
+  },
+  {
+	"action": "P1_Kick_Front_R",
+	"start": 1,
+	"end": 36,
+	"export_end": 37,
+	"fps": 24,
+	"loop": false,
+	"mode": 2,
+	"events": []
+  },
+  {
+	"action": "P1_Punch_Combo",
+	"start": 1,
+	"end": 36,
+	"export_end": 37,
+	"fps": 24,
+	"loop": false,
+	"mode": 2,
+	"events": []
+  },
+  {
+	"action": "P1_Walk_Waddle_Blockout",
+	"start": 1,
+	"end": 24,
+	"export_end": 25,
+	"fps": 24,
+	"loop": true,
+	"mode": 0,
+	"events": []
+  },
+  {
+	"action": "P1_Tray_Idle",
+	"start": 1,
+	"end": 72,
+	"export_end": 73,
+	"fps": 24,
+	"loop": true,
+	"mode": 1,
+	"events": []
+  },
+  {
+	"action": "P1_Tray_Walk",
+	"start": 1,
+	"end": 24,
+	"export_end": 25,
+	"fps": 24,
+	"loop": true,
+	"mode": 1,
+	"events": []
+  },
+  {
+	"action": "P1_Tray_Pickup",
+	"start": 1,
+	"end": 48,
+	"export_end": 48,
+	"fps": 24,
+	"loop": false,
+	"mode": 1,
+	"events": [
+	  [
+		5,
+        "hands_appear"
+	  ],
+	  [
+		18,
+        "tray_grip"
+	  ],
+	  [
+		40,
+        "carry_ready"
+	  ]
+	]
+  },
+  {
+	"action": "P1_Tray_Throw",
+	"start": 1,
+	"end": 44,
+	"export_end": 44,
+	"fps": 24,
+	"loop": false,
+	"mode": 1,
+	"events": [
+	  [
+		18,
+        "tray_release"
+	  ],
+	  [
+		34,
+        "preview_tray_land"
+	  ],
+	  [
+		40,
+        "hands_hide"
+	  ],
+	  [
+		44,
+        "ready_for_combat_enter"
+	  ]
+	]
+  },
+  {
+	"action": "P1_Combat_Enter",
+	"start": 1,
+	"end": 24,
+	"export_end": 24,
+	"fps": 24,
+	"loop": false,
+	"mode": 2,
+	"events": [
+	  [
+		3,
+        "fists_appear"
+	  ],
+	  [
+		24,
+        "guard_ready"
+	  ]
+	]
+  },
+  {
+	"action": "P1_Combat_Idle",
+	"start": 1,
+	"end": 72,
+	"export_end": 73,
+	"fps": 24,
+	"loop": true,
+	"mode": 2,
+	"events": []
+  },
+  {
+	"action": "P1_Combat_Walk",
+	"start": 1,
+	"end": 24,
+	"export_end": 25,
+	"fps": 24,
+	"loop": true,
+	"mode": 2,
+	"events": []
+  },
+  {
+	"action": "P1_Combat_Walk_Punch",
+	"start": 1,
+	"end": 48,
+	"export_end": 49,
+	"fps": 24,
+	"loop": true,
+	"mode": 2,
+	"events": [
+	  [
+		12,
+        "left_short_punch_contact"
+	  ],
+	  [
+		36,
+        "right_short_punch_contact"
+	  ]
+	]
+  },
+  {
+	"action": "Police_Dance_01",
+	"start": 1,
+	"end": 48,
+	"export_end": 49,
+	"fps": 24,
+	"loop": true,
+	"mode": 2,
+	"events": []
+  },
+  {
+	"action": "Police_Dance_02",
+	"start": 1,
+	"end": 96,
+	"export_end": 97,
+	"fps": 24,
+	"loop": true,
+	"mode": 1,
+	"events": []
+  }
+]
