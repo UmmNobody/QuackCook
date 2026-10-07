@@ -1,0 +1,78 @@
+[gd_scene format=4 uid="uid://oehgjajjsjqa"]
+
+[ext_resource type="Script" uid="uid://ba506g7kpc6h2" path="res://scripts/prefebs/stove.gd" id="1_0666h"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_3vrem"]
+size = Vector3(2, 1, 1)
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_qc3tw"]
+_surfaces = [{
+"aabb": AABB(-1.0288675, -0.5288675, -0.5288675, 2.057735, 1.057735, 1.057735),
+"attribute_data": PackedByteArray("AAAAAAAAAACrqio/AAAAAKuqqj4AAAAAAACAPwAAAAAAAAAAAAAAP6uqKj8AAAA/q6qqPgAAAD8AAIA/AAAAP6uqqj4AAAAAAAAAAAAAAD+rqio/AAAAAKuqqj4AAAA/q6qqPgAAAD8AAAAAAACAP6uqKj8AAAA/q6qqPgAAgD+rqqo+AAAAP6uqKj8AAAA/q6oqPwAAAD8AAIA/AAAAP6uqqj4AAIA/q6oqPwAAgD+rqio/AACAPwAAgD8AAIA/"),
+"format": 34359742487,
+"index_count": 36,
+"index_data": PackedByteArray("AAAEAAIAAgAEAAYAAQAFAAMAAwAFAAcACAAMAAoACgAMAA4ACQANAAsACwANAA8AEAAUABIAEgAUABYAEQAVABMAEwAVABcA"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 24,
+"vertex_data": PackedByteArray("7rGDv9xjBz/cYwc/7rGDP9xjBz/cYwe/7rGDP9xjBz/cYwc/7rGDv9xjBz/cYwe/7rGDv9xjB7/cYwc/7rGDP9xjB7/cYwe/7rGDP9xjB7/cYwc/7rGDv9xjB7/cYwe/7rGDP9xjBz/cYwc/7rGDv9xjBz/cYwe/7rGDP9xjBz/cYwe/7rGDv9xjBz/cYwc/7rGDP9xjB7/cYwc/7rGDv9xjB7/cYwe/7rGDP9xjB7/cYwe/7rGDv9xjB7/cYwc/7rGDP9xjBz/cYwc/7rGDv9xjB7/cYwc/7rGDv9xjBz/cYwc/7rGDP9xjB7/cYwc/7rGDP9xjBz/cYwe/7rGDv9xjB7/cYwe/7rGDv9xjBz/cYwe/7rGDP9xjB7/cYwe//3//f////7//////AAD/v/9//3////+//////wAA/7//f/9/////v/////8AAP+//3//f////7//////AAD/v///AID/////AAAAgP9//7///wCA/////wAAAID/f/+///8AgP////8AAACA/3//v///AID/////AAAAgP9//78AgP//AAD/vwCAAAD///+/AID//wAA/78AgAAA////vwCA//8AAP+/AIAAAP///78AgP//AAD/vwCAAAD///+/")
+}]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_khjbv"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2a5p3"]
+size = Vector3(2, 1, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3vrem"]
+size = Vector3(1.1582642, 0.350708, 1)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_3vrem"]
+viewport_path = NodePath("CookingUI3D/SubViewport")
+
+[node name="Stove" type="StaticBody3D" unique_id=159899656 groups=["Focusable", "Interactable"]]
+script = ExtResource("1_0666h")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1502085498]
+mesh = SubResource("BoxMesh_3vrem")
+
+[node name="OutlineMesh" type="MeshInstance3D" parent="MeshInstance3D" unique_id=1888543492]
+mesh = SubResource("ArrayMesh_qc3tw")
+surface_material_override/0 = SubResource("StandardMaterial3D_khjbv")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1974132067]
+shape = SubResource("BoxShape3D_2a5p3")
+
+[node name="Label3D" type="Label3D" parent="." unique_id=2117774049]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.042347193, 0.5836055)
+text = "Stove"
+
+[node name="SnapArea" type="Area3D" parent="." unique_id=490724904]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SnapArea" unique_id=840367379]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6484877, 0)
+shape = SubResource("BoxShape3D_3vrem")
+
+[node name="PanSnapPoint" type="Marker3D" parent="." unique_id=1972892932]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6289891, 0)
+
+[node name="CookingUI3D" type="Sprite3D" parent="." unique_id=1252913564]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2023202, 0)
+pixel_size = 0.005
+billboard = 2
+texture = SubResource("ViewportTexture_3vrem")
+
+[node name="SubViewport" type="SubViewport" parent="CookingUI3D" unique_id=1853373474]
+transparent_bg = true
+size = Vector2i(200, 25)
+
+[node name="ProgressBar" type="ProgressBar" parent="CookingUI3D/SubViewport" unique_id=1575956511]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[connection signal="body_entered" from="SnapArea" to="." method="_on_snap_area_body_entered"]

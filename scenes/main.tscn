@@ -1,0 +1,109 @@
+[gd_scene format=3 uid="uid://c01nkxnoeadck"]
+
+[ext_resource type="PackedScene" uid="uid://cjo0mq10ngblr" path="res://scenes/Player.tscn" id="1_itxqv"]
+[ext_resource type="PackedScene" uid="uid://5vc17ptsgh0n" path="res://scenes/prefebs/maps/food_box.tscn" id="3_wp4xf"]
+[ext_resource type="PackedScene" uid="uid://5cuhobnn8vyr" path="res://scenes/prefebs/maps/trash_can.tscn" id="4_brvut"]
+[ext_resource type="PackedScene" uid="uid://oehgjajjsjqa" path="res://scenes/prefebs/maps/stove.tscn" id="5_0ha60"]
+[ext_resource type="PackedScene" uid="uid://17y6uvl4eesq" path="res://scenes/prefebs/maps/knife.tscn" id="6_4j5ol"]
+[ext_resource type="PackedScene" uid="uid://dn1vfleipq0aj" path="res://scenes/prefebs/maps/Pot.tscn" id="6_k65ib"]
+[ext_resource type="PackedScene" uid="uid://cipn152gfg0or" path="res://scenes/prefebs/maps/pan.tscn" id="7_p1hux"]
+[ext_resource type="PackedScene" uid="uid://4blq3te7qwlx" path="res://scenes/prefebs/foods/Carrot.tscn" id="8_b5f6u"]
+[ext_resource type="PackedScene" uid="uid://dvgpfo0jg7wct" path="res://scenes/prefebs/foods/Chicken.tscn" id="8_of57s"]
+[ext_resource type="PackedScene" uid="uid://blr6qhc24xqxi" path="res://scenes/prefebs/foods/Cabbage.tscn" id="9_b5f6u"]
+[ext_resource type="PackedScene" uid="uid://bgj34sc80sv41" path="res://scenes/prefebs/foods/Tray.tscn" id="10_tqoya"]
+[ext_resource type="PackedScene" uid="uid://0j8ejpgoda1b" path="res://scenes/prefebs/foods/Rice.tscn" id="11_wscrc"]
+[ext_resource type="PackedScene" uid="uid://u6skf1wj0hv2" path="res://scenes/prefebs/foods/Bottle.tscn" id="12_mswub"]
+[ext_resource type="PackedScene" uid="uid://c1myro2mwwn4n" path="res://scenes/prefebs/maps/serving_table.tscn" id="13_serving_table"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_itxqv"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_v0l8b"]
+sky_material = SubResource("ProceduralSkyMaterial_itxqv")
+
+[sub_resource type="Environment" id="Environment_wp4xf"]
+background_mode = 2
+sky = SubResource("Sky_v0l8b")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_itxqv"]
+albedo_color = Color(1, 0.48659056, 0.39853647, 1)
+
+[node name="Main" type="Node3D" unique_id=94328322]
+
+[node name="ServingTable" parent="." unique_id=807668315 instance=ExtResource("13_serving_table")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -7)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1209547466]
+transform = Transform3D(-0.5735659, -0.759853, 0.30601606, -0.53351504, 0.6299919, 0.5643334, -0.621598, 0.16041821, -0.7667348, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2084578373]
+environment = SubResource("Environment_wp4xf")
+
+[node name="Player" parent="." unique_id=1634674887 instance=ExtResource("1_itxqv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6254536, 0)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=56126396]
+transform = Transform3D(16.679712, -0.001040339, 0.03662441, 0.011209054, 1.5460815, 0.0064079384, -0.037089575, -0.000599103, 16.472477, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_itxqv")
+use_collision = true
+size = Vector3(2.014, 0.001, 2)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="." unique_id=1091440910]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.819595, 1.2388306, 0.047416687)
+use_collision = true
+size = Vector3(0.33251953, 3.4776611, 33.553726)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="." unique_id=968279185]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.55579, 1.2388306, 0.047416687)
+use_collision = true
+size = Vector3(0.33251953, 3.4776611, 33.553726)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="." unique_id=2137718114]
+transform = Transform3D(-0.004651334, 0, -0.99998915, 0, 1, 0, 0.99998915, 0, -0.004651334, 0.15672874, 1.2388306, 16.630026)
+use_collision = true
+size = Vector3(0.33251953, 3.4776611, 33.553726)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="." unique_id=604432266]
+transform = Transform3D(-0.004651334, 0, -0.99998915, 0, 1, 0, 0.99998915, 0, -0.004651334, 0.15672874, 1.2388306, -16.777327)
+use_collision = true
+size = Vector3(0.33251953, 3.4776611, 33.553726)
+
+[node name="TrashCan" parent="." unique_id=241567825 instance=ExtResource("4_brvut")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.741066, 0.56770325, -1.2516394)
+
+[node name="Stove" parent="." unique_id=159899656 instance=ExtResource("5_0ha60")]
+transform = Transform3D(0.021950703, 0, 0.9997591, 0, 1, 0, -0.9997591, 0, 0.021950703, -5.0350385, 0.52502084, 0)
+
+[node name="Knife" parent="." unique_id=1302013892 instance=ExtResource("6_4j5ol")]
+transform = Transform3D(0.44786963, -0.32942167, -0.8312005, 0.15625994, 0.94418293, -0.29000252, 0.8803384, 0, 0.47434625, -3.3901083, 1.5030818, 2.2436512)
+
+[node name="Pan" parent="." unique_id=1579388431 instance=ExtResource("7_p1hux")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.1481533, 1.7333684, -1.4765525)
+
+[node name="Pot" parent="." unique_id=103759955 instance=ExtResource("6_k65ib")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.7987106, 0.5933552, -3.2362986)
+
+[node name="FoodBox" parent="." unique_id=2133142540 instance=ExtResource("3_wp4xf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.58337903, 3.0815468)
+food_scene = ExtResource("8_of57s")
+
+[node name="FoodBox2" parent="." unique_id=302117256 instance=ExtResource("3_wp4xf")]
+transform = Transform3D(0.83226883, 0, 0.5543722, 0, 1, 0, -0.5543722, 0, 0.83226883, 1.4870622, 0.584465, 2.643758)
+food_scene = ExtResource("8_b5f6u")
+
+[node name="FoodBox3" parent="." unique_id=1682879748 instance=ExtResource("3_wp4xf")]
+transform = Transform3D(0.9276672, 0, 0.373408, 0, 1, 0, -0.373408, 0, 0.9276672, 0.7359648, 1.6285133, 2.8984478)
+food_scene = ExtResource("9_b5f6u")
+
+[node name="FoodBox4" parent="." unique_id=936008067 instance=ExtResource("3_wp4xf")]
+transform = Transform3D(0.8827798, 0, -0.469787, 0, 1, 0, 0.469787, 0, 0.8827798, 2.5756512, 0.5324235, -4.0044937)
+food_scene = ExtResource("11_wscrc")
+
+[node name="FoodBox5" parent="." unique_id=612294559 instance=ExtResource("3_wp4xf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1091352, 0.56967735, -4.348176)
+food_scene = ExtResource("12_mswub")
+
+[node name="Tray" parent="." unique_id=662994443 instance=ExtResource("10_tqoya")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0648766, 0.23268127, -4.5671453)

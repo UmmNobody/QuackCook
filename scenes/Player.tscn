@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://cjo0mq10ngblr"]
+
+[ext_resource type="Script" uid="uid://cuwn6ns3nlvb6" path="res://scripts/player.gd" id="1_si3wx"]
+[ext_resource type="Script" uid="uid://ccp5xohkh24pl" path="res://scripts/head.gd" id="2_62i1b"]
+[ext_resource type="Script" uid="uid://cj0e3yujt610p" path="res://scripts/ui/charge_bar.gd" id="3_y30ri"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_3vrem"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vviyk"]
+
+[node name="Player" type="CharacterBody3D" unique_id=1634674887 groups=["Player"]]
+script = ExtResource("1_si3wx")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1883541636]
+mesh = SubResource("CapsuleMesh_3vrem")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=447218761]
+shape = SubResource("CapsuleShape3D_vviyk")
+
+[node name="Head" type="Node3D" parent="." unique_id=15131838]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.58453465, 0)
+script = ExtResource("2_62i1b")
+
+[node name="Camera3D" type="Camera3D" parent="Head" unique_id=2027936177]
+
+[node name="RayCast3D" type="RayCast3D" parent="Head/Camera3D" unique_id=790016441]
+target_position = Vector3(0, 0, -4)
+collision_mask = 3
+
+[node name="CarryObjectMarker" type="Marker3D" parent="Head/Camera3D" unique_id=1037061989]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.54816985, -0.42112744, -1.3673927)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=331577230]
+
+[node name="ChargeBar" type="ProgressBar" parent="CanvasLayer" unique_id=160440338]
+offset_left = 912.0
+offset_top = 166.0
+offset_right = 961.9601
+offset_bottom = 456.17072
+rotation = 0.0012055247
+max_value = 1.0
+fill_mode = 3
+show_percentage = false
+script = ExtResource("3_y30ri")
