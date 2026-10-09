@@ -11,6 +11,7 @@ var last_event: String = "Serve #1 Chicken, then watch #2 wait behind at Chicken
 var hit_count: int = 0
 var hud: Label
 var controls: Label
+var combat_test_items: Array[Node3D] = []
 
 func _ready() -> void:
 	var waiting: Array[Marker3D] = []
@@ -28,6 +29,7 @@ func _ready() -> void:
 	if not QueueManager.register_layout(self, waiting, $TrayPickupPoint, service, wells, $ExitPoint, escape, $Player, $Spawner.max_active_prisoners): return
 	for well in wells: well.current_servings = mini(test_starting_stock, well.capacity)
 	$Spawner.actor_parent = $Prisoners
+	_build_combat_lab()
 	$Spawner.wave_spawn_finished.connect(_on_wave_spawn_finished)
 	$Spawner.wave_completed.connect(_on_wave_completed)
 	QueueManager.event_reported.connect(_on_event)
@@ -85,7 +87,7 @@ func _build_hud() -> void:
 		button.pressed.connect(action[1])
 		actions.add_child(button)
 	controls = Label.new()
-	controls.text = "V: overview / FPS    WASD + mouse: FPS\nLeft click: aim at SERVE    Esc: exit\nNeeds: C chicken / V veg / R rice / W water"
+	controls.text = "V: overview / FPS    WASD + mouse: FPS\nLMB: pick / serve / trash | Hold LMB: throw | Q: drop\nThrow props at prisoners. Carry unconscious bodies to trash.\nNeeds: C chicken / V veg / R rice / W water | Esc: exit"
 	controls.add_theme_font_size_override("font_size", 14)
 	column.add_child(controls)
 	var crosshair = Label.new()
@@ -103,7 +105,7 @@ func _process(_delta: float) -> void:
 	var status: String = "IDLE"
 	if $Spawner.wave_active:
 		status = "CLEARING" if $Spawner.remaining_to_spawn() == 0 else ("PAUSED" if $Spawner.spawning_paused else "SPAWNING")
-	hud.text = "Queue %d/%d   Alive %d/%d\nWave: %d/%d spawned | %d pending | %s\nStock: %s    Hits: %d\n%s" % [QueueManager.queued_count(), QueueManager.capacity(), QueueManager.active_count(), $Spawner.max_active_prisoners, $Spawner.wave_spawned, $Spawner.wave_total, $Spawner.remaining_to_spawn(), status, " / ".join(stock), hit_count, last_event]
+	hud.text = "Queue %d/%d   Alive %d/%d   Bodies %d\nWave: %d/%d spawned | %d pending | %s\nStock: %s    Hits: %d\n%s" % [QueueManager.queued_count(), QueueManager.capacity(), QueueManager.active_count(), $Spawner.max_active_prisoners, QueueManager.incapacitated_count(), $Spawner.wave_spawned, $Spawner.wave_total, $Spawner.remaining_to_spawn(), status, " / ".join(stock), hit_count, last_event]
 
 func set_overview(enabled: bool) -> void:
 	overview = enabled
@@ -133,11 +135,45 @@ func toggle_pause() -> void:
 	$Spawner.spawning_paused = not $Spawner.spawning_paused
 
 func reset_lab() -> void:
+	$Player/Head.drop_object()
 	$Spawner.cancel_wave()
 	QueueManager.reset_queue()
 	hit_count = 0
 	refill_wells()
+	_refill_combat_items()
 	_start_test_wave()
+
+func _build_combat_lab() -> void:
+	var bench := StaticBody3D.new()
+	bench.name = "ThrowingPropsBench"
+	add_child(bench)
+	bench.position = Vector3(-3.85, 0.7, 3.2)
+	var mesh := MeshInstance3D.new()
+	var box := BoxMesh.new()
+	box.size = Vector3(4.6, 0.2, 1.2)
+	mesh.mesh = box
+	bench.add_child(mesh)
+	var collision := CollisionShape3D.new()
+	var shape := BoxShape3D.new()
+	shape.size = box.size
+	collision.shape = shape
+	bench.add_child(collision)
+	var trash = preload("res://scenes/prefebs/maps/trash_can.tscn").instantiate()
+	trash.name = "PrisonerTrash"
+	add_child(trash)
+	trash.position = Vector3(5.8, 0.56, 3.2)
+	_refill_combat_items()
+
+func _refill_combat_items() -> void:
+	for item in combat_test_items:
+		if is_instance_valid(item): item.queue_free()
+	combat_test_items.clear()
+	var scenes: Array[String] = ["res://scenes/prefebs/maps/pan.tscn", "res://scenes/prefebs/maps/Pot.tscn", "res://scenes/prefebs/maps/knife.tscn", "res://scenes/prefebs/foods/Bottle.tscn"]
+	for i in scenes.size():
+		var item = load(scenes[i]).instantiate()
+		add_child(item)
+		item.position = Vector3(-5.5 + i * 1.1, 1.25, 3.2)
+		combat_test_items.append(item)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo: return

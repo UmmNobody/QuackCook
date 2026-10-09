@@ -20,6 +20,12 @@ func interact_with(held_item: Node, player_head: Node) -> bool:
 	if held_item == null:
 		return false
 
+	if held_item.has_method("can_dispose") and held_item.can_dispose():
+		player_head.drop_object()
+		held_item.queue_free()
+		tween_effect()
+		return true
+
 	if held_item is Cookware or held_item is Tray:
 		if held_item.current_food is FoodItem:
 			held_item.clear_food()

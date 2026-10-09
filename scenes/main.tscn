@@ -41,34 +41,36 @@ shadow_enabled = true
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2084578373]
 environment = SubResource("Environment_wp4xf")
 
-[node name="Player" parent="." unique_id=1634674887 instance=ExtResource("1_itxqv")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6254536, 0)
+[node name="map" type="Node3D" parent="." unique_id=196697245]
 
-[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=56126396]
+[node name="CSGBox3D" type="CSGBox3D" parent="map" unique_id=56126396]
 transform = Transform3D(16.679712, -0.001040339, 0.03662441, 0.011209054, 1.5460815, 0.0064079384, -0.037089575, -0.000599103, 16.472477, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_itxqv")
 use_collision = true
 size = Vector3(2.014, 0.001, 2)
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="." unique_id=1091440910]
+[node name="CSGBox3D2" type="CSGBox3D" parent="map" unique_id=1091440910]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.819595, 1.2388306, 0.047416687)
 use_collision = true
 size = Vector3(0.33251953, 3.4776611, 33.553726)
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="." unique_id=968279185]
+[node name="CSGBox3D3" type="CSGBox3D" parent="map" unique_id=968279185]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.55579, 1.2388306, 0.047416687)
 use_collision = true
 size = Vector3(0.33251953, 3.4776611, 33.553726)
 
-[node name="CSGBox3D4" type="CSGBox3D" parent="." unique_id=2137718114]
+[node name="CSGBox3D4" type="CSGBox3D" parent="map" unique_id=2137718114]
 transform = Transform3D(-0.004651334, 0, -0.99998915, 0, 1, 0, 0.99998915, 0, -0.004651334, 0.15672874, 1.2388306, 16.630026)
 use_collision = true
 size = Vector3(0.33251953, 3.4776611, 33.553726)
 
-[node name="CSGBox3D5" type="CSGBox3D" parent="." unique_id=604432266]
+[node name="CSGBox3D5" type="CSGBox3D" parent="map" unique_id=604432266]
 transform = Transform3D(-0.004651334, 0, -0.99998915, 0, 1, 0, 0.99998915, 0, -0.004651334, 0.15672874, 1.2388306, -16.777327)
 use_collision = true
 size = Vector3(0.33251953, 3.4776611, 33.553726)
+
+[node name="Player" parent="." unique_id=1634674887 instance=ExtResource("1_itxqv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6254536, 0)
 
 [node name="TrashCan" parent="." unique_id=241567825 instance=ExtResource("4_brvut")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.741066, 0.56770325, -1.2516394)

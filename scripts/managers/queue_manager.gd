@@ -94,7 +94,23 @@ func capacity() -> int:
 	return slots.size()
 
 func active_count() -> int:
-	return actors.size()
+	var count: int = 0
+	for actor in actors.values():
+		if is_instance_valid(actor) and not actor.is_incapacitated(): count += 1
+	return count
+
+func incapacitated_count() -> int:
+	return actors.size() - active_count()
+
+func release_incapacitated(actor: Node3D) -> void:
+	for i in slots.size():
+		if occupants[i] == actor: occupants[i] = null
+		if reservations[i] == actor: reservations[i] = null
+	departing.erase(actor.get_instance_id())
+	actor.slot_index = -1
+	actor.target_index = -1
+	# Keep the actor registered until disposal so resets and wave completion see it.
+	queue_changed.emit()
 
 func queued_count() -> int:
 	var total: int = 0
@@ -103,7 +119,7 @@ func queued_count() -> int:
 	return total
 
 func can_spawn() -> bool:
-	return is_instance_valid(layout_owner) and not slots.is_empty() and actors.size() < max_active_prisoners and occupants[0] == null and reservations[0] == null
+	return is_instance_valid(layout_owner) and not slots.is_empty() and active_count() < max_active_prisoners and occupants[0] == null and reservations[0] == null
 
 func admit(actor: Node3D) -> bool:
 	if not can_spawn() or not actor.is_inside_tree(): return false
@@ -208,7 +224,7 @@ func request_serve(station_index: int) -> bool:
 	return true
 
 func make_angry(actor: Node3D, reason: String) -> void:
-	if actor.is_departing(): return
+	if actor.is_incapacitated() or not actor.anger_reason.is_empty(): return
 	for i in reservations.size():
 		if reservations[i] == actor: reservations[i] = null
 	if actor.slot_index >= 0: departing[actor.get_instance_id()] = actor.slot_index

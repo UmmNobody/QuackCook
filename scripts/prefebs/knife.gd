@@ -52,6 +52,8 @@ func throw(throw_force: Vector3) -> void:
 func _on_body_entered(body: Node) -> void:
 	if is_stuck:
 		return
+	# A prisoner impact is handled by ThrowImpact, without pinning the knife in air.
+	if body.has_method("take_damage") or body.has_meta("prisoner_owner"): return
 
 	if body.is_in_group("Cuttable") and linear_velocity.length() >= min_cut_speed:
 		if body.has_method("cut"):

@@ -40,6 +40,14 @@ func remaining_to_spawn() -> int:
 	return wave_total - wave_spawned if wave_active else 0
 
 func wave_alive_count() -> int:
+	var count: int = 0
+	for id in _wave_actors:
+		var actor = instance_from_id(id)
+		if is_instance_valid(actor) and not actor.is_incapacitated(): count += 1
+	return count
+
+func wave_pending_count() -> int:
+	# Includes unconscious prisoners until they are disposed of.
 	return _wave_actors.size()
 
 ## Cancel pending spawns/tracking, without deleting prisoners already in the scene.

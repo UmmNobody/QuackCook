@@ -4,6 +4,19 @@ extends Node3D
 @export_range(1.0, 30.0) var turn_speed: float = 12.0
 @export var tray_hand_offset: Vector3 = Vector3(0, 0.025, 0.04)
 
+@export_group("Hit Feedback")
+@export var hit_color: Color = Color(1.0, 0.6, 0.6)
+@export_range(0.0, 1.0) var hit_color_strength: float = 0.7
+@export_range(0.0, 0.2) var hit_squash_amount: float = 0.08
+
+var hit_materials: Array[BaseMaterial3D] = []
+var base_colors: Array[Color] = []
+var flash_tween: Tween
+var squash_tween: Tween
+var hit_flash: float = 0.0
+@onready var model: Node3D = $Model
+@onready var base_model_scale: Vector3 = $Model.scale
+
 @onready var animation_player: AnimationPlayer = $Model/AnimationPlayer
 @onready var skeleton: Skeleton3D = $Model/ROOT/Armature/Skeleton3D
 var target_yaw: float = 0.0
@@ -27,6 +40,16 @@ func _ready() -> void:
 	animation_player.callback_mode_process = AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL
 	left_hand = skeleton.find_bone("hand.L")
 	right_hand = skeleton.find_bone("hand.R")
+	# Local material copies keep one prisoner's flash from tinting every instance.
+	for mesh in skeleton.get_children():
+		if not mesh is MeshInstance3D or mesh.mesh == null: continue
+		for surface in mesh.mesh.get_surface_count():
+			var original = mesh.get_active_material(surface)
+			if original is BaseMaterial3D:
+				var material: BaseMaterial3D = original.duplicate()
+				mesh.set_surface_override_material(surface, material)
+				hit_materials.append(material)
+				base_colors.append(material.albedo_color)
 	# Choose once per prisoner. Hide every other option, including the default hat.
 	head_style = HEAD_STYLES.pick_random()
 	for part in HEAD_STYLES:
@@ -34,6 +57,27 @@ func _ready() -> void:
 	set_combat_hands(false)
 	play(&"P1_Idle")
 	animation_player.advance(0)
+
+func play_hit_feedback(allow_squash: bool = true) -> void:
+	if flash_tween != null and flash_tween.is_valid(): flash_tween.kill()
+	_set_hit_flash(1.0)
+	flash_tween = create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
+	flash_tween.tween_method(_set_hit_flash, 1.0, 0.0, 0.10)
+	flash_tween.tween_method(_set_hit_flash, 0.0, 0.8, 0.05)
+	flash_tween.tween_method(_set_hit_flash, 0.8, 0.0, 0.16)
+	# Never leave a scaled Skeleton under the physics ragdoll on a lethal hit.
+	if squash_tween != null and squash_tween.is_valid(): squash_tween.kill()
+	model.scale = base_model_scale
+	if not allow_squash: return
+	squash_tween = create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
+	var squash := Vector3(1.0 + hit_squash_amount * 0.6, 1.0 - hit_squash_amount, 1.0 + hit_squash_amount * 0.6)
+	squash_tween.tween_property(model, "scale", base_model_scale * squash, 0.06).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	squash_tween.tween_property(model, "scale", base_model_scale, 0.22).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+func _set_hit_flash(amount: float) -> void:
+	hit_flash = amount
+	for i in hit_materials.size():
+		hit_materials[i].albedo_color = base_colors[i].lerp(hit_color, amount * hit_color_strength)
 
 func clip_duration(clip: StringName) -> float:
 	return animation_player.get_animation(clip).length

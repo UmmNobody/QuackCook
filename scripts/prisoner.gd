@@ -13,7 +13,8 @@ enum State {
 	PICKING_UP_TRAY, 
 	WAITING_WITH_TRAY, 
 	THROWING_TRAY, 
-	ENTERING_COMBAT 
+	ENTERING_COMBAT,
+	INCAPACITATED
 }
 
 const MENU: Array[int] = [FoodItem.Type.CHICKEN, FoodItem.Type.MIXED_VEG, FoodItem.Type.RICE, FoodItem.Type.WATER]
@@ -43,6 +44,13 @@ const FOOD_SHORT_NAMES: Dictionary = {
 @export_range(0.1, 10.0) var tray_throw_forward_speed: float = 3.5
 @export_range(0.1, 10.0) var tray_throw_up_speed: float = 3.0
 @export_range(1.0, 300.0) var discarded_tray_lifetime: float = 8.0
+
+@export_group("Health")
+@export_range(1.0, 1000.0) var max_health: float = 100.0
+var health: float = 100.0
+var ragdoll: Node
+signal health_changed(current: float, maximum: float)
+signal incapacitated
 
 # Node References
 @onready var info: Label3D = $Info
@@ -79,9 +87,78 @@ var attack_in_progress: bool = false
 
 
 func _ready() -> void:
+	health = max_health
 	patience = patience_duration
 	visuals.sync_tray(tray_hold_point)
 	_update_display()
+
+func is_incapacitated() -> bool:
+	return state == State.INCAPACITATED
+
+func take_damage(amount: float, source: Node3D = null) -> void:
+	if amount <= 0 or is_incapacitated() or is_queued_for_deletion(): return
+	health = maxf(0.0, health - amount)
+	health_changed.emit(health, max_health)
+	visuals.play_hit_feedback(health > 0.0)
+	if health <= 0:
+		_incapacitate()
+	elif anger_reason.is_empty():
+		if is_instance_valid(QueueManager.layout_owner): QueueManager.make_angry(self, "Hit by a thrown object")
+		else:
+			var route: Array[Vector3] = []
+			begin_anger(route, source, "Hit by a thrown object")
+	_update_display()
+
+func _incapacitate() -> void:
+	state = State.INCAPACITATED
+	attack_in_progress = false
+	attack_timer = 0.0
+	velocity = Vector3.ZERO
+	fight_target = null
+	escape_points.clear()
+	QueueManager.release_incapacitated(self)
+	visuals.animation_player.pause()
+	collision_layer = 0
+	collision_mask = 0
+	$CollisionShape3D.set_deferred("disabled", true)
+	$Patience.hide()
+	add_to_group("Pickable")
+	add_to_group("Focusable")
+	# Build physics after any contact callbacks have finished.
+	_start_ragdoll.call_deferred()
+	incapacitated.emit()
+
+func _start_ragdoll() -> void:
+	if is_queued_for_deletion(): return
+	if has_serving_tray():
+		thrown_tray = serving_tray.throw_into_scene(get_parent(), Vector3.ZERO, discarded_tray_lifetime)
+		serving_tray = null
+	ragdoll = preload("res://scripts/prisoner_ragdoll.gd").new()
+	ragdoll.name = "Ragdoll"
+	add_child(ragdoll)
+	ragdoll.setup(self)
+	ragdoll.start()
+
+func can_pick_up() -> bool:
+	return is_incapacitated() and is_instance_valid(ragdoll) and ragdoll.active and not ragdoll.held
+
+func begin_carry() -> void:
+	ragdoll.pick_up()
+
+func update_carry(target: Transform3D, weight: float) -> void:
+	ragdoll.follow(target, weight)
+
+func end_carry() -> void:
+	ragdoll.drop()
+
+func throw(impulse: Vector3) -> void:
+	if is_incapacitated(): ragdoll.throw_body(impulse)
+
+func get_throw_bodies() -> Array[PhysicsBody3D]:
+	return ragdoll.bones
+
+func can_dispose() -> bool:
+	return is_incapacitated()
 
 
 func configure(order: Array[int], seconds: float) -> void:
@@ -120,6 +197,7 @@ func complete() -> bool:
 
 
 func receive_food(food: int) -> void:
+	if is_incapacitated(): return
 	if not has_serving_tray() or not serving_tray.show_food(food):
 		return
 	if needs_food(food):
@@ -132,6 +210,7 @@ func has_serving_tray() -> bool:
 
 
 func give_serving_tray() -> bool:
+	if is_incapacitated(): return false
 	if has_serving_tray():
 		return true
 	if serving_tray_scene == null:
@@ -145,6 +224,7 @@ func give_serving_tray() -> bool:
 
 
 func wait_at_tray_pickup() -> void:
+	if is_incapacitated(): return
 	if state == State.PICKING_UP_TRAY:
 		return
 		
@@ -175,16 +255,19 @@ func is_departing() -> bool:
 		State.CHASING_PLAYER, 
 		State.ATTACKING, 
 		State.THROWING_TRAY, 
-		State.ENTERING_COMBAT
+		State.ENTERING_COMBAT,
+		State.INCAPACITATED
 	]
 
 
 func set_waiting(in_service: bool, wants_here: bool) -> void:
+	if is_incapacitated(): return
 	state = State.WAITING_ENTRY if not in_service else (State.WAITING_FOOD if wants_here else State.BLOCKED)
 	_update_display()
 
 
 func move_to_slot(index: int, point: Vector3) -> void:
+	if is_incapacitated(): return
 	target_index = index
 	destination = point
 	state = State.MOVING_IN_QUEUE
@@ -192,13 +275,14 @@ func move_to_slot(index: int, point: Vector3) -> void:
 
 
 func begin_exit(point: Vector3) -> void:
+	if is_incapacitated(): return
 	destination = point
 	state = State.LEAVING
 	_update_display()
 
 
 func begin_anger(points: Array[Vector3], target: Node3D, reason: String) -> void:
-	if is_departing():
+	if is_incapacitated() or not anger_reason.is_empty():
 		return
 		
 	escape_points.assign(points)
@@ -225,6 +309,9 @@ func _throw_serving_tray() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if is_incapacitated():
+		if is_instance_valid(ragdoll): info.global_position = ragdoll.center() + Vector3.UP * 0.8
+		return
 	visuals.advance(delta, tray_hold_point)
 	
 	velocity.x = 0.0
@@ -311,11 +398,13 @@ func _start_attack() -> void:
 
 
 func _advance_attack(delta: float) -> void:
+	if is_incapacitated(): return
 	attack_elapsed += delta
 	var duration: float = visuals.clip_duration(ATTACK_CLIPS[attack_sequence])
 	var hits: Array = ATTACK_HITS[attack_sequence]
 	
 	while next_attack_hit < hits.size() and attack_elapsed >= duration * hits[next_attack_hit]:
+		if is_incapacitated() or not is_instance_valid(fight_target): return
 		next_attack_hit += 1
 		attacks_made += 1
 		QueueManager.attack_contact.emit(self, fight_target)
@@ -341,6 +430,11 @@ func _walk_to(point: Vector3, speed: float, delta: float) -> bool:
 
 func _update_display() -> void:
 	if not is_node_ready():
+		return
+	if is_incapacitated():
+		info.text = "#%d UNCONSCIOUS\nPick up / Trash" % ticket
+		info.modulate = Color("a9b3c6")
+		$Patience.hide()
 		return
 		
 	const STATE_NAMES: Array[String] = [
@@ -368,6 +462,7 @@ func _update_display() -> void:
 	patience_fill.scale.x = maxf(0.001, ratio)
 	patience_fill.position.x = -0.42 * (1.0 - ratio)
 	$Patience.visible = not complete() and not is_departing()
+	info.text += "\nHP %d/%d" % [ceili(health), ceili(max_health)]
 	
 	_update_animation()
 
