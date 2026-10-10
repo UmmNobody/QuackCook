@@ -1,0 +1,25 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3]
+
+[ext_resource type="Shader" path="res://shaders/kitchen_zip_toon.gdshader" id="1_toon"]
+[ext_resource type="Texture2D" path="res://assets/textures/kitchen_daylight/pattern_14.png" id="2_pattern"]
+
+[resource]
+resource_name = "Kitchen Floor Tiles"
+shader = ExtResource("1_toon")
+shader_parameter/floor_tiles = true
+shader_parameter/floor_pattern = ExtResource("2_pattern")
+shader_parameter/pattern_texture = ExtResource("2_pattern")
+shader_parameter/tile_color = Color(0.68, 0.72, 0.70, 1)
+shader_parameter/grout_color = Color(0.62, 0.66, 0.64, 1)
+shader_parameter/tile_size = 0.85
+shader_parameter/use_texture = false
+shader_parameter/use_vertex_color = false
+shader_parameter/normal_strength = 0.0
+shader_parameter/specular = 0.0
+shader_parameter/use_rim = false
+shader_parameter/use_pattern = false
+shader_parameter/use_stepped = true
+shader_parameter/steps = 3.0
+shader_parameter/step_smoothness = 0.22
+shader_parameter/shadow_tint = Color(0.6862745, 0.7254902, 0.8196079, 1)
+shader_parameter/shadow_tint_amount = 0.25

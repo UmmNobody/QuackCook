@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://4ajjdgalw4dw"]
+
+[ext_resource type="PackedScene" uid="uid://c01nkxnoeadck" path="res://scenes/main.tscn" id="1_game"]
+
+[node name="KitchenLightingTest" unique_id=534656072 instance=ExtResource("1_game")]
