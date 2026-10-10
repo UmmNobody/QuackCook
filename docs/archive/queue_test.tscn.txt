@@ -1,0 +1,184 @@
+[gd_scene format=3 uid="uid://dfdkn0u80q4tq"]
+
+[ext_resource type="Script" path="res://scripts/queue_test.gd" id="1"]
+[ext_resource type="Script" uid="uid://dbqggxjiwlwj3" path="res://scripts/queue/prisoner_spawner.gd" id="2"]
+[ext_resource type="PackedScene" uid="uid://c1myro2mwwn4n" path="res://scenes/props/stations/serving_table.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://cjo0mq10ngblr" path="res://scenes/characters/player/player.tscn" id="4"]
+
+[sub_resource type="Environment" id="Environment"]
+background_mode = 1
+background_color = Color(0.13, 0.18, 0.24, 1)
+ambient_light_source = 3
+ambient_light_color = Color(0.8, 0.87, 1, 1)
+ambient_light_energy = 0.65
+
+[sub_resource type="StandardMaterial3D" id="FloorMaterial"]
+albedo_color = Color(0.19, 0.24, 0.29, 1)
+
+[sub_resource type="BoxMesh" id="FloorMesh"]
+size = Vector3(24, 0.2, 16)
+
+[sub_resource type="BoxShape3D" id="FloorShape"]
+size = Vector3(24, 0.2, 16)
+
+[sub_resource type="StandardMaterial3D" id="ServiceMaterial"]
+albedo_color = Color(0.8, 0.66, 0.3, 1)
+
+[sub_resource type="CylinderMesh" id="SlotMesh"]
+top_radius = 0.43
+bottom_radius = 0.43
+height = 0.025
+
+[sub_resource type="StandardMaterial3D" id="WaitMaterial"]
+albedo_color = Color(0.24, 0.53, 0.66, 1)
+
+[sub_resource type="StandardMaterial3D" id="TrayPickupMaterial"]
+albedo_color = Color(0.65, 0.38, 0.85, 1)
+
+[node name="QueueTest" type="Node3D" unique_id=626161029]
+script = ExtResource("1")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=795389015]
+environment = SubResource("Environment")
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=1812286333]
+transform = Transform3D(0.90630776, 0.36599818, -0.21130912, 0, 0.49999997, 0.86602545, 0.42261827, -0.7848856, 0.45315385, 0, 0, 0)
+light_energy = 0.8
+shadow_enabled = true
+
+[node name="Floor" type="StaticBody3D" parent="." unique_id=2105436749]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, -0.1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=404666107]
+material_override = SubResource("FloorMaterial")
+mesh = SubResource("FloorMesh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=345732481]
+shape = SubResource("FloorShape")
+
+[node name="ServingTable" parent="." unique_id=168769136 instance=ExtResource("3")]
+
+[node name="ServiceSlots" type="Node3D" parent="ServingTable" unique_id=974513358]
+
+[node name="Chicken" type="Marker3D" parent="ServingTable/ServiceSlots" unique_id=713380923]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.95, 0.02, -1.5)
+
+[node name="GroundMark" type="MeshInstance3D" parent="ServingTable/ServiceSlots/Chicken" unique_id=156611386]
+material_override = SubResource("ServiceMaterial")
+mesh = SubResource("SlotMesh")
+
+[node name="Vegetables" type="Marker3D" parent="ServingTable/ServiceSlots" unique_id=2109264493]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.65, 0.02, -1.5)
+
+[node name="GroundMark" type="MeshInstance3D" parent="ServingTable/ServiceSlots/Vegetables" unique_id=1894234149]
+material_override = SubResource("ServiceMaterial")
+mesh = SubResource("SlotMesh")
+
+[node name="Rice" type="Marker3D" parent="ServingTable/ServiceSlots" unique_id=1123637797]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.65, 0.02, -1.5)
+
+[node name="GroundMark" type="MeshInstance3D" parent="ServingTable/ServiceSlots/Rice" unique_id=392289029]
+material_override = SubResource("ServiceMaterial")
+mesh = SubResource("SlotMesh")
+
+[node name="Water" type="Marker3D" parent="ServingTable/ServiceSlots" unique_id=171256040]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.95, 0.02, -1.5)
+
+[node name="GroundMark" type="MeshInstance3D" parent="ServingTable/ServiceSlots/Water" unique_id=1759000724]
+material_override = SubResource("ServiceMaterial")
+mesh = SubResource("SlotMesh")
+
+[node name="WaitingSlots" type="Node3D" parent="." unique_id=106488607]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.3, 0, 0)
+
+[node name="Wait1" type="Marker3D" parent="WaitingSlots" unique_id=102792337]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.15, 0.02, -1.5)
+
+[node name="GroundMark" type="MeshInstance3D" parent="WaitingSlots/Wait1" unique_id=1203211973]
+material_override = SubResource("WaitMaterial")
+mesh = SubResource("SlotMesh")
+
+[node name="Label" type="Label3D" parent="WaitingSlots/Wait1" unique_id=1703493153]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.025, 0.55)
+pixel_size = 0.006
+text = "WAIT 1"
+font_size = 28
+
+[node name="Wait2" type="Marker3D" parent="WaitingSlots" unique_id=1918394773]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.85, 0.02, -1.5)
+
+[node name="GroundMark" type="MeshInstance3D" parent="WaitingSlots/Wait2" unique_id=1734939832]
+material_override = SubResource("WaitMaterial")
+mesh = SubResource("SlotMesh")
+
+[node name="Label" type="Label3D" parent="WaitingSlots/Wait2" unique_id=615087321]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.025, 0.55)
+pixel_size = 0.006
+text = "WAIT 2"
+font_size = 28
+
+[node name="Wait3" type="Marker3D" parent="WaitingSlots" unique_id=986130760]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.55, 0.02, -1.5)
+
+[node name="GroundMark" type="MeshInstance3D" parent="WaitingSlots/Wait3" unique_id=644072957]
+material_override = SubResource("WaitMaterial")
+mesh = SubResource("SlotMesh")
+
+[node name="Label" type="Label3D" parent="WaitingSlots/Wait3" unique_id=317528216]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.025, 0.55)
+pixel_size = 0.006
+text = "WAIT 3"
+font_size = 28
+
+[node name="Wait4" type="Marker3D" parent="WaitingSlots" unique_id=2129376671]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.25, 0.02, -1.5)
+
+[node name="GroundMark" type="MeshInstance3D" parent="WaitingSlots/Wait4" unique_id=2111471938]
+material_override = SubResource("WaitMaterial")
+mesh = SubResource("SlotMesh")
+
+[node name="Label" type="Label3D" parent="WaitingSlots/Wait4" unique_id=225752265]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.025, 0.55)
+pixel_size = 0.006
+text = "WAIT 4"
+font_size = 28
+
+[node name="ExitPoint" type="Marker3D" parent="." unique_id=585377398]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.8, 0.02, -1.5)
+
+[node name="TrayPickupPoint" type="Marker3D" parent="." unique_id=1306909971]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.25, 0.02, -1.5)
+
+[node name="GroundMark" type="MeshInstance3D" parent="TrayPickupPoint" unique_id=1250245668]
+material_override = SubResource("TrayPickupMaterial")
+mesh = SubResource("SlotMesh")
+
+[node name="Label" type="Label3D" parent="TrayPickupPoint" unique_id=1934152760]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.025, 0.55)
+pixel_size = 0.006
+text = "TAKE TRAY"
+font_size = 28
+
+[node name="EscapeRoute" type="Node3D" parent="." unique_id=602192234]
+
+[node name="AroundBack" type="Marker3D" parent="EscapeRoute" unique_id=187484547]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.02, -3)
+
+[node name="AroundSide" type="Marker3D" parent="EscapeRoute" unique_id=815392419]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.02, 2.4)
+
+[node name="Prisoners" type="Node3D" parent="." unique_id=841502718]
+
+[node name="Spawner" type="Node" parent="." unique_id=1528491149]
+script = ExtResource("2")
+
+[node name="Player" parent="." unique_id=1648968325 instance=ExtResource("4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.02, 3)
+
+[node name="OverviewCamera" type="Camera3D" parent="." unique_id=1159869591]
+transform = Transform3D(1, 0, 0, 0, 0.68835455, 0.72537434, 0, -0.72537434, 0.68835455, -1.5, 11.7, 9)
+projection = 1
+current = true
+size = 10.5
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1687122165]

@@ -1,6 +1,6 @@
 extends SceneTree
 
-const Config = preload("res://scripts/managers/service_wave_config.gd")
+const Config = preload("res://scripts/resources/service_wave_config.gd")
 var checks: int = 0
 var failures: int = 0
 var game: Node
@@ -34,13 +34,13 @@ func run() -> void:
 	queue = root.get_node("QueueManager")
 	check(not game.start_service(Config.new()), "No wave before kitchen registration")
 	room = load("res://scenes/main.tscn").instantiate()
-	var layout = room.get_node("QueueLayout")
+	var layout = room.get_node("Queue/QueueLayout")
 	check(layout.auto_start_run and layout.first_day.prisoner_count == 6 and layout.first_day.preparation_seconds == 30, "Main defaults to one six-person test wave after thirty seconds")
 	layout.auto_start_run = false
 	root.add_child(room)
 	current_scene = room
 	await advance(5)
-	var player = room.get_node("Player")
+	var player = room.get_node("Actors/Player")
 	var spawner = layout.get_node("Spawner")
 	check(game.layout == layout and queue.layout_owner == layout, "Main registers gameplay queue with both managers")
 	check(queue.capacity() == 9 and queue.service_start_index == 5, "Four waiting, one tray and four service markers")
@@ -51,7 +51,8 @@ func run() -> void:
 	for well in queue.wells:
 		var button = well.get_node("ServeButton")
 		var eye := Vector3(-3.0, 2.35, well.global_position.z)
-		var query := PhysicsRayQueryParameters3D.create(eye, button.global_position, 3)
+		# Imported ladle's clickable shape is offset from the scene pivot.
+		var query := PhysicsRayQueryParameters3D.create(eye, button.get_node("CollisionShape3D").global_position, 3)
 		query.exclude = [player.get_rid()]
 		var hit := room.get_world_3d().direct_space_state.intersect_ray(query)
 		check(hit.get("collider") == button, "FPS can aim at " + well.name + " serving button without counter obstruction")
@@ -101,7 +102,7 @@ func run() -> void:
 	check(geometry_valid, "Queue markers stay on the actual kitchen floor")
 	check(game.served_count == 6 and game.failed_count == 0, "Six prisoners complete service through real main-scene movement")
 	check(game.can_close_kitchen(), "Empty queue permits closing after all arrivals")
-	var saved_pan = room.get_node("Pan")
+	var saved_pan = room.get_node("Items/Pan")
 	var saved_stock: int = queue.wells[3].current_servings
 	var report: Dictionary = game.finish_service()
 	check(report.get("target_met", false) and report.get("served") == 6, "Summary contains goal and successful count")

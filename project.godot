@@ -11,14 +11,14 @@ config_version=5
 [application]
 
 config/name="Quack Cook"
-run/main_scene="res://scenes/main_menu.tscn"
+run/main_scene="res://scenes/ui/main_menu.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
-config/icon="res://icon.svg"
+config/icon="res://assets/textures/ui/icon.svg"
 
 [autoload]
 
-QueueManager="*uid://d2yvxjeabclyl"
-GameManager="*uid://53tewnfq3ipl"
+QueueManager="*res://scripts/managers/queue_manager.gd"
+GameManager="*res://scripts/managers/game_manager.gd"
 
 [display]
 

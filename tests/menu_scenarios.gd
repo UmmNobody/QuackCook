@@ -49,8 +49,8 @@ func run() -> void:
 		print("Fresh process checks: %d passed, %d failed" % [checks - failures, failures])
 		quit(failures)
 		return
-	check(ProjectSettings.get_setting("application/run/main_scene") == "res://scenes/main_menu.tscn", "F5 opens main menu")
-	var menu = load("res://scenes/main_menu.tscn").instantiate()
+	check(ProjectSettings.get_setting("application/run/main_scene") == "res://scenes/ui/main_menu.tscn", "F5 opens main menu")
+	var menu = load("res://scenes/ui/main_menu.tscn").instantiate()
 	root.add_child(menu)
 	current_scene = menu
 	await frames(2)
@@ -63,10 +63,10 @@ func run() -> void:
 	check(game.current_day == 1 and game.checkpoint_day == 1, "New run begins on day one and stores session checkpoint")
 	var room = current_scene
 	var old_room_id := room.get_instance_id()
-	var pause_ui = room.get_node("PauseMenu")
-	var player = room.get_node("Player")
+	var pause_ui = room.get_node("UI/PauseMenu")
+	var player = room.get_node("Actors/Player")
 	var head = player.get_node("Head")
-	var pan = room.get_node("Pan")
+	var pan = room.get_node("Items/Pan")
 	head.pick_up(pan)
 	head.last_hovered_object = null
 	head._handle_interact_pressed()
@@ -110,7 +110,7 @@ func run() -> void:
 	check(game.pause_menu_open and game.state == game.State.SUMMARY, "Settings can open above daily report")
 	check(not game.next_day(), "Settings blocks report actions behind it")
 	await esc()
-	check(not game.pause_menu_open and paused and room.get_node("DaySummary").screen.visible, "Closing settings returns to report without unpausing world")
+	check(not game.pause_menu_open and paused and room.get_node("UI/DaySummary").screen.visible, "Closing settings returns to report without unpausing world")
 	await esc()
 	pause_ui.exit_button.pressed.emit()
 	check(await until(menu_ready), "Exit from passed report returns to menu")
@@ -130,9 +130,9 @@ func run() -> void:
 	check(game.preparation_remaining > 29 and game.served_count == 0 and game.spawned_count == 0, "Resume resets daily progress and gives full preparation")
 	var empty := true
 	for well in queue.wells: empty = empty and well.current_servings == 0
-	check(empty and room.get_node("Player").health == 100 and room.get_node("Player/Head").carried_object == null, "Resume does not restore stock, HP or held items")
+	check(empty and room.get_node("Actors/Player").health == 100 and room.get_node("Actors/Player/Head").carried_object == null, "Resume does not restore stock, HP or held items")
 	await esc()
-	room.get_node("PauseMenu").exit_button.pressed.emit()
+	room.get_node("UI/PauseMenu").exit_button.pressed.emit()
 	await until(menu_ready)
 	check(game.checkpoint_day == 2, "Leaving during preparation retains current day")
 	menu = current_scene
@@ -143,7 +143,7 @@ func run() -> void:
 	await until(func(): return game.spawned_count > 0)
 	check(game.current_day == 2 and game.state == game.State.SERVING, "Resumed day can enter active service")
 	await esc()
-	current_scene.get_node("PauseMenu").exit_button.pressed.emit()
+	current_scene.get_node("UI/PauseMenu").exit_button.pressed.emit()
 	await until(menu_ready)
 	check(game.checkpoint_day == 2, "Leaving during active service keeps the same day")
 	menu = current_scene
@@ -153,7 +153,7 @@ func run() -> void:
 	check(game.current_day == 1 and game.checkpoint_day == 1, "New game replaces old checkpoint with day one")
 	room = current_scene
 	game.open_kitchen()
-	var spawner = room.get_node("QueueLayout/Spawner")
+	var spawner = room.get_node("Queue/QueueLayout/Spawner")
 	spawner.spawning_paused = true
 	for i in 1000:
 		if queue.can_spawn():
@@ -164,7 +164,7 @@ func run() -> void:
 	game.finish_service()
 	check(game.state == game.State.SUMMARY and not game.last_summary.target_met and game.checkpoint_day == 0, "Failed day clears checkpoint before Game Over confirmation")
 	await esc()
-	room.get_node("PauseMenu").exit_button.pressed.emit()
+	room.get_node("UI/PauseMenu").exit_button.pressed.emit()
 	await until(menu_ready)
 	check(not game.has_checkpoint(), "Exiting a failed report cannot revive the lost run")
 	menu = current_scene
@@ -172,7 +172,7 @@ func run() -> void:
 	await until(kitchen_ready)
 	check(game.current_day == 1 and not paused, "After failure, Start begins day one directly")
 	await esc()
-	current_scene.get_node("PauseMenu").exit_button.pressed.emit()
+	current_scene.get_node("UI/PauseMenu").exit_button.pressed.emit()
 	await until(menu_ready)
 	check(game.checkpoint_day == 1, "Checkpoint remains in this process at end of test")
 	print("Menu checks: %d passed, %d failed" % [checks - failures, failures])

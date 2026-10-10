@@ -29,7 +29,7 @@ func standing_clear() -> bool:
 	query.shape = player.collider.shape
 	query.transform = player.collider.global_transform
 	query.exclude = [player.get_rid()]
-	query.collision_mask = 5
+	query.collision_mask = player._standing_mask
 	return player.get_world_3d().direct_space_state.intersect_shape(query).is_empty()
 func capture(name: String) -> void:
 	var args := OS.get_cmdline_user_args()
@@ -42,7 +42,7 @@ func run() -> void:
 	root.add_child(stage)
 	current_scene = stage
 	solid(Vector3(30, 1, 30), Vector3(0, -0.5, 0))
-	player = load("res://scenes/Player.tscn").instantiate()
+	player = load("res://scenes/characters/player/player.tscn").instantiate()
 	stage.add_child(player)
 	player.position = Vector3(0, 1.04, 0)
 	source = Node3D.new()
@@ -77,7 +77,7 @@ func run() -> void:
 	check(left and right and not is_equal_approx(magnitudes.min(), magnitudes.max()), "Hit direction and strength vary per accepted hit")
 	await frames(40)
 	player.invulnerability_remaining = 0
-	var pan = load("res://scenes/prefebs/maps/pan.tscn").instantiate()
+	var pan = load("res://scenes/items/cookware/pan.tscn").instantiate()
 	stage.add_child(pan)
 	player.head.pick_up(pan)
 	player.head.last_hovered_object = null
@@ -104,10 +104,10 @@ func run() -> void:
 	for i in 10: await process_frame
 	check(fall.torso.global_transform.is_equal_approx(ragdoll_pose) and player.stun_remaining == timer, "Pause freezes ragdoll and stun timer")
 	paused = false
-	await frames(85)
+	await frames(ceili(player.stun_remaining * 60.0) + 6)
 	check(not player.unconscious and player.health == player.max_health and player.can_control(), "Stun ends with full HP and restored controls")
 	check(player.ragdoll == null and not is_instance_valid(fall), "Temporary ragdoll is removed after recovery")
-	check(player.collision_layer == 1 and player.collision_mask == 5 and standing_clear(), "Standing collision restored without overlap")
+	check(player.collision_layer == 1 and player.collision_mask == 13 and standing_clear(), "Standing collision restored without overlap")
 	check(not player.blur.visible and player.camera.rotation.z == 0 and player.camera.position.y > -0.1, "Recovery restores upright FPS view and clears blur")
 	check(player.invulnerability_remaining > 0, "Recovery grants existing invulnerability window")
 	player.head._handle_interact_released()
@@ -131,23 +131,23 @@ func run() -> void:
 	check(player.global_position.z < 3.36, "Nonlethal knockback respects wall collision")
 	player.invulnerability_remaining = 0
 	player.take_damage(1000, source)
-	await frames(150)
+	await frames(ceili(player.stun_duration * 60.0) + 6)
 	check(not player.unconscious and standing_clear() and player.global_position.z < 3.36, "Ragdoll recovers on the correct side of the wall")
 	wall.queue_free()
 	stage.queue_free()
 	await frames(3)
 	# Exercise actual kitchen geometry, a held item, and scene teardown mid-stun.
 	stage = load("res://scenes/main.tscn").instantiate()
-	stage.get_node("QueueLayout").auto_start_run = false
+	stage.get_node("Queue/QueueLayout").auto_start_run = false
 	root.add_child(stage)
 	current_scene = stage
-	player = stage.get_node("Player")
+	player = stage.get_node("Actors/Player")
 	await frames(20)
 	player.take_damage(1000)
 	await frames(65)
 	await capture("player_unconscious")
 	check(player.unconscious and player.camera.global_transform.is_finite(), "Ragdoll works inside the actual kitchen")
-	await frames(85)
+	await frames(ceili(player.stun_remaining * 60.0) + 6)
 	check(not player.unconscious and player.can_control() and standing_clear(), "Player safely gets up in the actual kitchen")
 	await capture("player_recovered")
 	player.invulnerability_remaining = 0
@@ -159,3 +159,4 @@ func run() -> void:
 	check(not is_instance_valid(final_body), "Unloading scene mid-stun frees the ragdoll")
 	print("Player impact checks: %d passed, %d failed" % [checks - failures, failures])
 	quit(1 if failures else 0)
+

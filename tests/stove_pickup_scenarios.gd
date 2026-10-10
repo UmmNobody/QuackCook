@@ -11,17 +11,17 @@ func advance(count: int) -> void:
 	for i in count: await physics_frame
 func run() -> void:
 	var room = load("res://scenes/main.tscn").instantiate()
-	room.get_node("QueueLayout").auto_start_run = false
+	room.get_node("Queue/QueueLayout").auto_start_run = false
 	root.add_child(room)
 	current_scene = room
-	var player = room.get_node("Player")
+	var player = room.get_node("Actors/Player")
 	var head = player.get_node("Head")
-	var stove = room.get_node("Stove")
+	var stove = room.get_node("Kitchen/Stations/Stove")
 	player.set_physics_process(false)
 	head.set_process(false)
 	await advance(3)
 	for name in ["Pan", "Pot"]:
-		var item = room.get_node(name)
+		var item = room.get_node("Items/" + name)
 		for target in [stove, item]:
 			for settle in [0, 5]:
 				head.drop_object()
@@ -55,7 +55,7 @@ func run() -> void:
 		head._handle_interact_pressed()
 		await advance(45)
 		check(head.carried_object == item and stove.current_cookware == null, "%s lifts from automatic placement in one click" % name)
-		var food_path := "res://scenes/prefebs/foods/Chicken.tscn" if name == "Pan" else "res://scenes/prefebs/foods/Rice.tscn"
+		var food_path := "res://scenes/items/foods/chicken.tscn" if name == "Pan" else "res://scenes/items/foods/rice.tscn"
 		var food = load(food_path).instantiate()
 		room.add_child(food)
 		if name == "Pan": food.current_state = FoodItem.State.CUT

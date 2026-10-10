@@ -1,0 +1,52 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/models/props/Door.glb" id="1_model"]
+[ext_resource type="Script" path="res://scripts/props/interactive/prisoner_door.gd" id="2_script"]
+[ext_resource type="Script" path="res://scripts/components/hinged_animation.gd" id="3_motion"]
+
+[sub_resource type="BoxShape3D" id="BarrierShape"]
+size = Vector3(2, 3.1, 0.25)
+
+[sub_resource type="BoxShape3D" id="LeafShape"]
+size = Vector3(1.6, 2.8, 0.15)
+
+[sub_resource type="BoxShape3D" id="ApproachShape"]
+size = Vector3(2.4, 3.4, 6)
+
+[node name="PrisonerDoor" type="Node3D"]
+script = ExtResource("2_script")
+
+[node name="Model" parent="." instance=ExtResource("1_model")]
+
+[node name="PlayerBarrier" type="StaticBody3D" parent="."]
+collision_layer = 8
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerBarrier"]
+position = Vector3(0, 1.5, 0)
+shape = SubResource("BarrierShape")
+
+[node name="LeafRayCollision" type="AnimatableBody3D" parent="."]
+position = Vector3(-0.8, 0, 0)
+collision_layer = 2
+collision_mask = 0
+sync_to_physics = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LeafRayCollision"]
+position = Vector3(0.8, 1.4, 0)
+shape = SubResource("LeafShape")
+
+[node name="ApproachArea" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ApproachArea"]
+position = Vector3(0, 1.5, 0)
+shape = SubResource("ApproachShape")
+
+[node name="Motion" type="Node" parent="."]
+script = ExtResource("3_motion")
+animation_player_path = NodePath("../Model/AnimationPlayer")
+open_animation = &"Door_Open"
+close_animation = &"Door_Close"
+playback_speed = 3.0

@@ -1,7 +1,7 @@
 extends SceneTree
 
-const Config = preload("res://scripts/managers/service_wave_config.gd")
-const Progression = preload("res://scripts/managers/day_progression.gd")
+const Config = preload("res://scripts/resources/service_wave_config.gd")
+const Progression = preload("res://scripts/resources/day_progression.gd")
 var game: Node
 var queue: Node
 var checks: int = 0
@@ -47,16 +47,16 @@ func run() -> void:
 	check(progression.settings_for_day(defaults, 50).is_valid(), "Custom target growth cannot exceed arrivals")
 	progression = Progression.new()
 	var room = load("res://scenes/main.tscn").instantiate()
-	room.get_node("QueueLayout").auto_start_run = false
+	room.get_node("Queue/QueueLayout").auto_start_run = false
 	root.add_child(room)
 	current_scene = room
 	await advance(3)
 	var scene_id: int = room.get_instance_id()
-	var player = room.get_node("Player")
+	var player = room.get_node("Actors/Player")
 	var head = player.get_node("Head")
-	var close_button = room.get_node("CloseKitchenButton")
-	var summary_ui = room.get_node("DaySummary")
-	var spawner = room.get_node("QueueLayout/Spawner")
+	var close_button = room.get_node("Kitchen/Interactables/CloseKitchenButton")
+	var summary_ui = room.get_node("UI/DaySummary")
+	var spawner = room.get_node("Queue/QueueLayout/Spawner")
 	var ray := PhysicsRayQueryParameters3D.create(Vector3(-4.0, 2.2, -4.6), close_button.global_position, 3)
 	ray.exclude = [player.get_rid()]
 	check(room.get_world_3d().direct_space_state.intersect_ray(ray).get("collider") == close_button, "Wall button can be aimed at from inside beside the doorway")
@@ -97,7 +97,7 @@ func run() -> void:
 		if game.can_close_kitchen(): break
 		await physics_frame
 	check(game.served_count == 2 and game.failed_count == 1 and game.can_close_kitchen(), "Completed mixed-outcome day can close with body remaining")
-	var pan = room.get_node("Pan")
+	var pan = room.get_node("Items/Pan")
 	head.pick_up(pan)
 	head.last_hovered_object = null
 	head._handle_interact_pressed()

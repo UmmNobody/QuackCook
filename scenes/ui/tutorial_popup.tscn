@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/tutorial_popup.gd" id="1"]
-[ext_resource type="Theme" path="res://scenes/ui/menu_theme.tres" id="2"]
+[ext_resource type="Theme" path="res://resources/themes/menu_theme.tres" id="2"]
 
 [node name="TutorialPopup" type="CanvasLayer"]
 process_mode = 3

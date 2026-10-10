@@ -6,7 +6,7 @@ func _initialize() -> void: bake.call_deferred()
 
 func bake() -> void:
 	var scene = load("res://scenes/main.tscn").instantiate()
-	scene.get_node("QueueLayout").auto_start_run = false
+	scene.get_node("Queue/QueueLayout").auto_start_run = false
 	root.add_child(scene)
 	var mesh := NavigationMesh.new()
 	mesh.geometry_parsed_geometry_type = NavigationMesh.PARSED_GEOMETRY_STATIC_COLLIDERS
@@ -23,6 +23,6 @@ func bake() -> void:
 		push_error("Kitchen navigation bake produced no walkable polygons.")
 		quit(1)
 		return
-	var error := ResourceSaver.save(mesh, "res://scenes/kitchen_navigation.tres")
+	var error := ResourceSaver.save(mesh, "res://resources/navigation/kitchen_navigation.tres")
 	print("Kitchen navigation: %d polygons; save result %d" % [mesh.get_polygon_count(), error])
 	quit(0 if error == OK else 1)

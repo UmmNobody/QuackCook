@@ -38,14 +38,14 @@ func run() -> void:
 	game = root.get_node("GameManager")
 	check(not game.tutorial_seen and not game.tutorial_open, "Fresh process starts with unseen tutorial")
 	check(not game.open_tutorial(), "Cannot open guide without a kitchen")
-	change_scene_to_file("res://scenes/main_menu.tscn")
+	change_scene_to_file("res://scenes/ui/main_menu.tscn")
 	await until(func(): return current_scene != null and current_scene.name == "MainMenu")
 	current_scene.start_button.pressed.emit()
 	check(await until(func(): return game.tutorial_open), "First Start opens tutorial automatically")
 	var room := current_scene
-	var guide = room.get_node("TutorialPopup")
-	var sign = room.get_node("TutorialSign")
-	var player = room.get_node("Player")
+	var guide = room.get_node("UI/TutorialPopup")
+	var sign = room.get_node("Kitchen/Interactables/TutorialSign")
+	var player = room.get_node("Actors/Player")
 	var head = player.get_node("Head")
 	check(paused and guide.screen.visible and game.tutorial_seen, "Tutorial opens as a paused modal and marks this session seen")
 	check(game.preparation_remaining == 30 and game.spawned_count == 0, "First tutorial preserves the entire preparation countdown")
@@ -78,7 +78,7 @@ func run() -> void:
 	var sign_pose: Transform3D = sign.global_transform
 	head.object_focused.emit(sign)
 	check(sign.outline.visible and sign.hint.visible, "Guide highlights when focused")
-	var pan = room.get_node("Pan")
+	var pan = room.get_node("Items/Pan")
 	head.pick_up(pan)
 	head.last_hovered_object = null
 	head._handle_interact_pressed()

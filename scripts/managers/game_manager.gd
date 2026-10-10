@@ -12,10 +12,10 @@ signal pause_menu_changed(open: bool)
 signal tutorial_changed(open: bool)
 
 enum State { IDLE, PREPARING, SERVING, SUMMARY, GAME_OVER }
-const WaveConfig = preload("res://scripts/managers/service_wave_config.gd")
-const Progression = preload("res://scripts/managers/day_progression.gd")
+const WaveConfig = preload("res://scripts/resources/service_wave_config.gd")
+const Progression = preload("res://scripts/resources/day_progression.gd")
 
-@export_file("*.tscn") var game_over_scene_path: String = "res://scenes/game_over.tscn"
+@export_file("*.tscn") var game_over_scene_path: String = "res://scenes/ui/game_over.tscn"
 var current_day: int = 0
 var last_summary: Dictionary = {}
 var run_active: bool = false
@@ -321,7 +321,7 @@ func return_to_menu() -> bool:
 	return true
 
 func _return_to_menu() -> void:
-	var error := get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+	var error := get_tree().change_scene_to_file("res://scenes/ui/main_menu.tscn")
 	if error != OK:
 		_transition_pending = false
 		push_error("Could not open main menu: " + error_string(error))
