@@ -31,9 +31,19 @@ var is_charging: bool = false
 var player:Node3D = null
 
 func _ready() -> void:
-	player = get_tree().get_first_node_in_group("Player")
+	player = get_parent()
+
+func interaction_allowed() -> bool:
+	if get_tree().paused: return false
+	return not is_instance_valid(player) or not player.has_method("is_incapacitated") or not player.is_incapacitated()
+
+func cancel_interaction() -> void:
+	_reset_throw_state()
+	last_hovered_object = null
+	object_focused.emit(null)
 
 func _process(delta: float) -> void:
+	if not interaction_allowed(): return
 	_check_hovered_object()
 	_update_throw_charge(delta)
 
@@ -68,6 +78,7 @@ func _physics_process(delta: float) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if not interaction_allowed(): return
 	if event.is_action_pressed("drop"):
 		drop_object()
 	
@@ -79,6 +90,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _handle_interact_pressed() -> void:
+	if not interaction_allowed(): return
 	# Carry something and hover object have interact_with()
 	if is_instance_valid(last_hovered_object) and last_hovered_object.has_method("interact_with"):
 		var is_handled: bool = last_hovered_object.interact_with(carried_object, self)
@@ -103,6 +115,7 @@ func _handle_interact_pressed() -> void:
 
 
 func _handle_interact_released() -> void:
+	if not interaction_allowed(): return
 	if carried_object == null or not is_holding_button:
 		return
 
@@ -148,6 +161,7 @@ func _check_hovered_object() -> void:
 
 
 func pick_up(object: Node3D) -> void:
+	if not interaction_allowed(): return
 	if not is_instance_valid(object) or object.is_queued_for_deletion() or is_instance_valid(carried_object): return
 	if object.has_method("can_pick_up"):
 		if not object.can_pick_up(): return
@@ -155,10 +169,8 @@ func pick_up(object: Node3D) -> void:
 	var impact = object.get_node_or_null("ThrowImpact")
 	if impact: impact.disarm()
 	_reset_throw_state()
-	if object is Pan:
-		var pan := object as Pan
-		if pan.is_on_stove:
-			pan.remove_from_stove()
+	if object is Cookware and object.is_on_stove:
+		object.remove_from_stove()
 	
 	carried_object = object
 	carried_object.tree_exiting.connect(_on_carried_exiting, CONNECT_ONE_SHOT)
@@ -196,6 +208,7 @@ func drop_object() -> void:
 
 
 func throw_object(force: float) -> void:
+	if not interaction_allowed(): return
 	if carried_object == null:
 		return
 

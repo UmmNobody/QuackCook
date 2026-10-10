@@ -1,6 +1,6 @@
-[gd_scene format=3 uid="uid://o2nc2g8j8wei"]
+[gd_scene format=3 uid="uid://dfdkn0u80q4tq"]
 
-[ext_resource type="Script" uid="uid://s6d1j3qpx7t5" path="res://scripts/queue_test.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/queue_test.gd" id="1"]
 [ext_resource type="Script" uid="uid://dbqggxjiwlwj3" path="res://scripts/managers/prisoner_spawner.gd" id="2"]
 [ext_resource type="PackedScene" uid="uid://c1myro2mwwn4n" path="res://scenes/prefebs/maps/serving_table.tscn" id="3"]
 [ext_resource type="PackedScene" uid="uid://cjo0mq10ngblr" path="res://scenes/Player.tscn" id="4"]

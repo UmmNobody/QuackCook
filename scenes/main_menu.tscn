@@ -1,0 +1,156 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/main_menu.gd" id="1"]
+[ext_resource type="Theme" path="res://scenes/ui/menu_theme.tres" id="2"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2")
+script = ExtResource("1")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.062745, 0.094118, 0.082353, 1)
+
+[node name="Home" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2")
+
+[node name="Center" type="CenterContainer" parent="Home"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Home/Center"]
+custom_minimum_size = Vector2(520, 0)
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Home/Center/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="Content" type="VBoxContainer" parent="Home/Center/Panel/Margin"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Home/Center/Panel/Margin/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.909804, 0.921569, 0.913725, 1)
+theme_override_font_sizes/font_size = 40
+text = "QUACK COOK"
+
+[node name="Subtitle" type="Label" parent="Home/Center/Panel/Margin/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.603922, 0.670588, 0.647059, 1)
+theme_override_font_sizes/font_size = 18
+text = "A new day in the kitchen."
+
+[node name="Divider" type="HSeparator" parent="Home/Center/Panel/Margin/Content"]
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 2
+
+[node name="Start" type="Button" parent="Home/Center/Panel/Margin/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"PrimaryButton"
+text = "Start game"
+
+[node name="Confirmation" type="Control" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2")
+
+[node name="Center" type="CenterContainer" parent="Confirmation"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Confirmation/Center"]
+custom_minimum_size = Vector2(520, 0)
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Confirmation/Center/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="Content" type="VBoxContainer" parent="Confirmation/Center/Panel/Margin"]
+layout_mode = 2
+
+[node name="Eyebrow" type="Label" parent="Confirmation/Center/Panel/Margin/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.603922, 0.670588, 0.647059, 1)
+theme_override_font_sizes/font_size = 16
+text = "WELCOME BACK"
+
+[node name="Prompt" type="Label" parent="Confirmation/Center/Panel/Margin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.909804, 0.921569, 0.913725, 1)
+theme_override_font_sizes/font_size = 30
+text = "Continue your run?"
+
+[node name="Explanation" type="Label" parent="Confirmation/Center/Panel/Margin/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.603922, 0.670588, 0.647059, 1)
+theme_override_font_sizes/font_size = 17
+text = "The kitchen and today's progress start fresh.\nProgress lasts until you close the game."
+autowrap_mode = 3
+
+[node name="Continue" type="Button" parent="Confirmation/Center/Panel/Margin/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"PrimaryButton"
+text = "Continue"
+
+[node name="NewGame" type="Button" parent="Confirmation/Center/Panel/Margin/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "Start a new game — day 1"
+
+[node name="Cancel" type="Button" parent="Confirmation/Center/Panel/Margin/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "Cancel"
+flat = true

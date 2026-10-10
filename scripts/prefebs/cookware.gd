@@ -93,7 +93,10 @@ func place_on_stove(stove: Node, snap_point: Marker3D) -> void:
 	is_on_stove = true
 	current_stove = stove
 	freeze = true
-	reparent.call_deferred(snap_point)
+	# The stove is static: freeze/snap in place without removing this body from
+	# the tree. Reparenting emits tree_exiting and can cancel an in-flight pickup.
+	linear_velocity = Vector3.ZERO
+	angular_velocity = Vector3.ZERO
 	global_transform = snap_point.global_transform
 
 func remove_from_stove() -> void:
@@ -108,4 +111,3 @@ func remove_from_stove() -> void:
 			
 	current_stove = null
 	freeze = false
-	reparent(get_tree().current_scene)

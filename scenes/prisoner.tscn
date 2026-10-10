@@ -5,8 +5,8 @@
 [ext_resource type="Script" uid="uid://k0cp1m1ugo7y" path="res://scripts/prisoner_visual.gd" id="3"]
 
 [sub_resource type="CapsuleShape3D" id="Body"]
-radius = 0.32
-height = 1.4
+radius = 0.37402344
+height = 1.8699219
 
 [sub_resource type="StandardMaterial3D" id="Dark"]
 shading_mode = 0
@@ -32,40 +32,40 @@ script = ExtResource("3")
 
 [node name="Model" parent="Visuals" unique_id=1127494240 instance=ExtResource("2")]
 
-[node name="Blindfold" parent="Visuals/Model/ROOT/Armature/Skeleton3D" parent_id_path=PackedInt32Array(1127494240, 1753048354) index="1" unique_id=2026783153]
+[node name="Blindfold" parent="Visuals/Model/ROOT/Armature/Skeleton3D" parent_id_path=PackedInt32Array(1127494240, 2034863685) index="1" unique_id=999017605]
 visible = false
 
-[node name="Hair_Black" parent="Visuals/Model/ROOT/Armature/Skeleton3D" parent_id_path=PackedInt32Array(1127494240, 1753048354) index="7" unique_id=1008631984]
+[node name="Hair_Black" parent="Visuals/Model/ROOT/Armature/Skeleton3D" parent_id_path=PackedInt32Array(1127494240, 2034863685) index="7" unique_id=541767774]
 visible = false
 
-[node name="Hair_Brown" parent="Visuals/Model/ROOT/Armature/Skeleton3D" parent_id_path=PackedInt32Array(1127494240, 1753048354) index="8" unique_id=545610694]
+[node name="Hair_Brown" parent="Visuals/Model/ROOT/Armature/Skeleton3D" parent_id_path=PackedInt32Array(1127494240, 2034863685) index="8" unique_id=1217553790]
 visible = false
 
-[node name="Hair_Gold" parent="Visuals/Model/ROOT/Armature/Skeleton3D" parent_id_path=PackedInt32Array(1127494240, 1753048354) index="9" unique_id=1697549504]
+[node name="Hair_Gold" parent="Visuals/Model/ROOT/Armature/Skeleton3D" parent_id_path=PackedInt32Array(1127494240, 2034863685) index="9" unique_id=439417110]
 visible = false
 
-[node name="Hand_Fist_L" parent="Visuals/Model/ROOT/Armature/Skeleton3D" parent_id_path=PackedInt32Array(1127494240, 1753048354) index="10" unique_id=134354224]
+[node name="Hand_Fist_L" parent="Visuals/Model/ROOT/Armature/Skeleton3D" parent_id_path=PackedInt32Array(1127494240, 2034863685) index="10" unique_id=544380485]
 visible = false
 
-[node name="Hand_Fist_R" parent="Visuals/Model/ROOT/Armature/Skeleton3D" parent_id_path=PackedInt32Array(1127494240, 1753048354) index="11" unique_id=818874439]
+[node name="Hand_Fist_R" parent="Visuals/Model/ROOT/Armature/Skeleton3D" parent_id_path=PackedInt32Array(1127494240, 2034863685) index="11" unique_id=1167160418]
 visible = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1994187107]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.93496096, 0)
 shape = SubResource("Body")
 
 [node name="Info" type="Label3D" parent="." unique_id=436038358]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.95, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3334253, 0)
 billboard = 1
 text = "Prisoner"
 font_size = 36
 outline_size = 8
 
 [node name="TrayHoldPoint" type="Marker3D" parent="." unique_id=1327305186]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0.65)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.80065197, 0.65)
 
 [node name="Patience" type="Node3D" parent="." unique_id=1093971007]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.64, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.101256, 0)
 
 [node name="Background" type="MeshInstance3D" parent="Patience" unique_id=361286439]
 material_override = SubResource("Dark")

@@ -4,6 +4,7 @@ extends Node
 signal wave_started(total: int)
 signal wave_spawn_finished(total: int)
 signal wave_completed(total: int)
+signal prisoner_spawned(prisoner: Node3D)
 
 @export var prisoner_scene: PackedScene = preload("res://scenes/prisoner.tscn")
 @export_range(1, 50) var max_active_prisoners: int = 12
@@ -13,6 +14,7 @@ signal wave_completed(total: int)
 @export_range(1, 4) var maximum_foods: int = 4
 @export var use_example_orders: bool = true
 @export var spawning_paused: bool = false
+@export var use_navigation: bool = false
 
 var actor_parent: Node3D
 var elapsed: float = 0
@@ -85,6 +87,7 @@ func spawn_one(order_override: Array[int] = []) -> Node3D:
 			var maximum: int = clampi(maximum_foods, minimum, 4)
 			order.assign(choices.slice(0, randi_range(minimum, maximum)))
 	var actor = prisoner_scene.instantiate()
+	actor.use_navigation = use_navigation
 	actor.configure(order, patience_seconds)
 	actor_parent.add_child(actor)
 	if not QueueManager.admit(actor):
@@ -95,6 +98,7 @@ func spawn_one(order_override: Array[int] = []) -> Node3D:
 	actor.tree_exited.connect(_on_wave_actor_exited.bind(id, _wave_generation), CONNECT_ONE_SHOT)
 	wave_spawned += 1
 	elapsed = 0
+	prisoner_spawned.emit(actor)
 	if wave_spawned == wave_total:
 		wave_spawn_finished.emit(wave_total)
 	return actor

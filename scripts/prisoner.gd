@@ -1,4 +1,6 @@
 extends CharacterBody3D
+signal service_completed
+signal anger_started
 ## Queue movement is assigned by QueueManager; Visuals drives the imported model.
 
 enum State { 
@@ -30,11 +32,16 @@ const FOOD_SHORT_NAMES: Dictionary = {
 }
 
 @export_group("Movement & Patience")
+@export var use_navigation: bool = false
+var navigation_agent: NavigationAgent3D
+var navigation_update_remaining: float = 0.0
+var service_reported: bool = false
 @export_range(0.1, 10.0) var walk_speed: float = 1.8
 @export_range(0.1, 10.0) var chase_speed: float = 2.8
 @export_range(1.0, 300.0) var patience_duration: float = 45.0
 
 @export_group("Combat Settings")
+@export_range(0.0, 1000.0) var attack_damage: float = 10.0
 @export_range(0.3, 3.0) var attack_range: float = 1.2
 @export_range(0.1, 5.0) var attack_interval: float = 1.0
 
@@ -87,6 +94,11 @@ var attack_in_progress: bool = false
 
 
 func _ready() -> void:
+	if use_navigation:
+		navigation_agent = NavigationAgent3D.new()
+		navigation_agent.path_desired_distance = 0.2
+		navigation_agent.target_desired_distance = 0.6
+		add_child(navigation_agent)
 	health = max_health
 	patience = patience_duration
 	visuals.sync_tray(tray_hold_point)
@@ -278,6 +290,9 @@ func begin_exit(point: Vector3) -> void:
 	if is_incapacitated(): return
 	destination = point
 	state = State.LEAVING
+	if complete() and anger_reason.is_empty() and not service_reported:
+		service_reported = true
+		service_completed.emit()
 	_update_display()
 
 
@@ -288,6 +303,7 @@ func begin_anger(points: Array[Vector3], target: Node3D, reason: String) -> void
 	escape_points.assign(points)
 	fight_target = target
 	anger_reason = reason
+	anger_started.emit()
 	target_index = -1
 	combat_transition_elapsed = 0.0
 	state = State.THROWING_TRAY if has_serving_tray() else State.ENTERING_COMBAT
@@ -372,7 +388,7 @@ func _physics_process(delta: float) -> void:
 				if gap.length() > attack_range:
 					attack_in_progress = false
 					state = State.CHASING_PLAYER
-					_walk_to(fight_target.global_position, chase_speed, delta)
+					_chase_target(delta)
 				else:
 					state = State.ATTACKING
 					face_towards(fight_target.global_position)
@@ -407,11 +423,25 @@ func _advance_attack(delta: float) -> void:
 		if is_incapacitated() or not is_instance_valid(fight_target): return
 		next_attack_hit += 1
 		attacks_made += 1
+		if fight_target.has_method("take_damage"):
+			fight_target.take_damage(attack_damage, self)
 		QueueManager.attack_contact.emit(self, fight_target)
 		
 	if attack_elapsed >= duration:
 		attack_in_progress = false
 
+
+func _chase_target(delta: float) -> void:
+	if not use_navigation or navigation_agent == null:
+		_walk_to(fight_target.global_position, chase_speed, delta)
+		return
+	if NavigationServer3D.map_get_iteration_id(get_world_3d().navigation_map) == 0: return
+	navigation_update_remaining -= delta
+	if navigation_update_remaining <= 0.0:
+		navigation_agent.target_position = fight_target.global_position
+		navigation_update_remaining = 0.25
+	if not navigation_agent.is_navigation_finished():
+		_walk_to(navigation_agent.get_next_path_position(), chase_speed, delta)
 
 func _walk_to(point: Vector3, speed: float, delta: float) -> bool:
 	var offset: Vector3 = point - global_position

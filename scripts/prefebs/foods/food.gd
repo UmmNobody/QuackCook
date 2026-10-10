@@ -38,6 +38,9 @@ func _set_selected(object: Node) -> void:
 		var outline = active_mesh.get_node_or_null("OutlineMesh")
 		if outline:
 			outline.visible = is_focused
+			print("outline found")
+		else:
+			print("outline not found")
 
 func _get_active_mesh() -> MeshInstance3D:
 	match current_state:
