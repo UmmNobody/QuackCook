@@ -5,7 +5,6 @@ extends StaticBody3D
 @onready var door_body: AnimatableBody3D = $DoorCollision
 @onready var body_mesh: MeshInstance3D = $Model/Fridge/fridge_B_ROOT_001/fridge_B_001
 @onready var door_mesh: MeshInstance3D = $Model/Fridge/fridge_B_ROOT_001/Fridge_Hinge_CTRL_001/fridge_B_door_001
-@onready var hint: Label3D = $Hint
 
 func _ready() -> void:
 	door_body.global_transform = door_mesh.global_transform
@@ -17,7 +16,6 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	motion.advance(delta)
 	door_body.global_transform = door_mesh.global_transform
-	hint.text = "Close fridge" if motion.target_open else "Open fridge"
 
 func can_access_contents() -> bool:
 	return is_node_ready() and motion.fully_open()
@@ -31,4 +29,3 @@ func _set_selected(target: Node) -> void:
 	var selected := target == self or target == door_body
 	body_mesh.material_overlay = highlight_material if selected else null
 	door_mesh.material_overlay = highlight_material if selected else null
-	hint.visible = selected

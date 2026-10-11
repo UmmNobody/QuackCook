@@ -23,14 +23,6 @@ const MENU: Array[int] = [FoodItem.Type.CHICKEN, FoodItem.Type.MIXED_VEG, FoodIt
 const ATTACK_CLIPS: Array[StringName] = [&"P1_Punch_Combo", &"P1_Kick_Front_R", &"P1_Boxing_Flurry"]
 const ATTACK_HITS: Array = [[0.24, 0.60], [0.40], [0.18, 0.36, 0.54, 0.72]]
 
-# Map ชื่อย่อตามประเภทอาหารเพื่อลด Magic Array
-const FOOD_SHORT_NAMES: Dictionary = {
-	FoodItem.Type.CHICKEN: "C",
-	FoodItem.Type.MIXED_VEG: "V",
-	FoodItem.Type.RICE: "R",
-	FoodItem.Type.WATER: "W"
-}
-
 @export_group("Movement & Patience")
 @export var use_navigation: bool = false
 var navigation_agent: NavigationAgent3D
@@ -59,9 +51,15 @@ var ragdoll: Node
 signal health_changed(current: float, maximum: float)
 signal incapacitated
 
+@export_group("Order Icons")
+@export var chicken_icon: Texture2D
+@export var vegetables_icon: Texture2D
+@export var rice_icon: Texture2D
+@export var water_icon: Texture2D
+
 # Node References
-@onready var info: Label3D = $Info
-@onready var patience_fill: MeshInstance3D = $Patience/Fill
+@onready var food_icon: Sprite3D = $FoodIcon
+@onready var patience_bar: Node3D = $FoodIcon/Patience
 @onready var visuals: Node3D = $Visuals
 @onready var tray_hold_point: Marker3D = $TrayHoldPoint
 
@@ -133,7 +131,7 @@ func _incapacitate() -> void:
 	collision_layer = 0
 	collision_mask = 0
 	$CollisionShape3D.set_deferred("disabled", true)
-	$Patience.hide()
+	food_icon.hide()
 	add_to_group("Pickable")
 	add_to_group("Focusable")
 	# Build physics after any contact callbacks have finished.
@@ -181,6 +179,7 @@ func configure(order: Array[int], seconds: float) -> void:
 	received.clear()
 	patience_duration = maxf(1.0, seconds)
 	patience = patience_duration
+	_update_display()
 
 
 func food_name(food: int) -> String:
@@ -326,7 +325,6 @@ func _throw_serving_tray() -> void:
 
 func _physics_process(delta: float) -> void:
 	if is_incapacitated():
-		if is_instance_valid(ragdoll): info.global_position = ragdoll.center() + Vector3.UP * 0.8
 		return
 	visuals.advance(delta, tray_hold_point)
 	
@@ -458,43 +456,28 @@ func _walk_to(point: Vector3, speed: float, delta: float) -> bool:
 	return false
 
 
-func _update_display() -> void:
-	if not is_node_ready():
-		return
-	if is_incapacitated():
-		info.text = "#%d UNCONSCIOUS\nPick up / Trash" % ticket
-		info.modulate = Color("a9b3c6")
-		$Patience.hide()
-		return
-		
-	const STATE_NAMES: Array[String] = [
-		"ENTRY", "WALK", "WAIT FOOD", "BLOCKED", "EXIT", 
-		"ANGRY", "CHASE", "ATTACK", "TAKE TRAY", "TRAY READY", 
-		"THROW TRAY", "COMBAT READY"
-	]
-	
-	var state_name: String = STATE_NAMES[state]
-	var remaining: PackedStringArray = []
-	
+## Queue stations use MENU order, regardless of how the random order was supplied.
+func current_wanted_food() -> int:
+	if is_departing() or not anger_reason.is_empty(): return -1
 	for food in MENU:
-		if needs_food(food):
-			remaining.append(FOOD_SHORT_NAMES.get(food, "?"))
-			
-	if not anger_reason.is_empty():
-		info.text = "#%d  ANGRY\n%s" % [ticket, anger_reason]
-		info.modulate = Color("ec5c55")
-	else:
-		info.text = "#%d  %s\n%s" % [ticket, state_name, "Need: " + " ".join(remaining) if not remaining.is_empty() else "Complete"]
-		info.modulate = Color("65ce95") if complete() else Color.WHITE
+		if needs_food(food): return food
+	return -1
 
-	# Update Patience Bar
-	var ratio: float = clampf(patience / patience_duration, 0.0, 1.0)
-	patience_fill.scale.x = maxf(0.001, ratio)
-	patience_fill.position.x = -0.42 * (1.0 - ratio)
-	$Patience.visible = not complete() and not is_departing()
-	info.text += "\nHP %d/%d" % [ceili(health), ceili(max_health)]
-	
-	_update_animation()
+func _order_texture(food: int) -> Texture2D:
+	match food:
+		FoodItem.Type.CHICKEN: return chicken_icon
+		FoodItem.Type.MIXED_VEG: return vegetables_icon
+		FoodItem.Type.RICE: return rice_icon
+		FoodItem.Type.WATER: return water_icon
+		_: return null
+
+func _update_display() -> void:
+	if not is_node_ready(): return
+	var texture := _order_texture(current_wanted_food())
+	if food_icon.texture != texture: food_icon.texture = texture
+	food_icon.visible = texture != null
+	patience_bar.set_ratio(patience / maxf(patience_duration, 0.001))
+	if not is_incapacitated(): _update_animation()
 
 
 func _update_animation() -> void:

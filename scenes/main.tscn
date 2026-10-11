@@ -5,6 +5,8 @@
 [ext_resource type="PackedScene" uid="uid://oehgjajjsjqa" path="res://scenes/props/stations/stove.tscn" id="5_0ha60"]
 [ext_resource type="PackedScene" uid="uid://17y6uvl4eesq" path="res://scenes/items/tools/knife.tscn" id="6_4j5ol"]
 [ext_resource type="PackedScene" uid="uid://dn1vfleipq0aj" path="res://scenes/items/cookware/pot.tscn" id="6_k65ib"]
+[ext_resource type="PackedScene" uid="uid://cbll0lbg2mbgt" path="res://assets/models/props/CuttingBoard.glb" id="6_qkpxi"]
+[ext_resource type="PackedScene" uid="uid://bljuttgc7732c" path="res://assets/models/props/Door.glb" id="7_5q0nq"]
 [ext_resource type="PackedScene" uid="uid://cipn152gfg0or" path="res://scenes/items/cookware/pan.tscn" id="7_p1hux"]
 [ext_resource type="PackedScene" uid="uid://bgj34sc80sv41" path="res://scenes/items/cookware/tray.tscn" id="10_tqoya"]
 [ext_resource type="PackedScene" uid="uid://c1myro2mwwn4n" path="res://scenes/props/stations/serving_table.tscn" id="13_serving_table"]
@@ -25,21 +27,12 @@
 [ext_resource type="PackedScene" uid="uid://b2aoeosuhu4fq" path="res://scenes/props/food_sources/chicken_foodbox.tscn" id="25_og1vs"]
 [ext_resource type="PackedScene" path="res://scenes/ui/tutorial_popup.tscn" id="25_tutorial"]
 [ext_resource type="PackedScene" path="res://scenes/props/interactive/tutorial_sign.tscn" id="26_guide"]
-[ext_resource type="PackedScene" path="res://scenes/props/stations/fridge.tscn" id="27_fridge"]
+[ext_resource type="PackedScene" uid="uid://b38e7arjc60ia" path="res://scenes/props/stations/fridge.tscn" id="27_fridge"]
 [ext_resource type="PackedScene" path="res://scenes/props/interactive/prisoner_door.tscn" id="28_door"]
-
-[ext_resource type="Script" path="res://scripts/visuals/kitchen_visual_style.gd" id="99_visual_style"]
-
-[ext_resource type="Sky" path="res://resources/visuals/kitchen_daylight_sky.tres" id="100_daylight_sky"]
-
+[ext_resource type="Script" uid="uid://cofd22df30w8m" path="res://scripts/visuals/kitchen_visual_style.gd" id="99_visual_style"]
+[ext_resource type="Sky" uid="uid://db6aykvxipbv4" path="res://resources/visuals/kitchen_daylight_sky.tres" id="100_daylight_sky"]
+[ext_resource type="Script" uid="uid://uetxswv6mjk4" path="res://scripts/props/interactive/kitchen_shutter.gd" id="101_shutter"]
 [ext_resource type="Material" path="res://resources/materials/kitchen_floor_tiles.tres" id="floor_tiles_saved"]
-
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_itxqv"]
-sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
-ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
-
-[sub_resource type="Sky" id="Sky_v0l8b"]
-sky_material = SubResource("ProceduralSkyMaterial_itxqv")
 
 [sub_resource type="Environment" id="Environment_wp4xf"]
 background_mode = 2
@@ -57,6 +50,14 @@ script = ExtResource("21_progression")
 
 [node name="QuackCook_Kitchen" parent="Environment" unique_id=2070259630 instance=ExtResource("15_jkv2x")]
 
+[node name="Part_025" parent="Environment/QuackCook_Kitchen" index="22" unique_id=1653422431]
+material_override = ExtResource("floor_tiles_saved")
+
+[node name="KitchenShutter" type="Node" parent="Environment" unique_id=1857322287]
+process_mode = 3
+script = ExtResource("101_shutter")
+animation_player_path = NodePath("../QuackCook_Kitchen/AnimationPlayer")
+
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment" unique_id=1209547466]
 transform = Transform3D(-0.5735659, -0.759853, 0.30601606, -0.53351504, 0.6299919, 0.5643334, -0.621598, 0.16041821, -0.7667348, 0, 0, 0)
 shadow_enabled = true
@@ -67,10 +68,16 @@ environment = SubResource("Environment_wp4xf")
 [node name="KitchenNavigation" type="NavigationRegion3D" parent="Environment" unique_id=563204380]
 navigation_mesh = ExtResource("20_nav")
 
+[node name="CuttingBoard" parent="Environment" unique_id=1550618818 instance=ExtResource("6_qkpxi")]
+transform = Transform3D(0.4272266, 0, 0.9041446, 0, 1, 0, -0.9041446, 0, 0.4272266, 1.0399873, 1.8382051, -2.825852)
+
+[node name="StaticDoor" parent="Environment" unique_id=1193288103 instance=ExtResource("7_5q0nq")]
+transform = Transform3D(1.1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, 5.3127155, 0.77066183, -9.109724)
+
 [node name="Actors" type="Node3D" parent="." unique_id=695234059]
 
 [node name="Player" parent="Actors" unique_id=1634674887 instance=ExtResource("1_itxqv")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.8, 1.85, 1.3)
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, -1.4494165, 1.85, 1.7316358)
 
 [node name="Kitchen" type="Node3D" parent="." unique_id=1715090546]
 
@@ -122,7 +129,7 @@ transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -6.06, 2.2, -3.45)
 [node name="Items" type="Node3D" parent="." unique_id=1283369535]
 
 [node name="Knife" parent="Items" unique_id=1302013892 instance=ExtResource("6_4j5ol")]
-transform = Transform3D(0.44786963, -0.32942167, -0.8312005, 0.15625994, 0.94418293, -0.29000252, 0.8803384, 0, 0.47434625, 0.8964045, 2.2898846, 2.208595)
+transform = Transform3D(0.44786963, -0.32942164, -0.8312004, -0.43150288, -0.89385784, 0.12175053, -0.78308225, 0.304137, -0.5424782, 1.2747644, 3.1014066, -3.1456468)
 
 [node name="Pan" parent="Items" unique_id=1579388431 instance=ExtResource("7_p1hux")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4819291, 2.8723013, 7.5647)
@@ -147,19 +154,19 @@ difficulty = SubResource("Resource_difficulty")
 [node name="WaitingSlots" type="Node3D" parent="Queue/QueueLayout" unique_id=225426837]
 
 [node name="Wait1" type="Marker3D" parent="Queue/QueueLayout/WaitingSlots" unique_id=1973059393]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.45, 0, -2.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.086717, 0, -2.25)
 
 [node name="Wait2" type="Marker3D" parent="Queue/QueueLayout/WaitingSlots" unique_id=970593799]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.15, 0, -2.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.7867165, 0, -2.25)
 
 [node name="Wait3" type="Marker3D" parent="Queue/QueueLayout/WaitingSlots" unique_id=1730591704]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.85, 0, -2.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.4867163, 0, -2.25)
 
 [node name="Wait4" type="Marker3D" parent="Queue/QueueLayout/WaitingSlots" unique_id=196687063]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.55, 0, -2.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.186717, 0, -2.25)
 
 [node name="TrayPickupPoint" type="Marker3D" parent="Queue/QueueLayout" unique_id=222640611]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.25, 0, -2.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.7651298, 0, -2.25)
 
 [node name="Label" type="Label3D" parent="Queue/QueueLayout/TrayPickupPoint" unique_id=1633372791]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.06, 0)
@@ -169,16 +176,16 @@ text = "TAKE TRAY"
 [node name="ServiceSlots" type="Node3D" parent="Queue/QueueLayout" unique_id=1355375462]
 
 [node name="Chicken" type="Marker3D" parent="Queue/QueueLayout/ServiceSlots" unique_id=2136955526]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.95, 0, -2.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3116925, 0, -2.25)
 
 [node name="Vegetables" type="Marker3D" parent="Queue/QueueLayout/ServiceSlots" unique_id=941108653]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.65, 0, -2.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6043029, 0, -2.25)
 
 [node name="Rice" type="Marker3D" parent="Queue/QueueLayout/ServiceSlots" unique_id=600862511]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.65, 0, -2.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9868643, 0, -2.25)
 
 [node name="Water" type="Marker3D" parent="Queue/QueueLayout/ServiceSlots" unique_id=1838953790]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.95, 0, -2.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4320664, 0, -2.25)
 
 [node name="ExitPoint" type="Marker3D" parent="Queue/QueueLayout" unique_id=1740179370]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, -2.25)
@@ -232,10 +239,7 @@ text = "+"
 
 [node name="TutorialPopup" parent="UI" unique_id=1923505119 instance=ExtResource("25_tutorial")]
 
-[node name="KitchenVisualStyle" type="Node3D" parent="."]
+[node name="KitchenVisualStyle" type="Node3D" parent="." unique_id=55129419]
 script = ExtResource("99_visual_style")
-
-[node name="Part_025" parent="Environment/QuackCook_Kitchen"]
-material_override = ExtResource("floor_tiles_saved")
 
 [editable path="Environment/QuackCook_Kitchen"]

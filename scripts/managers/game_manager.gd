@@ -116,7 +116,8 @@ func start_service(settings: Resource) -> bool:
 	spawner.minimum_foods = config.minimum_foods
 	spawner.maximum_foods = config.maximum_foods
 	spawner.patience_seconds = config.patience_seconds
-	spawner.spawn_interval = config.spawn_interval
+	spawner.spawn_interval_min = config.spawn_interval_min
+	spawner.spawn_interval_max = config.spawn_interval_max
 	spawner.use_example_orders = false
 	spawner.spawning_paused = false
 	preparation_remaining = config.preparation_seconds

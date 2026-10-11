@@ -8,7 +8,8 @@ signal prisoner_spawned(prisoner: Node3D)
 
 @export var prisoner_scene: PackedScene = preload("res://scenes/characters/prisoner/prisoner.tscn")
 @export_range(1, 50) var max_active_prisoners: int = 12
-@export_range(0.1, 30.0) var spawn_interval: float = 2.0
+@export_range(0.1, 30.0) var spawn_interval_min: float = 1.0
+@export_range(0.1, 30.0) var spawn_interval_max: float = 3.0
 @export_range(1.0, 300.0) var patience_seconds: float = 45.0
 @export_range(1, 4) var minimum_foods: int = 2
 @export_range(1, 4) var maximum_foods: int = 4
@@ -18,6 +19,7 @@ signal prisoner_spawned(prisoner: Node3D)
 
 var actor_parent: Node3D
 var elapsed: float = 0
+var next_spawn_delay: float = 0.0
 var wave_total: int = 0
 var wave_spawned: int = 0
 var wave_active: bool = false
@@ -34,7 +36,9 @@ func start_wave(count: int) -> bool:
 	wave_total = count
 	wave_spawned = 0
 	wave_active = true
-	elapsed = spawn_interval
+	# The first arrival is immediate; later arrivals wait after a successful spawn.
+	elapsed = 0.0
+	next_spawn_delay = 0.0
 	wave_started.emit(count)
 	return true
 
@@ -61,11 +65,12 @@ func cancel_wave() -> void:
 	wave_spawned = 0
 	_wave_actors.clear()
 	elapsed = 0
+	next_spawn_delay = 0.0
 
 func _process(delta: float) -> void:
 	if spawning_paused or remaining_to_spawn() == 0: return
-	elapsed = minf(elapsed + delta, spawn_interval)
-	if elapsed >= spawn_interval:
+	elapsed = minf(elapsed + delta, next_spawn_delay)
+	if elapsed >= next_spawn_delay:
 		spawn_one()
 
 ## Manual test step (also works while paused). Always consumes the active wave quota.
@@ -98,6 +103,8 @@ func spawn_one(order_override: Array[int] = []) -> Node3D:
 	actor.tree_exited.connect(_on_wave_actor_exited.bind(id, _wave_generation), CONNECT_ONE_SHOT)
 	wave_spawned += 1
 	elapsed = 0
+	var minimum_delay := maxf(0.1, spawn_interval_min)
+	next_spawn_delay = randf_range(minimum_delay, maxf(minimum_delay, spawn_interval_max))
 	prisoner_spawned.emit(actor)
 	if wave_spawned == wave_total:
 		wave_spawn_finished.emit(wave_total)

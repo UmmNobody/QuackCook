@@ -3,29 +3,41 @@
 [ext_resource type="Script" uid="uid://bp184ugv1w3ip" path="res://scripts/characters/prisoner/prisoner.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://bdifaup3l3e2r" path="res://assets/models/characters/prisoner.glb" id="2"]
 [ext_resource type="Script" uid="uid://k0cp1m1ugo7y" path="res://scripts/characters/prisoner/prisoner_visual.gd" id="3"]
+[ext_resource type="Texture2D" uid="uid://gg06qrwcjrwi" path="res://assets/icon/chicken_icon.png" id="icon_chicken"]
+[ext_resource type="Texture2D" uid="uid://ckdqb8bvgy35e" path="res://assets/icon/rice_icon.png" id="icon_rice"]
+[ext_resource type="Texture2D" uid="uid://dnnows6r5o374" path="res://assets/icon/mixveg_icon.png" id="icon_vegetables"]
+[ext_resource type="Texture2D" uid="uid://cqscrgikk4wdy" path="res://assets/icon/water_icon.png" id="icon_water"]
+[ext_resource type="Script" uid="uid://fk43uddmv1vc" path="res://scripts/characters/prisoner/prisoner_patience_bar.gd" id="patience_script"]
 
 [sub_resource type="CapsuleShape3D" id="Body"]
 radius = 0.37402344
 height = 1.8699219
 
-[sub_resource type="StandardMaterial3D" id="Dark"]
+[sub_resource type="StandardMaterial3D" id="PatienceBackgroundMaterial"]
+cull_mode = 2
 shading_mode = 0
-albedo_color = Color(0.05, 0.07, 0.09, 1)
+albedo_color = Color(0.04, 0.055, 0.065, 1)
 
-[sub_resource type="BoxMesh" id="BarBack"]
-size = Vector3(0.9, 0.09, 0.09)
+[sub_resource type="QuadMesh" id="PatienceBackgroundMesh"]
+size = Vector2(0.14, 0.72)
 
-[sub_resource type="StandardMaterial3D" id="Green"]
+[sub_resource type="StandardMaterial3D" id="PatienceFillMaterial"]
+resource_local_to_scene = true
+cull_mode = 2
 shading_mode = 0
-albedo_color = Color(0.2, 0.9, 0.55, 1)
+albedo_color = Color(0.25, 0.85, 0.4, 1)
 
-[sub_resource type="BoxMesh" id="Bar"]
-size = Vector3(0.84, 0.065, 0.065)
+[sub_resource type="QuadMesh" id="PatienceFillMesh"]
+size = Vector2(0.1, 0.68)
 
 [node name="Prisoner" type="CharacterBody3D" unique_id=1609689057]
 collision_layer = 4
 collision_mask = 5
 script = ExtResource("1")
+chicken_icon = ExtResource("icon_chicken")
+vegetables_icon = ExtResource("icon_vegetables")
+rice_icon = ExtResource("icon_rice")
+water_icon = ExtResource("icon_water")
 
 [node name="Visuals" type="Node3D" parent="." unique_id=2009391957]
 script = ExtResource("3")
@@ -54,26 +66,30 @@ visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.93496096, 0)
 shape = SubResource("Body")
 
-[node name="Info" type="Label3D" parent="." unique_id=436038358]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3334253, 0)
+[node name="FoodIcon" type="Sprite3D" parent="." unique_id=1430912979]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
+visible = false
+cast_shadow = 0
+pixel_size = 0.003
 billboard = 1
-text = "Prisoner"
-font_size = 36
-outline_size = 8
+texture = ExtResource("icon_chicken")
+
+[node name="Patience" type="Node3D" parent="FoodIcon" unique_id=594676413]
+script = ExtResource("patience_script")
+
+[node name="Background" type="MeshInstance3D" parent="FoodIcon/Patience" unique_id=2079709814]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.52, 0, 0)
+material_override = SubResource("PatienceBackgroundMaterial")
+cast_shadow = 0
+mesh = SubResource("PatienceBackgroundMesh")
+
+[node name="Fill" type="MeshInstance3D" parent="FoodIcon/Patience" unique_id=565681647]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.52, 0, 0.002)
+material_override = SubResource("PatienceFillMaterial")
+cast_shadow = 0
+mesh = SubResource("PatienceFillMesh")
 
 [node name="TrayHoldPoint" type="Marker3D" parent="." unique_id=1327305186]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.80065197, 0.65)
-
-[node name="Patience" type="Node3D" parent="." unique_id=1093971007]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.101256, 0)
-
-[node name="Background" type="MeshInstance3D" parent="Patience" unique_id=361286439]
-material_override = SubResource("Dark")
-mesh = SubResource("BarBack")
-
-[node name="Fill" type="MeshInstance3D" parent="Patience" unique_id=1010875950]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.018)
-material_override = SubResource("Green")
-mesh = SubResource("Bar")
 
 [editable path="Visuals/Model"]
