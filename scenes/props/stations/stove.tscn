@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://ba506g7kpc6h2" path="res://scripts/props/stations/stove.gd" id="1_0666h"]
 [ext_resource type="ArrayMesh" uid="uid://cmw6xssndqufx" path="res://resources/meshes/Stove.tres" id="2_b7fva"]
 [ext_resource type="Material" uid="uid://v0mnupsurftt" path="res://resources/materials/outline_material.tres" id="3_af5fx"]
+[ext_resource type="PackedScene" path="res://scenes/effects/particles/stove_fire.tscn" id="4_fire"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_vldeo"]
 _surfaces = [{
@@ -18,7 +19,7 @@ _surfaces = [{
 }]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_2a5p3"]
-size = Vector3(2.142517, 1.3743896, 1)
+size = Vector3(2.073288, 1.278656, 2.0941162)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_3vrem"]
 size = Vector3(1.8190956, 0.532074, 1.5116577)
@@ -37,7 +38,7 @@ mesh = SubResource("ArrayMesh_vldeo")
 surface_material_override/0 = ExtResource("3_af5fx")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1974132067]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.011810303, 0.5753784, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.013175964, 0.5874176, 0.007019043)
 shape = SubResource("BoxShape3D_2a5p3")
 
 [node name="SnapArea" type="Area3D" parent="." unique_id=490724904]
@@ -47,7 +48,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2935528, 0)
 shape = SubResource("BoxShape3D_3vrem")
 
 [node name="PanSnapPoint" type="Marker3D" parent="." unique_id=1972892932]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3566126, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2241493, 0)
+
+[node name="StoveFire" parent="PanSnapPoint" unique_id=455031769 instance=ExtResource("4_fire")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.08, 0)
+emission_ring_cone_angle = 90.0
 
 [node name="CookingUI3D" type="Sprite3D" parent="." unique_id=1252913564]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.111167, 0)

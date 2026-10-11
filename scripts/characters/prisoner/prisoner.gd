@@ -31,6 +31,10 @@ var service_reported: bool = false
 @export_range(0.1, 10.0) var walk_speed: float = 1.8
 @export_range(0.1, 10.0) var chase_speed: float = 2.8
 @export_range(1.0, 300.0) var patience_duration: float = 45.0
+## Acceleration given to loose physics items blocking the walking direction.
+@export_range(1.0, 100.0) var object_push_acceleration: float = 35.0
+@export_range(0.1, 10.0) var object_push_speed: float = 4.0
+var kitchen_door_passed: bool = false
 
 @export_group("Combat Settings")
 @export_range(0.0, 1000.0) var attack_damage: float = 10.0
@@ -104,6 +108,9 @@ func _ready() -> void:
 
 func is_incapacitated() -> bool:
 	return state == State.INCAPACITATED
+
+func can_open_kitchen_door() -> bool:
+	return state == State.ANGRY_EXIT and not kitchen_door_passed
 
 func take_damage(amount: float, source: Node3D = null) -> void:
 	if amount <= 0 or is_incapacitated() or is_queued_for_deletion(): return
@@ -397,10 +404,36 @@ func _physics_process(delta: float) -> void:
 			else:
 				attack_in_progress = false
 
+	var intended_velocity := Vector3(velocity.x, 0.0, velocity.z)
 	move_and_slide()
+	_push_loose_objects(intended_velocity, delta)
 	visuals.sync_tray(tray_hold_point)
 	_update_display()
 
+
+func _push_loose_objects(intended_velocity: Vector3, delta: float) -> void:
+	if intended_velocity.length_squared() < 0.001: return
+	var pushed: Array[RID] = []
+	for index in get_slide_collision_count():
+		var contact := get_slide_collision(index)
+		var body := contact.get_collider() as RigidBody3D
+		# Held items and cookware attached to stations are frozen.
+		if body == null or body.get_rid() in pushed: continue
+		var stuck_knife: bool = body is Knife and body.is_stuck
+		if body.freeze and not stuck_knife: continue
+		var direction := -contact.get_normal()
+		direction.y = 0.0
+		if direction.length_squared() < 0.01: continue
+		direction = direction.normalized()
+		if intended_velocity.dot(direction) <= 0.05: continue
+		if body is Knife: body.release_for_push()
+		pushed.append(body.get_rid())
+		# Accelerate only up to the target speed; never launch light items or slow
+		# down an incoming/outgoing thrown object by replacing its velocity.
+		var speed_gain := minf(object_push_speed - body.linear_velocity.dot(direction), object_push_acceleration * delta)
+		if speed_gain <= 0.0: continue
+		body.sleeping = false
+		body.apply_central_impulse(direction * speed_gain * body.mass)
 
 func _start_attack() -> void:
 	attack_sequence = (attack_sequence + 1) % ATTACK_CLIPS.size()

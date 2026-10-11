@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://cbll0lbg2mbgt" path="res://assets/models/props/CuttingBoard.glb" id="6_qkpxi"]
 [ext_resource type="PackedScene" uid="uid://bljuttgc7732c" path="res://assets/models/props/Door.glb" id="7_5q0nq"]
 [ext_resource type="PackedScene" uid="uid://cipn152gfg0or" path="res://scenes/items/cookware/pan.tscn" id="7_p1hux"]
+[ext_resource type="PackedScene" uid="uid://s75ly7k8m64f" path="res://assets/models/props/serving_tray.glb" id="8_dgi5k"]
 [ext_resource type="PackedScene" uid="uid://bgj34sc80sv41" path="res://scenes/items/cookware/tray.tscn" id="10_tqoya"]
 [ext_resource type="PackedScene" uid="uid://c1myro2mwwn4n" path="res://scenes/props/stations/serving_table.tscn" id="13_serving_table"]
 [ext_resource type="PackedScene" uid="uid://c3gdyaba8p7n4" path="res://assets/models/environment/QuackCook_Kitchen.glb" id="15_jkv2x"]
@@ -26,7 +27,7 @@
 [ext_resource type="PackedScene" uid="uid://cnbul82g2v04k" path="res://scenes/props/food_sources/cabbage_foodbox.tscn" id="24_y6deb"]
 [ext_resource type="PackedScene" uid="uid://b2aoeosuhu4fq" path="res://scenes/props/food_sources/chicken_foodbox.tscn" id="25_og1vs"]
 [ext_resource type="PackedScene" path="res://scenes/ui/tutorial_popup.tscn" id="25_tutorial"]
-[ext_resource type="PackedScene" path="res://scenes/props/interactive/tutorial_sign.tscn" id="26_guide"]
+[ext_resource type="PackedScene" uid="uid://2435o11bq1we" path="res://scenes/props/interactive/tutorial_sign.tscn" id="26_guide"]
 [ext_resource type="PackedScene" uid="uid://b38e7arjc60ia" path="res://scenes/props/stations/fridge.tscn" id="27_fridge"]
 [ext_resource type="PackedScene" path="res://scenes/props/interactive/prisoner_door.tscn" id="28_door"]
 [ext_resource type="Script" uid="uid://cofd22df30w8m" path="res://scripts/visuals/kitchen_visual_style.gd" id="99_visual_style"]
@@ -73,6 +74,15 @@ transform = Transform3D(0.4272266, 0, 0.9041446, 0, 1, 0, -0.9041446, 0, 0.42722
 
 [node name="StaticDoor" parent="Environment" unique_id=1193288103 instance=ExtResource("7_5q0nq")]
 transform = Transform3D(1.1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, 5.3127155, 0.77066183, -9.109724)
+
+[node name="ServingTray" parent="Environment" unique_id=1349177995 instance=ExtResource("8_dgi5k")]
+transform = Transform3D(-0.06394882, 0, 0.99795324, 0, 1, 0, -0.99795324, 0, -0.06394882, -5.691073, 1.8354161, 5.277719)
+
+[node name="ServingTray2" parent="Environment" unique_id=1545793472 instance=ExtResource("8_dgi5k")]
+transform = Transform3D(0.023072861, 0, 0.9997338, 0, 1, 0, -0.9997338, 0, 0.023072861, -5.7116094, 1.8971348, 5.225137)
+
+[node name="ServingTray3" parent="Environment" unique_id=1042862267 instance=ExtResource("8_dgi5k")]
+transform = Transform3D(-0.041702878, 0, 0.9991301, 0, 1, 0, -0.9991301, 0, -0.041702878, -5.703534, 1.9640274, 5.2812085)
 
 [node name="Actors" type="Node3D" parent="." unique_id=695234059]
 
@@ -121,10 +131,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.309811, 1.6116626, -7.51163
 transform = Transform3D(-4.8082526e-08, 0, -1.1, 0, 1.1, 0, 1.1, 0, -4.8082526e-08, -6.473309, 0.64000875, -5.9)
 
 [node name="CloseKitchenButton" parent="Kitchen/Interactables" unique_id=1134922038 instance=ExtResource("22_close")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -6.06, 2.2, -4.6)
+transform = Transform3D(-6.556708e-08, 1.5, -6.556708e-08, 0, -6.556708e-08, -1.5, -1.5, -6.556708e-08, 2.8660283e-15, -6.1633897, 2.3822393, -4.0820537)
 
 [node name="TutorialSign" parent="Kitchen/Interactables" unique_id=1862615322 instance=ExtResource("26_guide")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -6.06, 2.2, -3.45)
+transform = Transform3D(1.574122e-08, -0.36011714, 0.9329071, -1, -4.371139e-08, 0, 4.0778666e-08, -0.9329071, -0.36011714, 1.6693063, 2.0039241, 2.505769)
 
 [node name="Items" type="Node3D" parent="." unique_id=1283369535]
 
@@ -154,24 +164,19 @@ difficulty = SubResource("Resource_difficulty")
 [node name="WaitingSlots" type="Node3D" parent="Queue/QueueLayout" unique_id=225426837]
 
 [node name="Wait1" type="Marker3D" parent="Queue/QueueLayout/WaitingSlots" unique_id=1973059393]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.086717, 0, -2.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.330077, 0, -2.25)
 
 [node name="Wait2" type="Marker3D" parent="Queue/QueueLayout/WaitingSlots" unique_id=970593799]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.7867165, 0, -2.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.030077, 0, -2.25)
 
 [node name="Wait3" type="Marker3D" parent="Queue/QueueLayout/WaitingSlots" unique_id=1730591704]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.4867163, 0, -2.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.730077, 0, -2.25)
 
 [node name="Wait4" type="Marker3D" parent="Queue/QueueLayout/WaitingSlots" unique_id=196687063]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.186717, 0, -2.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.4300776, 0, -2.25)
 
 [node name="TrayPickupPoint" type="Marker3D" parent="Queue/QueueLayout" unique_id=222640611]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.7651298, 0, -2.25)
-
-[node name="Label" type="Label3D" parent="Queue/QueueLayout/TrayPickupPoint" unique_id=1633372791]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.06, 0)
-pixel_size = 0.004
-text = "TAKE TRAY"
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.957245, 0, -2.25)
 
 [node name="ServiceSlots" type="Node3D" parent="Queue/QueueLayout" unique_id=1355375462]
 

@@ -13,6 +13,7 @@ class_name Knife
 var is_stuck: bool = false
 var current_bounces: int = 0
 var target_bounces: int = 1
+var push_grace_remaining: float = 0.0
 
 @onready var outline_mesh = $MeshInstance3D/OutlineMesh
 var player: Node3D = null
@@ -34,6 +35,7 @@ func _set_selected(object: Node) -> void:
 # --- Throw System ---
 
 func throw(throw_force: Vector3) -> void:
+	push_grace_remaining = 0.0
 	is_stuck = false
 	freeze = false
 	reparent(get_tree().current_scene)
@@ -50,7 +52,7 @@ func throw(throw_force: Vector3) -> void:
 	print("ปามีดแรง: ", force_magnitude, " -> ตั้งค่าให้เด้ง: ", target_bounces, " ครั้ง")
 
 func _on_body_entered(body: Node) -> void:
-	if is_stuck:
+	if is_stuck or push_grace_remaining > 0.0:
 		return
 	# A prisoner impact is handled by ThrowImpact, without pinning the knife in air.
 	if body.has_method("take_damage") or body.has_meta("prisoner_owner"): return
@@ -80,3 +82,15 @@ func pick_up_knife() -> void:
 	is_stuck = false
 	freeze = false
 	current_bounces = 0
+	push_grace_remaining = 0.0
+
+func release_for_push() -> void:
+	# A dropped/thrown knife can be frozen into the floor. Let footsteps free it
+	# without changing held knives or re-sticking on the same ground contact.
+	is_stuck = false
+	freeze = false
+	current_bounces = 0
+	push_grace_remaining = 0.25
+
+func _physics_process(delta: float) -> void:
+	push_grace_remaining = maxf(0.0, push_grace_remaining - delta)

@@ -61,9 +61,9 @@ func run() -> void:
 	ray.exclude = [player.get_rid()]
 	check(room.get_world_3d().direct_space_state.intersect_ray(ray).get("collider") == close_button, "Wall button can be aimed at from inside beside the doorway")
 	head.object_focused.emit(close_button)
-	check(close_button.outline.visible, "Wall button highlights on focus")
+	check(close_button.get_node("Lever/Lever/Lever_Base").material_overlay != null, "Wall button highlights on focus")
 	head.object_focused.emit(null)
-	check(not close_button.outline.visible, "Wall highlight clears on focus loss")
+	check(close_button.get_node("Lever/Lever/Lever_Base").material_overlay == null, "Wall highlight clears on focus loss")
 	close_button.interact_with(null, head)
 	check(game.state == game.State.IDLE and not paused, "Cannot close before opening")
 	var settings = Config.new()
@@ -170,3 +170,4 @@ func run() -> void:
 	check(not paused and game.state == game.State.IDLE, "Scene unload leaves no pause or stale run")
 	print("Day loop checks: %d passed, %d failed" % [checks - failures, failures])
 	quit(1 if failures else 0)
+

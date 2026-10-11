@@ -4,10 +4,10 @@
 [ext_resource type="Script" uid="uid://ccp5xohkh24pl" path="res://scripts/characters/player/head.gd" id="2_62i1b"]
 [ext_resource type="Script" uid="uid://cj0e3yujt610p" path="res://scripts/ui/charge_bar.gd" id="3_y30ri"]
 [ext_resource type="Shader" uid="uid://dd4jp4avd24cr" path="res://shaders/player_blur.gdshader" id="4_blur"]
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_3vrem"]
+[ext_resource type="PackedScene" uid="uid://cpgqgrtrk5e5e" path="res://assets/models/characters/Player_Duck.glb" id="5_duck"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vviyk"]
+height = 2.1899414
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_blur"]
 shader = ExtResource("4_blur")
@@ -20,10 +20,13 @@ stun_duration = 3.0
 hit_turn_min_degrees = 10.0
 hit_turn_max_degrees = 20.0
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1883541636]
-mesh = SubResource("CapsuleMesh_3vrem")
+[node name="Visuals" type="Node3D" parent="." unique_id=208875208]
+
+[node name="PlayerDuck" parent="Visuals" unique_id=873244301 instance=ExtResource("5_duck")]
+transform = Transform3D(-1.45, 0, -1.2676303e-07, 0, 1.45, 0, 1.2676303e-07, 0, -1.45, 0, -1, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=447218761]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0949707, 0)
 shape = SubResource("CapsuleShape3D_vviyk")
 
 [node name="Head" type="Node3D" parent="." unique_id=15131838]
@@ -32,6 +35,7 @@ script = ExtResource("2_62i1b")
 throw_damage_per_speed = 3.0
 
 [node name="Camera3D" type="Camera3D" parent="Head" unique_id=2027936177]
+cull_mask = 524287
 
 [node name="RayCast3D" type="RayCast3D" parent="Head/Camera3D" unique_id=790016441]
 target_position = Vector3(0, 0, -4)

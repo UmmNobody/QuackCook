@@ -5,6 +5,17 @@ signal unconscious_started
 signal recovered
 
 const RagdollScene = preload("res://scenes/characters/player/player_ragdoll.tscn")
+## Layer 20 is excluded only by this player's first-person camera.
+const PLAYER_MODEL_LAYER: int = 1 << 19
+@export_group("Model Animation")
+@export_range(0.0, 0.5) var animation_blend_time: float = 0.15
+@export_range(0.1, 3.0) var walk_animation_speed: float = 1.0
+@export_group("Dash")
+@export_range(5.0, 30.0) var dash_speed: float = 12.0
+@export_range(0.05, 1.0) var dash_duration: float = 0.18
+## Delay between dash starts. Holding Shift does not repeat the dash.
+@export_range(0.0, 5.0) var dash_cooldown: float = 0.8
+@export var dash_ground_only: bool = true
 @export_group("Health")
 @export_range(1.0, 1000.0) var max_health: float = 100.0
 @export_range(0.0, 10.0) var invulnerability_duration: float = 0.5
@@ -28,6 +39,9 @@ var stun_remaining: float = 0.0
 var controls_enabled: bool = true
 var unconscious: bool = false
 var knockback_velocity := Vector3.ZERO
+var dash_remaining: float = 0.0
+var dash_cooldown_remaining: float = 0.0
+var _dash_direction := Vector3.ZERO
 var ragdoll: Node3D
 var _hit_rng := RandomNumberGenerator.new()
 var _hit_turn := Vector3.ZERO
@@ -45,7 +59,8 @@ var _last_grounded_position := Vector3.ZERO
 @onready var blur: ColorRect = $HealthHUD/UnconsciousBlur
 @onready var stun_label: Label = $HealthHUD/StunLabel
 @onready var collider: CollisionShape3D = $CollisionShape3D
-@onready var body_mesh: MeshInstance3D = $MeshInstance3D
+@onready var body_mesh: Node3D = $Visuals
+@onready var body_animation: AnimationPlayer = $Visuals/PlayerDuck/AnimationPlayer
 @onready var head: Node3D = $Head
 @onready var camera: Camera3D = $Head/Camera3D
 
@@ -64,6 +79,7 @@ func _ready() -> void:
 	_standing_mask = collision_mask
 	_standing_mesh_visible = body_mesh.visible
 	_last_grounded_position = global_position
+	_setup_model()
 	reset_health()
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
@@ -101,6 +117,7 @@ func _start_hit_turn() -> void:
 
 func _begin_unconscious(direction: Vector3) -> void:
 	unconscious = true
+	dash_remaining = 0.0
 	stun_remaining = stun_duration
 	_fall_origin = global_position
 	head.cancel_interaction()
@@ -108,6 +125,7 @@ func _begin_unconscious(direction: Vector3) -> void:
 	collision_layer = 0
 	collision_mask = 0
 	body_mesh.hide()
+	body_animation.pause()
 	ragdoll = RagdollScene.instantiate()
 	add_child(ragdoll)
 	ragdoll.global_transform = Transform3D(Basis(Vector3.UP, head.global_rotation.y), global_position)
@@ -121,6 +139,8 @@ func _begin_unconscious(direction: Vector3) -> void:
 
 func reset_health() -> void:
 	if unconscious and not _recover(): return
+	dash_remaining = 0.0
+	dash_cooldown_remaining = 0.0
 	health = max_health
 	unconscious = false
 	stun_remaining = 0.0
@@ -153,6 +173,7 @@ func _recover() -> bool:
 	collision_layer = _standing_layer
 	collision_mask = _standing_mask
 	body_mesh.visible = _standing_mesh_visible
+	body_animation.play("Idle", animation_blend_time)
 	velocity = Vector3.ZERO
 	knockback_velocity = Vector3.ZERO
 	unconscious = false
@@ -219,10 +240,25 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not can_control(): return
 	if event is InputEventMouseMotion:
 		head.rotate_y(-event.relative.x * SENSITIVITY)
-		_look_pitch = clampf(_look_pitch - event.relative.y * SENSITIVITY, deg_to_rad(-60), deg_to_rad(60))
+		_look_pitch = clampf(_look_pitch - event.relative.y * SENSITIVITY, deg_to_rad(-80), deg_to_rad(60))
+
+func try_dash(direction: Vector3) -> bool:
+	if not can_control() or dash_remaining > 0.0 or dash_cooldown_remaining > 0.0:
+		return false
+	if dash_ground_only and not is_on_floor(): return false
+	direction.y = 0.0
+	if direction.is_zero_approx():
+		direction = -head.global_basis.z
+		direction.y = 0.0
+	_dash_direction = direction.normalized()
+	dash_remaining = dash_duration
+	dash_cooldown_remaining = dash_cooldown
+	return true
 
 func _physics_process(delta: float) -> void:
 	_update_health(delta)
+	dash_cooldown_remaining = maxf(0.0, dash_cooldown_remaining - delta)
+	if not can_control(): dash_remaining = 0.0
 	if unconscious:
 		if is_instance_valid(ragdoll):
 			global_position = ragdoll.center()
@@ -233,6 +269,7 @@ func _physics_process(delta: float) -> void:
 	if can_control() and Input.is_action_just_pressed("jump") and is_on_floor(): velocity.y = JUMP_VELOCITY
 	var input_dir := Input.get_vector("left", "right", "up", "down") if can_control() else Vector2.ZERO
 	var direction := (head.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	if Input.is_action_just_pressed("dash"): try_dash(direction)
 	if is_on_floor() or not can_control():
 		velocity.x = direction.x * SPEED
 		velocity.z = direction.z * SPEED
@@ -241,13 +278,47 @@ func _physics_process(delta: float) -> void:
 		velocity.z = lerpf(velocity.z, direction.z * SPEED, minf(delta * 4.0, 1.0))
 	# Separate external momentum so normal WASD deceleration cannot erase a hit.
 	var movement_velocity := velocity
+	if dash_remaining > 0.0:
+		# Keep dash separate from walking/air momentum; sweep using normal collisions.
+		var dash_weight := minf(dash_remaining / delta, 1.0)
+		velocity.x = lerpf(velocity.x, _dash_direction.x * dash_speed, dash_weight)
+		velocity.z = lerpf(velocity.z, _dash_direction.z * dash_speed, dash_weight)
+		dash_remaining = maxf(0.0, dash_remaining - delta)
 	velocity += knockback_velocity
 	move_and_slide()
+	_update_model(direction)
 	velocity.x = movement_velocity.x
 	velocity.z = movement_velocity.z
 	knockback_velocity = knockback_velocity.move_toward(Vector3.ZERO, hit_push_deceleration * delta)
 	t_bob += delta * direction.length() * SPEED * float(is_on_floor()) * float(can_control())
 	_update_view()
+
+func _setup_model() -> void:
+	for mesh in body_mesh.find_children("*", "MeshInstance3D", true, false):
+		# Feet share the animated skeleton, but remain visible in first person.
+		var is_foot := mesh.name == &"Player | Foot_L" or mesh.name == &"Player | Foot_R"
+		mesh.layers = 1 if is_foot else PLAYER_MODEL_LAYER
+	# Duplicate the imported library so other instances and the GLB stay untouched.
+	var library := body_animation.get_animation_library("").duplicate(true) as AnimationLibrary
+	body_animation.remove_animation_library("")
+	body_animation.add_animation_library("", library)
+	for animation_name in ["Idle", "Walk"]:
+		body_animation.get_animation(animation_name).loop_mode = Animation.LOOP_LINEAR
+	body_animation.play("Idle")
+	body_animation.advance(0.0)
+	body_mesh.rotation.y = head.rotation.y
+
+func _update_model(input_direction: Vector3) -> void:
+	body_mesh.rotation.y = head.rotation.y
+	var actual_velocity := get_real_velocity()
+	var horizontal_speed := Vector2(actual_velocity.x, actual_velocity.z).length()
+	# Walking into a wall, being knocked back, or jumping should not run the walk cycle.
+	var moving := can_control() and is_on_floor() and horizontal_speed > 0.1
+	moving = moving and (not input_direction.is_zero_approx() or dash_remaining > 0.0)
+	var animation_name: StringName = &"Walk" if moving else &"Idle"
+	body_animation.speed_scale = walk_animation_speed * clampf(horizontal_speed / SPEED, 0.5, 2.0) if moving else 1.0
+	if body_animation.current_animation != animation_name:
+		body_animation.play(animation_name, animation_blend_time)
 
 func _update_view() -> void:
 	var weight: float = 0.0
@@ -258,7 +329,7 @@ func _update_view() -> void:
 		weight = 1.0 - smoothstep(0.0, 1.0, t)
 	camera.position = _standing_camera.origin + _headbob(t_bob)
 	camera.rotation = Vector3(_look_pitch, 0.0, 0.0) + _hit_turn * weight
-	camera.rotation.x = clampf(camera.rotation.x, deg_to_rad(-75), deg_to_rad(75))
+	camera.rotation.x = clampf(camera.rotation.x, deg_to_rad(-85), deg_to_rad(75))
 
 func _headbob(time: float) -> Vector3:
 	return Vector3(cos(time * BOB_FREQ / 2) * BOB_AMP, sin(time * BOB_FREQ) * BOB_AMP, 0.0)

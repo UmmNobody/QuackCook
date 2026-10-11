@@ -3,6 +3,7 @@ class_name Stove
 
 @onready var outline_mesh = $MeshInstance3D/OutlineMesh
 @onready var stove_snap_point: Marker3D = $PanSnapPoint
+@onready var fire: CPUParticles3D = $PanSnapPoint/StoveFire
 
 # --- Node UI 3D ---
 @onready var cooking_ui_3d: Sprite3D = $CookingUI3D
@@ -67,9 +68,16 @@ func _setup_cooking_ui() -> void:
 		cooking_ui_3d.visible = true
 	else:
 		_hide_cooking_ui()
+	_update_fire()
 
 func _hide_cooking_ui() -> void:
 	cooking_ui_3d.visible = false
+	fire.set_active(false)
+
+func _update_fire() -> void:
+	var cooking := is_instance_valid(current_cookware) and current_cookware.is_on_stove
+	cooking = cooking and is_instance_valid(current_cookware.current_food)
+	fire.set_active(cooking and current_cookware.current_food.can_be_cooked())
 
 func _physics_process(delta: float) -> void:
 	if current_cookware and current_cookware.current_food:
@@ -81,6 +89,7 @@ func _physics_process(delta: float) -> void:
 			
 			if not cooking_ui_3d.visible:
 				_setup_cooking_ui()
+	_update_fire()
 
 func _on_snap_area_body_entered(body: Node3D) -> void:
 	if body is Cookware:

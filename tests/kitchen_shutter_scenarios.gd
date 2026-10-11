@@ -48,7 +48,16 @@ func run() -> void:
 	spawner.spawning_paused = true
 	var button = room.get_node("Kitchen/Interactables/CloseKitchenButton")
 	var player = room.get_node("Actors/Player")
+	var hinge: Node3D = button.get_node("Lever/Lever/Lever_Hinge_CTRL")
+	check(not button.has_node("Title") and not button.has_node("Hint"), "Lever has no Title or Hint nodes")
+	check(not button.motion.target_open and hinge.quaternion.is_equal_approx(Quaternion.IDENTITY), "Lever starts raised while kitchen is closed")
 	await frames(30)
+	var ray := PhysicsRayQueryParameters3D.create(button.to_global(Vector3(0,0.18,1)), button.get_node("CollisionShape3D").global_position, 3)
+	ray.exclude = [player.get_rid()]
+	check(room.get_world_3d().direct_space_state.intersect_ray(ray).get("collider") == button, "New lever is aimable through its interaction collider")
+	player.head.object_focused.emit(button)
+	check(button.get_node("Lever/Lever/Lever_Base").material_overlay != null and button.get_node("Lever/Lever/Lever_Hinge_CTRL/Lever_Handle").material_overlay != null, "Focusing lever highlights base and moving handle")
+	player.head.object_focused.emit(null)
 	check(panel.position.is_equal_approx(closed_pose), "Shutter stays closed throughout preparation")
 	button.interact_with(null, player.head)
 	check(game.state == game.State.SERVING and shutter.target_open, "Manual open button starts shutter opening")
@@ -56,18 +65,22 @@ func run() -> void:
 	check(panel.position.y > closed_pose.y + 0.1 and shutter.moving, "Imported panel visibly rises during opening")
 	var mid_pose: Vector3 = panel.position
 	var mid_time: float = shutter.animation_time
+	var lever_mid_pose := hinge.quaternion
 	game.toggle_pause_menu()
 	await frames(40)
 	check(panel.position.is_equal_approx(mid_pose) and shutter.animation_time == mid_time, "Esc pause freezes shutter during service")
+	check(hinge.quaternion.is_equal_approx(lever_mid_pose), "Esc pause freezes lever animation too")
 	game.toggle_pause_menu()
 	await frames(170)
 	var opened_pose: Vector3 = panel.position
 	check(not shutter.moving and is_equal_approx(shutter.animation_time, shutter.opened_time), "Opening stops at middle of combined clip")
 	check(opened_pose.y > closed_pose.y + 1.8, "Panel reaches imported fully open pose")
+	check(button.motion.fully_open() and hinge.rotation.x < -1.0, "Manual opening finishes with lever pulled down")
 	await frames(190)
 	check(panel.position.is_equal_approx(opened_pose), "Shutter stays open instead of automatically playing closing half")
 	button.interact_with(null, player.head)
 	check(game.state == game.State.SERVING and shutter.target_open, "Rejected kitchen close leaves shutter open")
+	check(button.motion.fully_open(), "Rejected close leaves lever down")
 	await resolve_wave(spawner)
 	check(game.can_close_kitchen(), "Resolved wave allows closing")
 	button.interact_with(null, player.head)
@@ -78,6 +91,7 @@ func run() -> void:
 	check(player.global_transform.is_equal_approx(player_pose), "Player remains frozen while shutter closes")
 	await frames(120)
 	check(not shutter.moving and panel.position.is_equal_approx(closed_pose), "Shutter finishes fully closed behind report")
+	check(not button.motion.target_open and not button.motion.player.is_playing() and hinge.quaternion.is_equal_approx(Quaternion.IDENTITY), "Lever finishes raising behind paused summary")
 	check(game.next_day(), "Advance to next day in same scene")
 	spawner.spawning_paused = true
 	await frames(10)
@@ -85,6 +99,7 @@ func run() -> void:
 	game.preparation_remaining = 0.05
 	await frames(180)
 	check(game.state == game.State.SERVING and shutter.target_open and panel.position.is_equal_approx(opened_pose), "Countdown expiry opens shutter automatically")
+	check(button.motion.fully_open() and hinge.rotation.x < -1.0, "Countdown expiry also pulls lever down")
 	await resolve_wave(spawner)
 	button.interact_with(null, player.head)
 	await frames(48)
@@ -94,6 +109,7 @@ func run() -> void:
 	check(panel.position.distance_to(closing_pose) < 0.04 and shutter.target_open, "Early reopen reverses smoothly without snapping")
 	await frames(180)
 	check(panel.position.is_equal_approx(opened_pose) and not shutter.moving, "Reversal completes at open pose")
+	check(button.motion.fully_open() and hinge.rotation.x < -1.0, "Lever completes reopening when next day interrupts closing")
 	room.queue_free()
 	await frames(4)
 	load_room()

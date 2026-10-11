@@ -1,60 +1,32 @@
 [gd_scene format=3 uid="uid://c15g86rqaqnby"]
 
 [ext_resource type="Script" uid="uid://dfo86yv01d650" path="res://scripts/props/interactive/close_kitchen_button.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://dsup82y3rvbwg" path="res://assets/models/props/Lever.glb" id="2_et1ab"]
+[ext_resource type="Script" uid="uid://dtjhqouhnupam" path="res://scripts/components/hinged_animation.gd" id="motion"]
 
-[sub_resource type="StandardMaterial3D" id="PlateMaterial"]
-albedo_color = Color(0.12, 0.14, 0.16, 1)
-roughness = 0.85
-
-[sub_resource type="BoxMesh" id="PlateMesh"]
-size = Vector3(0.64, 0.78, 0.12)
-
-[sub_resource type="BoxShape3D" id="PlateShape"]
-size = Vector3(0.64, 0.78, 0.16)
-
-[sub_resource type="StandardMaterial3D" id="OutlineMaterial"]
+[sub_resource type="StandardMaterial3D" id="Highlight"]
 cull_mode = 1
 shading_mode = 0
-albedo_color = Color(1, 0.86, 0.42, 1)
+albedo_color = Color(0, 0, 0, 1)
 grow = true
-grow_amount = 0.018
+grow_amount = 0.01
 
-[sub_resource type="StandardMaterial3D" id="ButtonMaterial"]
-albedo_color = Color(0.53, 0.74, 0.64, 1)
-
-[sub_resource type="BoxMesh" id="ButtonMesh"]
-size = Vector3(0.38, 0.22, 0.05)
+[sub_resource type="BoxShape3D" id="InteractionShape"]
+size = Vector3(0.18932617, 0.09294322, 0.24914305)
 
 [node name="CloseKitchenButton" type="StaticBody3D" unique_id=1461992384 groups=["Focusable", "Interactable"]]
+process_mode = 3
 script = ExtResource("1")
+highlight_material = SubResource("Highlight")
 
-[node name="Plate" type="MeshInstance3D" parent="." unique_id=675190121]
-material_override = SubResource("PlateMaterial")
-mesh = SubResource("PlateMesh")
+[node name="Lever" parent="." unique_id=533190391 instance=ExtResource("2_et1ab")]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2041430593]
-shape = SubResource("PlateShape")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=404912899]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00042480975, 0.046399012, -0.00019269437)
+shape = SubResource("InteractionShape")
 
-[node name="Outline" type="MeshInstance3D" parent="." unique_id=2125026214]
-visible = false
-material_override = SubResource("OutlineMaterial")
-mesh = SubResource("PlateMesh")
-
-[node name="Button" type="MeshInstance3D" parent="." unique_id=720064303]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.13, 0.08)
-material_override = SubResource("ButtonMaterial")
-mesh = SubResource("ButtonMesh")
-
-[node name="Title" type="Label3D" parent="." unique_id=210330695]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.16, 0.07)
-pixel_size = 0.002
-text = "CLOSE
-KITCHEN"
-font_size = 38
-outline_size = 0
-
-[node name="Hint" type="Label3D" parent="." unique_id=299713453]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.63, 0.1)
-pixel_size = 0.003
-billboard = 1
-font_size = 26
+[node name="Motion" type="Node" parent="." unique_id=740685233]
+script = ExtResource("motion")
+animation_player_path = NodePath("../Lever/AnimationPlayer")
+open_animation = &"Lever_Cartoon_Down"
+close_animation = &"Lever_Cartoon_Up"
