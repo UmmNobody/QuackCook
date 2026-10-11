@@ -4,11 +4,21 @@
 
 [ext_resource type="Material" path="res://resources/materials/kitchen_floor_tiles.tres" id="floor_tiles_saved"]
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_roof_only"]
+size = Vector3(16.92, 0.256, 19.08)
+
 [node name="QuackCookKitchen" type="Node3D" unique_id=607881379]
 
 [node name="KitchenModel" type="Node3D" parent="." unique_id=1939389288 instance=ExtResource("1_kitchen")]
 
 [node name="Part_025" parent="KitchenModel"]
 material_override = ExtResource("floor_tiles_saved")
+
+[node name="RoofCollision" type="StaticBody3D" parent="KitchenModel/Roof_Removable_Slab"]
+collision_layer = 1
+collision_mask = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="KitchenModel/Roof_Removable_Slab/RoofCollision"]
+shape = SubResource("BoxShape3D_roof_only")
 
 [editable path="KitchenModel"]
