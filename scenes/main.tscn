@@ -27,13 +27,17 @@
 [ext_resource type="PackedScene" uid="uid://cnbul82g2v04k" path="res://scenes/props/food_sources/cabbage_foodbox.tscn" id="24_y6deb"]
 [ext_resource type="PackedScene" uid="uid://b2aoeosuhu4fq" path="res://scenes/props/food_sources/chicken_foodbox.tscn" id="25_og1vs"]
 [ext_resource type="PackedScene" path="res://scenes/ui/tutorial_popup.tscn" id="25_tutorial"]
-[ext_resource type="PackedScene" uid="uid://2435o11bq1we" path="res://scenes/props/interactive/tutorial_sign.tscn" id="26_guide"]
+[ext_resource type="PackedScene" path="res://scenes/props/interactive/tutorial_sign.tscn" id="26_guide"]
 [ext_resource type="PackedScene" uid="uid://b38e7arjc60ia" path="res://scenes/props/stations/fridge.tscn" id="27_fridge"]
 [ext_resource type="PackedScene" path="res://scenes/props/interactive/prisoner_door.tscn" id="28_door"]
 [ext_resource type="Script" uid="uid://cofd22df30w8m" path="res://scripts/visuals/kitchen_visual_style.gd" id="99_visual_style"]
 [ext_resource type="Sky" uid="uid://db6aykvxipbv4" path="res://resources/visuals/kitchen_daylight_sky.tres" id="100_daylight_sky"]
 [ext_resource type="Script" uid="uid://uetxswv6mjk4" path="res://scripts/props/interactive/kitchen_shutter.gd" id="101_shutter"]
+[ext_resource type="PackedScene" path="res://scenes/world/quackcook_exterior_hall.tscn" id="102_exterior_hall"]
 [ext_resource type="Material" path="res://resources/materials/kitchen_floor_tiles.tres" id="floor_tiles_saved"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_roof_only"]
+size = Vector3(16.92, 0.256, 19.08)
 
 [sub_resource type="Environment" id="Environment_wp4xf"]
 background_mode = 2
@@ -45,17 +49,19 @@ script = ExtResource("18_config")
 [sub_resource type="Resource" id="Resource_difficulty"]
 script = ExtResource("21_progression")
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_roof_only"]
-size = Vector3(16.92, 0.256, 19.08)
-
 [node name="Main" type="Node3D" unique_id=94328322]
 
 [node name="Environment" type="Node3D" parent="." unique_id=1545067222]
 
 [node name="QuackCook_Kitchen" parent="Environment" unique_id=2070259630 instance=ExtResource("15_jkv2x")]
 
-[node name="Part_025" parent="Environment/QuackCook_Kitchen" index="22" unique_id=1653422431]
+[node name="Part_025" parent="Environment/QuackCook_Kitchen" index="22" unique_id=1492324131]
 material_override = ExtResource("floor_tiles_saved")
+
+[node name="RoofCollision" type="StaticBody3D" parent="Environment/QuackCook_Kitchen/Roof_Removable_Slab" parent_id_path=PackedInt32Array(2070259630, 836019991) index="0" unique_id=1635935972]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/QuackCook_Kitchen/Roof_Removable_Slab/RoofCollision" unique_id=131838335]
+shape = SubResource("BoxShape3D_roof_only")
 
 [node name="KitchenShutter" type="Node" parent="Environment" unique_id=1857322287]
 process_mode = 3
@@ -86,6 +92,8 @@ transform = Transform3D(0.023072861, 0, 0.9997338, 0, 1, 0, -0.9997338, 0, 0.023
 
 [node name="ServingTray3" parent="Environment" unique_id=1042862267 instance=ExtResource("8_dgi5k")]
 transform = Transform3D(-0.041702878, 0, 0.9991301, 0, 1, 0, -0.9991301, 0, -0.041702878, -5.703534, 1.9640274, 5.2812085)
+
+[node name="ExteriorHall" parent="Environment" unique_id=1207768819 instance=ExtResource("102_exterior_hall")]
 
 [node name="Actors" type="Node3D" parent="." unique_id=695234059]
 
@@ -249,12 +257,5 @@ text = "+"
 
 [node name="KitchenVisualStyle" type="Node3D" parent="." unique_id=55129419]
 script = ExtResource("99_visual_style")
-
-[node name="RoofCollision" type="StaticBody3D" parent="Environment/QuackCook_Kitchen/Roof_Removable_Slab"]
-collision_layer = 1
-collision_mask = 1
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/QuackCook_Kitchen/Roof_Removable_Slab/RoofCollision"]
-shape = SubResource("BoxShape3D_roof_only")
 
 [editable path="Environment/QuackCook_Kitchen"]
