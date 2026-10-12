@@ -2,7 +2,7 @@
 
 The guide automatically opens on the first registered kitchen run in each application session (including running main.tscn directly). `GameManager.tutorial_seen` is memory-only, like the day checkpoint. Returning to the menu, continuing, retrying or starting a new game in the same process does not show it automatically again. Restarting the application resets this flag.
 
-Reading pauses preparation, cooking, spawning, AI and physics. Close or Esc resumes the world. Esc closes the guide without also opening settings. Settings and summary cannot open the guide behind another modal. An unconscious player cannot interact with the sign. Opening cancels throw charging while retaining any held item.
+Reading pauses preparation, cooking, spawning, AI and physics. Close or the `quit` shortcut (currently Tab) resumes the world. The shortcut closes the guide without also opening settings; the Close label reads its key from InputMap. Settings and summary cannot open the guide behind another modal. An unconscious player cannot interact with the sign. Opening cancels throw charging while retaining any held item.
 
 ## Edit pages without changing code
 
@@ -14,15 +14,15 @@ Open `scenes/ui/tutorial_popup.tscn` and find `Screen/Panel/Margin/Content/Pages
 4. Each page may contain additional labels or custom UI. Preserve the optional `Image` and `Placeholder` names if using automatic artwork/placeholder handling.
 5. Screen starts hidden. Enable Visible temporarily to preview it in the editor, and show the Page being edited. Runtime displays only the selected page regardless of saved visibility.
 
-Three blank numbered pages are supplied. Previous/Next stop at the ends. Close remains available on every page; deleting every page shows an empty-state message and still allows closing. Every reopening begins at page one.
+Five illustrated pages use `assets/textures/ui/tutorial/tutorial1.png` through `tutorial5.png`, in filename order: how to play, fried chicken, mixed vegetables, rice, and controls. The dedicated `resources/themes/tutorial_theme.tres` provides the black, chalk-white and mustard palette. Other menus keep their existing themes. Previous/Next stop at the ends. Close remains available on every page; deleting every page shows an empty-state message and still allows closing. Every reopening begins at page one.
 
 ## World object
 
-`Main/Kitchen/Interactables/TutorialSign` instances `scenes/props/interactive/tutorial_sign.tscn`. It sits on the inner wall beside the open/close kitchen button. Move the instance in the editor to change its placement. It is a StaticBody3D with collision, Focusable/Interactable groups and outline feedback; it cannot be picked up or moved by forces. Aim and click to open the guide, with or without a held item.
+`Main/Kitchen/Interactables/TutorialSign` instances `scenes/props/interactive/tutorial_sign.tscn`. It uses the Book model at the position authored in main.tscn. Move the instance in the editor to change its placement. It is a StaticBody3D with collision, Focusable/Interactable groups and outline feedback; it cannot be picked up or moved by forces. Aim and click to open the guide, with or without a held item.
 
 ## Responsibilities
 
-- `GameManager`: session flag, opening guards, pause/mouse ownership, scene-unload cleanup and Esc behavior.
+- `GameManager`: session flag, opening guards, pause/mouse ownership, scene-unload cleanup and close-shortcut behavior.
 - `tutorial_popup.gd`: page enumeration, numbering, artwork placeholders and navigation.
 - `tutorial_sign.gd`: focus and world interaction.
 - Both the popup and sign use saved scene nodes, not runtime-built UI.

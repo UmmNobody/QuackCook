@@ -35,6 +35,10 @@
 [ext_resource type="Script" uid="uid://uetxswv6mjk4" path="res://scripts/props/interactive/kitchen_shutter.gd" id="101_shutter"]
 [ext_resource type="PackedScene" path="res://scenes/world/quackcook_exterior_hall.tscn" id="102_exterior_hall"]
 [ext_resource type="Material" path="res://resources/materials/kitchen_floor_tiles.tres" id="floor_tiles_saved"]
+[ext_resource type="Script" uid="uid://d31rba4jpah0y" path="res://scripts/items/item_respawner.gd" id="item_respawner"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_roof_only"]
+size = Vector3(16.92, 0.256, 19.08)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_roof_only"]
 size = Vector3(16.92, 0.256, 19.08)
@@ -51,6 +55,12 @@ script = ExtResource("21_progression")
 
 [node name="Main" type="Node3D" unique_id=94328322]
 
+[node name="ItemRespawner" type="Node3D" parent="." unique_id=1557336074]
+script = ExtResource("item_respawner")
+
+[node name="RespawnPoint" type="Marker3D" parent="ItemRespawner" unique_id=1898464896]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 2.5, -1)
+
 [node name="Environment" type="Node3D" parent="." unique_id=1545067222]
 
 [node name="QuackCook_Kitchen" parent="Environment" unique_id=2070259630 instance=ExtResource("15_jkv2x")]
@@ -58,9 +68,15 @@ script = ExtResource("21_progression")
 [node name="Part_025" parent="Environment/QuackCook_Kitchen" index="22" unique_id=1492324131]
 material_override = ExtResource("floor_tiles_saved")
 
+<<<<<<< Updated upstream
 [node name="RoofCollision" type="StaticBody3D" parent="Environment/QuackCook_Kitchen/Roof_Removable_Slab" parent_id_path=PackedInt32Array(2070259630, 836019991) index="0" unique_id=1635935972]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/QuackCook_Kitchen/Roof_Removable_Slab/RoofCollision" unique_id=131838335]
+=======
+[node name="RoofCollision" type="StaticBody3D" parent="Environment/QuackCook_Kitchen/Roof_Removable_Slab" parent_id_path=PackedInt32Array(2070259630, 124971692) index="0" unique_id=207534161]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/QuackCook_Kitchen/Roof_Removable_Slab/RoofCollision" unique_id=1510140098]
+>>>>>>> Stashed changes
 shape = SubResource("BoxShape3D_roof_only")
 
 [node name="KitchenShutter" type="Node" parent="Environment" unique_id=1857322287]

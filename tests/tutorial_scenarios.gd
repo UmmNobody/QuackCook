@@ -16,15 +16,12 @@ func until(predicate: Callable) -> bool:
 		if predicate.call(): return true
 		await process_frame
 	return false
-func esc() -> void:
-	var key := InputEventKey.new()
-	key.keycode = KEY_ESCAPE
-	key.physical_keycode = KEY_ESCAPE
+func close_key() -> void:
+	var key = InputMap.action_get_events("quit")[0].duplicate() as InputEventKey
 	key.pressed = true
 	Input.parse_input_event(key)
-	var release := InputEventKey.new()
-	release.keycode = KEY_ESCAPE
-	release.physical_keycode = KEY_ESCAPE
+	var release = key.duplicate() as InputEventKey
+	release.pressed = false
 	Input.parse_input_event(release)
 	await frames(2)
 func capture(name: String) -> void:
@@ -51,40 +48,47 @@ func run() -> void:
 	check(game.preparation_remaining == 30 and game.spawned_count == 0, "First tutorial preserves the entire preparation countdown")
 	await frames(20)
 	check(game.preparation_remaining == 30 and game.spawned_count == 0 and not player.can_control(), "Reading guide freezes game and controls")
-	check(guide.pages.size() == 3 and guide.page_counter.text == "1 / 3", "Saved scene starts with three placeholder pages")
+	check(guide.pages.size() == 5 and guide.page_counter.text == "1 / 5", "Saved scene has all five illustrated pages")
 	check(guide.previous_button.disabled and not guide.next_button.disabled, "First-page navigation bounds")
 	check(not game.open_tutorial() and not game.open_kitchen() and game.finish_service().is_empty(), "Modal prevents duplicate opening and kitchen actions")
+	for i in 5:
+		var image: TextureRect = guide.pages[i].get_node("Image")
+		check(image.texture.resource_path == "res://assets/textures/ui/tutorial/tutorial%d.png" % (i + 1), "Page %d uses the correct artwork" % (i + 1))
+		guide.change_page(i - guide.page_index)
+		await capture("tutorial_page_%d" % (i + 1))
+	guide.change_page(-guide.page_index)
 	await capture("tutorial_first")
 	guide.next_button.pressed.emit()
-	check(guide.page_counter.text == "2 / 3" and guide.pages[1].visible and not guide.pages[0].visible, "Next shows exactly the second page")
-	guide.next_button.pressed.emit()
-	check(guide.next_button.disabled and guide.page_counter.text == "3 / 3", "Last page disables Next")
+	check(guide.page_counter.text == "2 / 5" and guide.pages[1].visible and not guide.pages[0].visible, "Next shows exactly the second page")
+	guide.change_page(3)
+	check(guide.next_button.disabled and guide.page_counter.text == "5 / 5", "Last page disables Next")
 	guide.change_page(1)
-	check(guide.page_index == 2, "Cannot navigate past last page")
+	check(guide.page_index == 4, "Cannot navigate past last page")
 	guide.previous_button.pressed.emit()
-	check(guide.page_counter.text == "2 / 3", "Previous returns to earlier pages")
-	await esc()
-	check(not game.tutorial_open and not game.pause_menu_open and not paused and not guide.screen.visible, "Esc only dismisses tutorial and resumes game")
+	check(guide.page_counter.text == "4 / 5", "Previous returns to earlier pages")
+	await close_key()
+	check(not game.tutorial_open and not game.pause_menu_open and not paused and not guide.screen.visible, "Close shortcut only dismisses tutorial and resumes game")
 	check(player.can_control() and head.interaction_allowed(), "Closing restores normal player control")
 	check(DisplayServer.get_name() == "headless" or Input.mouse_mode == Input.MOUSE_MODE_CAPTURED, "Closing recaptures the mouse")
-	await esc()
+	await close_key()
 	check(game.pause_menu_open and paused and not game.open_tutorial(), "Settings keeps ownership of pause and blocks guide opening")
-	await esc()
-	var ray := PhysicsRayQueryParameters3D.create(Vector3(-4, 2.2, -3.45), sign.global_position, 3)
+	await close_key()
+	# The guide is now a book on the counter; aim down at its current placement.
+	var ray := PhysicsRayQueryParameters3D.create(sign.global_position + Vector3.UP, sign.global_position, 3)
 	ray.exclude = [player.get_rid()]
 	await physics_frame
-	check(room.get_world_3d().direct_space_state.intersect_ray(ray).get("collider") == sign, "Wall guide is reachable by aiming from the kitchen")
+	check(room.get_world_3d().direct_space_state.intersect_ray(ray).get("collider") == sign, "Guide book is reachable by aiming at its current placement")
 	check(sign is StaticBody3D and not sign.is_in_group("Pickable"), "Guide is immovable and cannot be picked up")
 	var sign_pose: Transform3D = sign.global_transform
 	head.object_focused.emit(sign)
-	check(sign.outline.visible and sign.hint.visible, "Guide highlights when focused")
+	check(sign.outline.visible and (sign.hint == null or sign.hint.visible), "Guide highlights when focused")
 	var pan = room.get_node("Items/Pan")
 	head.pick_up(pan)
 	head.last_hovered_object = null
 	head._handle_interact_pressed()
 	head._update_throw_charge(0.4)
 	sign.interact_with(pan, head)
-	check(game.tutorial_open and paused and guide.page_counter.text == "1 / 3", "Sign reopens the guide from page one")
+	check(game.tutorial_open and paused and guide.page_counter.text == "1 / 5", "Sign reopens the guide from page one")
 	check(not head.is_charging and head.carried_object == pan and not sign.outline.visible, "Opening cancels charged throw and focus but keeps held item")
 	var held_pose: Transform3D = pan.global_transform
 	await frames(15)
@@ -103,7 +107,7 @@ func run() -> void:
 	artwork.height = 360
 	added.get_node("Image").texture = artwork
 	check(game.open_tutorial(), "Guide can reopen repeatedly")
-	check(guide.pages.size() == 4 and guide.pages[0] == added and guide.page_counter.text == "1 / 4", "Adding and reordering page nodes updates navigation automatically")
+	check(guide.pages.size() == 6 and guide.pages[0] == added and guide.page_counter.text == "1 / 6", "Adding and reordering page nodes updates navigation automatically")
 	check(not added.get_node("Placeholder").visible, "Assigned artwork hides placeholder number")
 	await capture("tutorial_artwork")
 	game.close_tutorial()

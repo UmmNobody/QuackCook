@@ -31,6 +31,8 @@ func resolve_wave(spawner: Node) -> void:
 	await frames(3)
 func run() -> void:
 	game = root.get_node("GameManager")
+	# Delay timing is covered separately by summary_delay_scenarios.gd.
+	game.summary_delay_seconds = 0.0
 	game.tutorial_seen = true
 	load_room()
 	await frames(3)

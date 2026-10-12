@@ -1,7 +1,7 @@
 extends CanvasLayer
 
-@export var success_color: Color = Color("a1d6b6")
-@export var failure_color: Color = Color("e7a09a")
+@export var success_color: Color = Color("f0f0f0")
+@export var failure_color: Color = Color("ff5050")
 @onready var screen: Control = %Summary
 @onready var day_label: Label = %Day
 @onready var title_label: Label = %Title
@@ -24,7 +24,7 @@ func _show_summary(summary: Dictionary) -> void:
 	target_label.text = "%d / %d" % [summary.served, summary.required]
 	result_label.text = "Target reached" if summary.target_met else "Target not reached"
 	result_label.add_theme_color_override("font_color", success_color if summary.target_met else failure_color)
-	continue_button.text = "Start day %d  →" % (summary.day + 1) if summary.target_met else "Continue to Game Over"
+	continue_button.text = "Start day %d" % (summary.day + 1) if summary.target_met else "Continue to Game Over"
 	screen.show()
 	continue_button.grab_focus()
 

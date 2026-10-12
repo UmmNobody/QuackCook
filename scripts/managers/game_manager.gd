@@ -16,6 +16,8 @@ const WaveConfig = preload("res://scripts/resources/service_wave_config.gd")
 const Progression = preload("res://scripts/resources/day_progression.gd")
 
 @export_file("*.tscn") var game_over_scene_path: String = "res://scenes/ui/game_over.tscn"
+@export_range(0.0, 10.0) var summary_delay_seconds: float = 3.0
+var summary_pending: bool = false
 var current_day: int = 0
 var last_summary: Dictionary = {}
 var run_active: bool = false
@@ -56,6 +58,7 @@ func register_kitchen(owner_node: Node3D, wave_spawner: Node) -> bool:
 func unregister_kitchen(owner_node: Node) -> void:
 	if owner_node != layout: return
 	_generation += 1
+	summary_pending = false
 	if is_instance_valid(spawner):
 		spawner.cancel_wave()
 		if spawner.prisoner_spawned.is_connected(_on_prisoner_spawned): spawner.prisoner_spawned.disconnect(_on_prisoner_spawned)
@@ -215,13 +218,23 @@ func finish_service() -> Dictionary:
 		if player != null: player.get_node("Head").cancel_interaction()
 		_owns_pause = true
 		get_tree().paused = true
-		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-		summary_opened.emit(last_summary.duplicate(true))
+		summary_pending = true
+		_open_summary_after_delay(_generation)
 	service_finished.emit(summary)
 	session_changed.emit()
 	return summary
 
+func _open_summary_after_delay(generation: int) -> void:
+	# The world is paused, but the shutter/lever can finish their closing animation.
+	if summary_delay_seconds > 0.0:
+		await get_tree().create_timer(summary_delay_seconds, true).timeout
+	if generation != _generation or not summary_pending or state != State.SUMMARY or not is_instance_valid(layout) or _transition_pending: return
+	summary_pending = false
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	summary_opened.emit(last_summary.duplicate(true))
+
 func next_day() -> bool:
+	if summary_pending: return false
 	if state != State.SUMMARY or not run_active or not last_summary.get("target_met", false) or _transition_pending or pause_menu_open: return false
 	var next_settings: Resource = _progression.settings_for_day(_first_day, current_day + 1)
 	state = State.IDLE
@@ -237,6 +250,7 @@ func next_day() -> bool:
 	return true
 
 func confirm_summary() -> void:
+	if summary_pending: return
 	if state != State.SUMMARY or _transition_pending or pause_menu_open: return
 	if last_summary.get("target_met", false):
 		next_day()
@@ -292,6 +306,7 @@ func _load_kitchen(day: int) -> void:
 	# Keep the transition guarded until kitchen_queue consumes the pending day.
 
 func toggle_pause_menu() -> void:
+	if summary_pending: return
 	# Esc dismisses the topmost modal; it must not also open settings.
 	if tutorial_open:
 		close_tutorial()

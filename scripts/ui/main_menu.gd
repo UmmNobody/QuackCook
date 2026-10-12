@@ -1,5 +1,4 @@
 extends Control
-## Layout and styling live in main_menu.tscn and menu_theme.tres.
 @onready var home: Control = %Home
 @onready var confirmation: Control = %Confirmation
 @onready var start_button: Button = %Start
@@ -10,19 +9,20 @@ extends Control
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	continue_button.disabled = not GameManager.has_checkpoint()
+	continue_button._animate()
+	continue_button.tooltip_text = "Continue day %d" % GameManager.checkpoint_day if GameManager.has_checkpoint() else "No saved day in this session"
 	start_button.pressed.connect(_start_pressed)
 	continue_button.pressed.connect(_launch.bind(true))
 	new_button.pressed.connect(_launch.bind(false))
 	cancel_button.pressed.connect(_cancel)
-	start_button.grab_focus()
 
 func _start_pressed() -> void:
 	if GameManager.has_checkpoint():
 		home.hide()
-		prompt.text = "Continue day %d?" % GameManager.checkpoint_day
-		continue_button.text = "Continue day %d" % GameManager.checkpoint_day
+		prompt.text = "Start again from day 1?"
 		confirmation.show()
-		continue_button.grab_focus()
+		cancel_button.grab_focus()
 	else:
 		_launch(false)
 

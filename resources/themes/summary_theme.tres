@@ -1,0 +1,47 @@
+[gd_resource type="Theme" format=3 uid="uid://bttyh5y327fpf"]
+
+[sub_resource type="StyleBoxFlat" id="Focus"]
+draw_center = false
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.65)
+
+[sub_resource type="StyleBoxFlat" id="Hover"]
+content_margin_left = 12.0
+content_margin_top = 8.0
+content_margin_right = 12.0
+content_margin_bottom = 8.0
+bg_color = Color(1, 1, 1, 0.07)
+
+[sub_resource type="StyleBoxEmpty" id="Clear"]
+content_margin_left = 12.0
+content_margin_top = 8.0
+content_margin_right = 12.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxLine" id="Divider"]
+color = Color(1, 1, 1, 0.25)
+
+[sub_resource type="StyleBoxFlat" id="Board"]
+bg_color = Color(0, 0, 0, 0.94)
+
+[resource]
+default_font_size = 18
+Button/colors/font_color = Color(0.9, 0.9, 0.9, 1)
+Button/colors/font_focus_color = Color(1, 1, 1, 1)
+Button/colors/font_hover_color = Color(1, 1, 1, 1)
+Button/colors/font_pressed_color = Color(0.6, 0.6, 0.6, 1)
+Button/colors/icon_focus_color = Color(1, 1, 1, 1)
+Button/colors/icon_hover_color = Color(1, 1, 1, 1)
+Button/colors/icon_normal_color = Color(0.8, 0.8, 0.8, 1)
+Button/colors/icon_pressed_color = Color(0.6, 0.6, 0.6, 1)
+Button/constants/h_separation = 20
+Button/constants/icon_max_width = 48
+Button/styles/focus = SubResource("Focus")
+Button/styles/hover = SubResource("Hover")
+Button/styles/normal = SubResource("Clear")
+Button/styles/pressed = SubResource("Hover")
+HBoxContainer/constants/separation = 24
+HSeparator/styles/separator = SubResource("Divider")
+Label/colors/font_color = Color(0.94, 0.94, 0.94, 1)
+PanelContainer/styles/panel = SubResource("Board")
+VBoxContainer/constants/separation = 18

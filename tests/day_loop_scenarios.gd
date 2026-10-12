@@ -30,6 +30,8 @@ func capture(filename: String) -> void:
 
 func run() -> void:
 	game = root.get_node("GameManager")
+	# Delay timing is covered separately by summary_delay_scenarios.gd.
+	game.summary_delay_seconds = 0.0
 	game.tutorial_seen = true # First-time onboarding is covered by tutorial_scenarios.
 	queue = root.get_node("QueueManager")
 	var progression = Progression.new()

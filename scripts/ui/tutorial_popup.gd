@@ -5,8 +5,8 @@ extends CanvasLayer
 @onready var screen: Control = %Screen
 @onready var pages_root: Control = %Pages
 @onready var empty_state: Label = %EmptyState
-@onready var previous_button: Button = %Previous
-@onready var next_button: Button = %Next
+@onready var previous_button: TextureButton = %Previous
+@onready var next_button: TextureButton = %Next
 @onready var close_button: Button = %Close
 @onready var page_counter: Label = %PageCounter
 var pages: Array[Control] = []
@@ -14,9 +14,22 @@ var page_index: int = 0
 
 func _ready() -> void:
 	screen.hide()
+	# Keep the hint in sync with the project's current pause/close binding.
+	for event in InputMap.action_get_events("quit"):
+		if event is InputEventKey:
+			var keycode: int = event.physical_keycode if event.physical_keycode != 0 else event.keycode
+			close_button.text = "CLOSE  [%s]" % OS.get_keycode_string(keycode)
+			break
 	previous_button.pressed.connect(change_page.bind(-1))
 	next_button.pressed.connect(change_page.bind(1))
 	close_button.pressed.connect(GameManager.close_tutorial)
+	for button in [previous_button, next_button]:
+		button.mouse_entered.connect(_update_arrow.bind(button))
+		button.mouse_exited.connect(_update_arrow.bind(button))
+		button.focus_entered.connect(_update_arrow.bind(button))
+		button.focus_exited.connect(_update_arrow.bind(button))
+		button.button_down.connect(_update_arrow.bind(button))
+		button.button_up.connect(_update_arrow.bind(button))
 	GameManager.tutorial_changed.connect(_on_tutorial_changed)
 	_refresh_pages()
 	if GameManager.tutorial_open: _on_tutorial_changed(true)
@@ -61,6 +74,15 @@ func _show_page(index: int) -> void:
 	page_counter.text = "%d / %d" % [page_index + 1 if not pages.is_empty() else 0, pages.size()]
 	previous_button.disabled = pages.is_empty() or page_index == 0
 	next_button.disabled = pages.is_empty() or page_index == pages.size() - 1
+	_update_arrow(previous_button)
+	_update_arrow(next_button)
+
+func _update_arrow(button: TextureButton) -> void:
+	var brightness := 0.78
+	if button.disabled: brightness = 0.22
+	elif button.is_pressed(): brightness = 0.55
+	elif button.is_hovered() or button.has_focus(): brightness = 1.0
+	button.self_modulate = Color(brightness, brightness, brightness, 1.0)
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not GameManager.tutorial_open: return

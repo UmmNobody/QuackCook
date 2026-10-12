@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/day_summary.gd" id="1"]
-[ext_resource type="Theme" path="res://resources/themes/menu_theme.tres" id="2"]
+[ext_resource type="Theme" path="res://resources/themes/summary_theme.tres" id="2"]
+
+[ext_resource type="Texture2D" path="res://assets/icon/nextpage_icon.png" id="3_arrow"]
 
 [node name="DaySummary" type="CanvasLayer"]
 process_mode = 3
@@ -27,7 +29,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.025, 0.04, 0.035, 0.8)
+color = Color(0, 0, 0, 0.65)
 
 [node name="Center" type="CenterContainer" parent="Summary"]
 layout_mode = 1
@@ -54,14 +56,14 @@ layout_mode = 2
 [node name="Day" type="Label" parent="Summary/Center/Panel/Margin/Content"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.603922, 0.670588, 0.647059, 1)
+theme_override_colors/font_color = Color(0.72, 0.72, 0.72, 1)
 theme_override_font_sizes/font_size = 16
 text = "DAY 01  /  DAILY REPORT"
 
 [node name="Title" type="Label" parent="Summary/Center/Panel/Margin/Content"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.909804, 0.921569, 0.913725, 1)
+theme_override_colors/font_color = Color(0.96, 0.96, 0.96, 1)
 theme_override_font_sizes/font_size = 32
 text = "Kitchen closed"
 
@@ -74,7 +76,7 @@ layout_mode = 2
 
 [node name="Caption" type="Label" parent="Summary/Center/Panel/Margin/Content/ServedRow"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.603922, 0.670588, 0.647059, 1)
+theme_override_colors/font_color = Color(0.72, 0.72, 0.72, 1)
 theme_override_font_sizes/font_size = 18
 text = "Successfully served"
 size_flags_horizontal = 3
@@ -82,7 +84,7 @@ size_flags_horizontal = 3
 [node name="Served" type="Label" parent="Summary/Center/Panel/Margin/Content/ServedRow"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.909804, 0.921569, 0.913725, 1)
+theme_override_colors/font_color = Color(0.96, 0.96, 0.96, 1)
 theme_override_font_sizes/font_size = 24
 text = "0"
 
@@ -91,7 +93,7 @@ layout_mode = 2
 
 [node name="Caption" type="Label" parent="Summary/Center/Panel/Margin/Content/MissedRow"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.603922, 0.670588, 0.647059, 1)
+theme_override_colors/font_color = Color(0.72, 0.72, 0.72, 1)
 theme_override_font_sizes/font_size = 18
 text = "Not served"
 size_flags_horizontal = 3
@@ -99,7 +101,7 @@ size_flags_horizontal = 3
 [node name="Missed" type="Label" parent="Summary/Center/Panel/Margin/Content/MissedRow"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.909804, 0.921569, 0.913725, 1)
+theme_override_colors/font_color = Color(0.96, 0.96, 0.96, 1)
 theme_override_font_sizes/font_size = 24
 text = "0"
 
@@ -108,7 +110,7 @@ layout_mode = 2
 
 [node name="Caption" type="Label" parent="Summary/Center/Panel/Margin/Content/TargetRow"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.603922, 0.670588, 0.647059, 1)
+theme_override_colors/font_color = Color(0.72, 0.72, 0.72, 1)
 theme_override_font_sizes/font_size = 18
 text = "Daily target"
 size_flags_horizontal = 3
@@ -116,7 +118,7 @@ size_flags_horizontal = 3
 [node name="Target" type="Label" parent="Summary/Center/Panel/Margin/Content/TargetRow"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.909804, 0.921569, 0.913725, 1)
+theme_override_colors/font_color = Color(0.96, 0.96, 0.96, 1)
 theme_override_font_sizes/font_size = 24
 text = "0 / 4"
 
@@ -127,7 +129,7 @@ layout_mode = 2
 [node name="Result" type="Label" parent="Summary/Center/Panel/Margin/Content"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.631373, 0.839216, 0.713725, 1)
+theme_override_colors/font_color = Color(0.94, 0.94, 0.94, 1)
 theme_override_font_sizes/font_size = 20
 text = "Target reached"
 
@@ -136,5 +138,8 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 mouse_default_cursor_shape = 2
-theme_type_variation = &"PrimaryButton"
-text = "Start day 2  →"
+icon = ExtResource("3_arrow")
+icon_alignment = 2
+expand_icon = true
+alignment = 0
+text = "Start day 2"
