@@ -43,6 +43,11 @@ size = Vector3(16.92, 0.256, 19.08)
 [sub_resource type="Environment" id="Environment_wp4xf"]
 background_mode = 2
 sky = ExtResource("100_daylight_sky")
+ambient_light_source = 2
+ambient_light_color = Color(0.88, 0.92, 0.96, 1)
+ambient_light_sky_contribution = 0.0
+ambient_light_energy = 0.384
+reflected_light_source = 1
 
 [sub_resource type="Resource" id="Resource_test_wave"]
 script = ExtResource("18_config")
@@ -65,7 +70,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 2.5, -1)
 [node name="Part_025" parent="Environment/QuackCook_Kitchen" index="22" unique_id=1492324131]
 material_override = ExtResource("floor_tiles_saved")
 
-[node name="RoofCollision" type="StaticBody3D" parent="Environment/QuackCook_Kitchen/Roof_Removable_Slab" index="0" unique_id=1635935972]
+[node name="RoofCollision" type="StaticBody3D" parent="Environment/QuackCook_Kitchen/Roof_Removable_Slab" parent_id_path=PackedInt32Array(2070259630, 836019991) index="0" unique_id=1635935972]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/QuackCook_Kitchen/Roof_Removable_Slab/RoofCollision" unique_id=131838335]
 shape = SubResource("BoxShape3D_roof_only")
@@ -74,10 +79,6 @@ shape = SubResource("BoxShape3D_roof_only")
 process_mode = 3
 script = ExtResource("101_shutter")
 animation_player_path = NodePath("../QuackCook_Kitchen/AnimationPlayer")
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment" unique_id=1209547466]
-transform = Transform3D(-0.5735659, -0.759853, 0.30601606, -0.53351504, 0.6299919, 0.5643334, -0.621598, 0.16041821, -0.7667348, 0, 0, 0)
-shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="Environment" unique_id=2084578373]
 environment = SubResource("Environment_wp4xf")
@@ -101,6 +102,34 @@ transform = Transform3D(0.023072861, 0, 0.9997338, 0, 1, 0, -0.9997338, 0, 0.023
 transform = Transform3D(-0.041702878, 0, 0.9991301, 0, 1, 0, -0.9991301, 0, -0.041702878, -5.703534, 1.9640274, 5.2812085)
 
 [node name="ExteriorHall" parent="Environment" unique_id=1207768819 instance=ExtResource("102_exterior_hall")]
+
+[node name="RoomLighting" type="Node3D" parent="Environment" unique_id=1072900143]
+
+[node name="KitchenRoomLight" type="SpotLight3D" parent="Environment/RoomLighting" unique_id=1745323825]
+transform = Transform3D(1, 0, 0, 0, 7.54979e-08, 1, 0, -1, 7.54979e-08, 1.7, 6, 0)
+light_color = Color(1, 0.98, 0.95, 1)
+light_energy = 0.466
+shadow_enabled = true
+shadow_bias = 1.0
+shadow_normal_bias = 2.0
+shadow_opacity = 0.0
+spot_range = 15.306865
+spot_attenuation = 0.3
+spot_angle = 88.0
+spot_angle_attenuation = 0.15
+
+[node name="HallRoomLight" type="SpotLight3D" parent="Environment/RoomLighting" unique_id=2111752991]
+transform = Transform3D(1, 0, 0, 0, 7.54979e-08, 1, 0, -1, 7.54979e-08, -11.1, 6, 0)
+light_color = Color(1, 0.98, 0.95, 1)
+light_energy = 0.149
+shadow_enabled = true
+shadow_bias = 1.0
+shadow_normal_bias = 2.0
+shadow_opacity = 0.0
+spot_range = 16.483944
+spot_attenuation = 0.3
+spot_angle = 89.99
+spot_angle_attenuation = 0.15
 
 [node name="Actors" type="Node3D" parent="." unique_id=695234059]
 

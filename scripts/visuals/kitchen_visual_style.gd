@@ -1,10 +1,6 @@
 extends Node3D
 ## Visual-only preset. Does not change gameplay, collision, or imported assets.
 @export var enabled: bool = true
-@export_range(0.0, 1.0) var ambient_strength: float = 0.50
-@export_range(0.0, 3.0) var ceiling_strength: float = 0.70
-@export var shadow_color: Color = Color("dce7ee")
-@export var warm_light_color: Color = Color("fffdf7")
 @export var subtle_prop_outlines: bool = true
 const TOON = preload("res://shaders/kitchen_zip_toon.gdshader")
 var _materials: Dictionary = {}
@@ -18,12 +14,11 @@ func _ready() -> void:
 
 func apply_style() -> void:
 	_scope = get_parent()
-	configure_lighting()
 	for node in _scope.find_children("*", "MeshInstance3D", true, false):
 		style_mesh(node)
 	if not get_tree().node_added.is_connected(_on_node_added):
 		get_tree().node_added.connect(_on_node_added)
-	print("KITCHEN_STYLE_READY meshes=", _styled_count, " ceiling_lights=6 shadowed_ceiling_lights=2")
+	print("KITCHEN_STYLE_READY meshes=", _styled_count, " saved_room_lights=2")
 
 func _on_node_added(node: Node) -> void:
 	if node is MeshInstance3D:
@@ -102,58 +97,4 @@ func style_mesh(mesh: MeshInstance3D) -> void:
 		mesh.set_surface_override_material(surface, styled)
 	mesh.set_meta("kitchen_styled", true)
 	_styled_count += 1
-
-func configure_lighting() -> void:
-	var world_nodes = _scope.find_children("*", "WorldEnvironment", true, false)
-	var world: WorldEnvironment
-	if world_nodes.is_empty():
-		world = WorldEnvironment.new()
-		add_child(world)
-	else:
-		world = world_nodes[0]
-	var env = world.environment.duplicate() if world.environment != null else Environment.new()
-	env.sky = load("res://resources/visuals/kitchen_daylight_sky.tres")
-	env.background_mode = Environment.BG_SKY
-	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	env.ambient_light_color = shadow_color
-	env.ambient_light_energy = ambient_strength
-	env.ambient_light_sky_contribution = 0.0
-	env.reflected_light_source = Environment.REFLECTION_SOURCE_DISABLED
-	env.tonemap_mode = Environment.TONE_MAPPER_LINEAR
-	env.adjustment_enabled = true
-	env.adjustment_saturation = 1.0
-	env.adjustment_contrast = 1.0
-	world.environment = env
-	for sun in _scope.find_children("*", "DirectionalLight3D", true, false):
-		sun.light_color = warm_light_color
-		sun.light_energy = 0.85
-		sun.rotation_degrees = Vector3(-48, -35, 0)
-		sun.shadow_enabled = true
-		sun.shadow_bias = 0.3
-		sun.shadow_normal_bias = 2.0
-	if get_node_or_null("CeilingRig") != null:
-		return
-	var rig = Node3D.new()
-	rig.name = "CeilingRig"
-	add_child(rig)
-	# Lights follow the imported model transform, including its 0.4 import scale.
-	var fixture_meshes = _scope.find_children("Ceiling_Light_Housing*", "MeshInstance3D", true, false)
-	for index in range(fixture_meshes.size()):
-		var fixture: MeshInstance3D = fixture_meshes[index]
-		var lamp = SpotLight3D.new()
-		lamp.name = "Ceiling_%02d" % (index + 1)
-		rig.add_child(lamp)
-		lamp.global_position = fixture.global_transform * fixture.mesh.get_aabb().get_center() + Vector3(0, -0.16, 0)
-		lamp.rotation_degrees.x = -90
-		lamp.light_color = warm_light_color
-		lamp.light_energy = ceiling_strength
-		lamp.light_specular = 0.2
-		lamp.spot_range = 10.0
-		lamp.spot_angle = 72.0
-		lamp.spot_attenuation = 0.6
-		lamp.spot_angle_attenuation = 0.35
-		lamp.shadow_enabled = index in [1, 4]
-		lamp.shadow_bias = 0.3
-		lamp.shadow_normal_bias = 1.5
-
 
