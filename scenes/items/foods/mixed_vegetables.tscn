@@ -57,7 +57,7 @@ mesh = SubResource("ArrayMesh_xfnyl")
 surface_material_override/0 = ExtResource("1_53k88")
 
 [node name="CookedMesh" type="MeshInstance3D" parent="Meshes" unique_id=439717128]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15089574, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.23488718, 0)
 mesh = ExtResource("2_ej20h")
 
 [node name="OutlineMesh" type="MeshInstance3D" parent="Meshes/CookedMesh" unique_id=1831384522]

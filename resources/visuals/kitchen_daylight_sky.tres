@@ -6,10 +6,10 @@
 
 [sub_resource type="ShaderMaterial" id="Clouds"]
 shader = ExtResource("1")
-shader_parameter/sky_day = Color(0.29, 0.61, 0.75, 1)
-shader_parameter/horizon_day = Color(0.77, 0.86, 0.85, 1)
-shader_parameter/horizon_sunset = Color(0.77, 0.83, 0.83, 1)
-shader_parameter/sky_sunset = Color(0.32, 0.52, 0.69, 1)
+shader_parameter/sky_day = Color(0.7, 0.74, 0.76, 1)
+shader_parameter/horizon_day = Color(0.96, 0.79, 0.59, 1)
+shader_parameter/horizon_sunset = Color(0.95, 0.73, 0.49, 1)
+shader_parameter/sky_sunset = Color(0.64, 0.63, 0.67, 1)
 shader_parameter/horizon_night = Color(0.1, 0.15, 0.2, 1)
 shader_parameter/sky_night = Color(0.05, 0.1, 0.15, 1)
 shader_parameter/day_night_mix = 1.0
@@ -19,7 +19,7 @@ shader_parameter/sunset_amount_exponent = 0.7
 shader_parameter/night_amount_exponent = 4.0
 shader_parameter/cloud_tex_01 = ExtResource("2")
 shader_parameter/cloud_tex_02 = ExtResource("3")
-shader_parameter/cloud_color = Color(0.96, 0.97, 0.94, 1)
+shader_parameter/cloud_color = Color(0.98, 0.94, 0.85, 1)
 shader_parameter/cloud_tiling = Vector2(1.4, 1.4)
 shader_parameter/wind_speed = Vector2(0.025, 0.012)
 shader_parameter/cloud_density = 0.9

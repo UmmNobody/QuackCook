@@ -73,4 +73,7 @@ grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
+show_percentage = false
+
 [connection signal="body_entered" from="SnapArea" to="." method="_on_snap_area_body_entered"]
+

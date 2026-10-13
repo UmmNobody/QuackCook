@@ -24,13 +24,15 @@ func run() -> void:
 	hud._last_tick = ""
 	hud._process(0)
 	check(hud.get_node("%Seconds").text == "30" and hud.countdown.visible, "Preparation shows 30")
-	check(hud.countdown.scale.x > 1 and hud.countdown.modulate.a == 1, "New tick starts large and opaque")
+	check(hud.countdown.scale == Vector2.ONE and hud.countdown.modulate.a == 1, "Countdown is normal size and opaque")
+	check(hud.countdown.get_global_rect().end.x <= hud.get_node("%Day").get_global_rect().position.x, "Time is left of Day without overlap")
+	check(is_equal_approx(hud.countdown.global_position.y, hud.get_node("%Day").global_position.y), "Time and Day share a row")
 	await capture("countdown")
 	await frames(35)
-	check(hud.countdown.scale.x < 1 and hud.countdown.modulate.a < 0.6, "Number shrinks and fades")
+	check(hud.countdown.scale == Vector2.ONE and hud.countdown.modulate.a == 1, "Countdown stays visible without animation")
 	game.preparation_remaining = 29
 	hud._process(0)
-	check(hud.get_node("%Seconds").text == "29" and hud.countdown.scale.x > 1, "Next second restarts pulse")
+	check(hud.get_node("%Seconds").text == "29" and hud.countdown.visible, "Next second updates the plain countdown")
 	paused = true
 	hud._process(0)
 	check(not hud.countdown.visible, "Paused menu hides countdown")
@@ -38,6 +40,8 @@ func run() -> void:
 	game.state = game.State.SERVING
 	game.served_count = 3
 	hud._process(0)
+	check(hud.progress.value < 3, "Service fill animates instead of jumping")
+	await create_timer(0.7).timeout
 	check(hud.progress.max_value == 6 and hud.progress.value == 3, "Bar maximum is arrivals, fill is successful service")
 	check(hud._fill.bg_color == hud.below_target_color, "Below target is red")
 	check(absf((hud.marker.position.x + hud.marker.size.x * 0.5) / hud.progress.size.x - 4.0 / 6.0) < 0.01, "Target tick sits at quota ratio")
@@ -49,6 +53,7 @@ func run() -> void:
 	await capture("red_progress")
 	game.served_count = 4
 	hud._process(0)
+	await create_timer(0.7).timeout
 	check(hud._fill.bg_color == hud.target_met_color and hud.progress.value == 4, "Meeting target changes green without filling to maximum")
 	await capture("green_progress")
 	game.config.prisoner_count = 10
@@ -59,7 +64,7 @@ func run() -> void:
 	game.spawned_count = 10
 	game.auto_close_remaining = 10
 	hud._process(0)
-	check(hud.countdown.visible and hud.get_node("%Seconds").text == "10" and hud.get_node("%CountdownCaption").text.contains("CLOSES"), "Auto-close uses same countdown style")
+	check(hud.countdown.visible and hud.get_node("%Seconds").text == "10" and hud.get_node("%CountdownCaption").tooltip_text.contains("CLOSES"), "Auto-close uses same countdown style")
 	game.state = game.State.SUMMARY
 	hud._process(0)
 	check(not hud.countdown.visible, "Closing service cancels countdown")

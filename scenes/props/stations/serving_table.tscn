@@ -25,12 +25,6 @@ _surfaces = [{
 [sub_resource type="BoxShape3D" id="BoxShape3D_e24ud"]
 size = Vector3(1.3704727, 0.20662911, 1.3950951)
 
-[sub_resource type="MultiMesh" id="MultiMesh_qwuem"]
-transform_format = 1
-instance_count = 8
-mesh = ExtResource("4_qwuem")
-buffer = PackedFloat32Array(0.96837974, -0.4201301, 0, -0.42643723, -0.3640628, -0.83914727, -0.5268385, 0.10160887, 0.20968452, 0.48331276, -0.9147184, 0.42128325, 0.8574094, -0.3669194, 0, -0.23354712, -0.35451293, -0.82841825, 0.24046732, 0.10160887, -0.09460668, -0.22107488, -0.90108615, -0.44245857, 0.5204523, -0.25870025, -0.82422227, 0.30420926, 0.73807037, -0.36687124, 0.58120257, 0.10160887, -0.44891015, -0.903116, 0, 0.35502833, -1.1134739, -0.2296495, 0, -0.20544437, -0.21744983, 1.0543228, 0.36562565, 0.10160887, -0.07385438, 0.35808888, -1.0765134, -0.123295605, -0.9203597, -0.18287958, 0, -0.27730742, 0.16393143, -0.82500124, -0.41594028, 0.10160887, 0.08106434, -0.40796432, 0.8411305, -0.3016593, -0.762819, -0.41212222, 0.3448167, 0.044643253, 0.30337283, 0.16390085, 0.86702794, 0.10160887, -0.443518, 0.82093114, 0, 0.35088727, 0.7439128, -0.42114332, -0.1429876, 0.36817446, 0.12443159, -0.07044311, 0.8548497, 0.10160887, -0.42699406, -0.7542476, 0, 0.48163384, 0.4403492, -0.7205611, -0.6274959, 0.28192228, 0.32721114, -0.5354287, 0.84446174, 0.10160887, -0.897715, -0.54861146, 0, 0.05599229)
-
 [sub_resource type="PlaneMesh" id="PlaneMesh_3vrem"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_jpl5i"]
@@ -115,10 +109,6 @@ shape = SubResource("BoxShape3D_e24ud")
 
 [node name="FoodDisplay" type="Node3D" parent="ChickenWell" unique_id=1091596846]
 
-[node name="MultiMeshInstance3D" type="MultiMeshInstance3D" parent="ChickenWell/FoodDisplay" unique_id=2143705552]
-transform = Transform3D(-0.6608959, 0, -0.6109145, 0, 0.9, 0, 0.6109145, 0, -0.6608959, 0.017868042, -0.03510499, 0.11602974)
-multimesh = SubResource("MultiMesh_qwuem")
-
 [node name="MeshInstance3D" type="MeshInstance3D" parent="ChickenWell/FoodDisplay" unique_id=1054332333]
 transform = Transform3D(0.46241173, 0, 0, 0, 1, 0, 0, 0, 0.48770273, 0, 0.10160887, 0)
 visible = false
@@ -126,6 +116,18 @@ mesh = SubResource("PlaneMesh_3vrem")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="ChickenWell/FoodDisplay" unique_id=1167318746]
 transform = Transform3D(0.84691954, 0.07698108, 0.5261191, -0.19451095, 0.9657366, 0.1718084, -0.4948663, -0.24784377, 0.8328749, 0.19744611, 0.10822964, -0.24535859)
+mesh = ExtResource("4_qwuem")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="ChickenWell/FoodDisplay" unique_id=290227161]
+transform = Transform3D(0.24893913, -0.12081824, 0.960954, -0.19451101, 0.9657367, 0.1718084, -0.94878596, -0.2296859, 0.21690899, 0.36472917, 0.10822964, 0.29433423)
+mesh = ExtResource("4_qwuem")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="ChickenWell/FoodDisplay" unique_id=1715793741]
+transform = Transform3D(0.25880542, 0.21947461, -0.9406651, -0.19451101, 0.9657367, 0.1718084, 0.9461423, 0.13850471, 0.29262826, -0.3025627, 0.10822964, -0.23548743)
+mesh = ExtResource("4_qwuem")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="ChickenWell/FoodDisplay" unique_id=1195684338]
+transform = Transform3D(0.8469195, 0.07698101, 0.5261192, -0.19451101, 0.9657366, 0.17180842, -0.49486643, -0.24784385, 0.8328749, -0.10136104, 0.10822964, 0.25893795)
 mesh = ExtResource("4_qwuem")
 
 [node name="CountLabel" type="Label3D" parent="ChickenWell" unique_id=1465106622]

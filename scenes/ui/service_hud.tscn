@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" path="res://scripts/ui/service_hud.gd" id="1"]
 
+[ext_resource type="Texture2D" path="res://assets/textures/ui/cursor_focus.png" id="2_cursor"]
+
 [sub_resource type="StyleBoxFlat" id="Track"]
 bg_color = Color(0.04, 0.04, 0.04, 0.8)
 corner_radius_top_left = 12
@@ -50,6 +52,7 @@ mouse_filter = 2
 theme_override_styles/background = SubResource("Track")
 theme_override_styles/fill = SubResource("Fill")
 show_percentage = false
+step = 0.0
 max_value = 6.0
 
 [node name="Border" type="Panel" parent="Top/ServiceProgress"]
@@ -96,6 +99,7 @@ horizontal_alignment = 2
 
 [node name="Day" type="Label" parent="Top"]
 unique_name_in_owner = true
+anchor_left = 0.5
 anchor_right = 1.0
 offset_top = 57.0
 offset_bottom = 90.0
@@ -104,46 +108,55 @@ theme_override_font_sizes/font_size = 24
 theme_override_constants/outline_size = 4
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
 text = "DAY 1"
-horizontal_alignment = 1
+horizontal_alignment = 2
 
-[node name="Countdown" type="Control" parent="."]
+[node name="Countdown" type="HBoxContainer" parent="Top"]
+unique_name_in_owner = true
+visible = false
+anchor_right = 0.5
+offset_top = 57.0
+offset_bottom = 90.0
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="CountdownCaption" type="Label" parent="Top/Countdown"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 24
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
+text = "TIME"
+vertical_alignment = 1
+
+[node name="Seconds" type="Label" parent="Top/Countdown"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 24
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
+text = "30"
+vertical_alignment = 1
+
+[node name="FocusCursor" type="TextureRect" parent="."]
 unique_name_in_owner = true
 visible = false
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -200.0
-offset_top = -80.0
-offset_right = 200.0
-offset_bottom = 80.0
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 16.0
+offset_bottom = 16.0
 mouse_filter = 2
-
-[node name="Seconds" type="Label" parent="Countdown"]
-unique_name_in_owner = true
-anchor_right = 1.0
-offset_bottom = 118.0
-mouse_filter = 2
-theme_override_font_sizes/font_size = 92
-theme_override_constants/outline_size = 6
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
-text = "30"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="CountdownCaption" type="Label" parent="Countdown"]
-unique_name_in_owner = true
-anchor_right = 1.0
-offset_top = 122.0
-offset_bottom = 150.0
-mouse_filter = 2
-theme_override_font_sizes/font_size = 16
-theme_override_constants/outline_size = 4
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
-text = "SECONDS / KITCHEN OPENS"
-horizontal_alignment = 1
+texture = ExtResource("2_cursor")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Crosshair" type="Label" parent="."]
+unique_name_in_owner = true
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -154,3 +167,5 @@ offset_right = 5.0
 offset_bottom = 14.0
 mouse_filter = 2
 text = "+"
+horizontal_alignment = 1
+vertical_alignment = 1

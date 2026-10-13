@@ -1,5 +1,8 @@
 extends CanvasLayer
 
+const SummaryReveal = preload("res://scripts/ui/summary_reveal.gd")
+var _reveal := SummaryReveal.new()
+
 @export var success_color: Color = Color("f0f0f0")
 @export var failure_color: Color = Color("ff5050")
 @onready var screen: Control = %Summary
@@ -12,6 +15,7 @@ extends CanvasLayer
 @onready var continue_button: Button = %Continue
 
 func _ready() -> void:
+	add_child(_reveal)
 	screen.hide()
 	continue_button.pressed.connect(GameManager.confirm_summary)
 	GameManager.summary_opened.connect(_show_summary)
@@ -26,7 +30,8 @@ func _show_summary(summary: Dictionary) -> void:
 	result_label.add_theme_color_override("font_color", success_color if summary.target_met else failure_color)
 	continue_button.text = "Start day %d" % (summary.day + 1) if summary.target_met else "Continue to Game Over"
 	screen.show()
-	continue_button.grab_focus()
+	_reveal.play($Summary/Center/Panel/Margin/Content, continue_button)
 
 func _on_day_started(_day: int) -> void:
+	_reveal.stop()
 	screen.hide()

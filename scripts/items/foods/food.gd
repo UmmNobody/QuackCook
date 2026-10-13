@@ -114,7 +114,8 @@ func _update_visuals() -> void:
 			burning_fire.emission_box_extents = Vector3(maxf(0.05, bounds.size.x * 0.4), maxf(0.03, bounds.size.y * 0.3), maxf(0.05, bounds.size.z * 0.4))
 	if burning_fire != null: burning_fire.set_active(is_burning())
 	var player := get_tree().get_first_node_in_group("Player")
-	if player != null: _set_selected(player.head.last_hovered_object)
+	if player != null:
+		_set_selected(player.head.last_hovered_object if is_instance_valid(player.head.last_hovered_object) else null)
 
 func is_burning() -> bool:
 	return current_state == State.BURNT

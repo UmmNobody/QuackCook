@@ -22,12 +22,12 @@
 [ext_resource type="PackedScene" uid="uid://c15g86rqaqnby" path="res://scenes/props/interactive/close_kitchen_button.tscn" id="22_close"]
 [ext_resource type="PackedScene" uid="uid://bvhgebvyuya1f" path="res://scenes/props/food_sources/water_foodbox.tscn" id="22_jscy8"]
 [ext_resource type="PackedScene" uid="uid://c2mahmw87uvhp" path="res://scenes/props/food_sources/carrot_foodbox.tscn" id="23_pm3ni"]
-[ext_resource type="PackedScene" path="res://scenes/ui/day_summary.tscn" id="23_summary"]
+[ext_resource type="PackedScene" uid="uid://cw3wreof2oyti" path="res://scenes/ui/day_summary.tscn" id="23_summary"]
 [ext_resource type="PackedScene" path="res://scenes/ui/pause_menu.tscn" id="24_pause"]
 [ext_resource type="PackedScene" uid="uid://cnbul82g2v04k" path="res://scenes/props/food_sources/cabbage_foodbox.tscn" id="24_y6deb"]
 [ext_resource type="PackedScene" uid="uid://b2aoeosuhu4fq" path="res://scenes/props/food_sources/chicken_foodbox.tscn" id="25_og1vs"]
 [ext_resource type="PackedScene" path="res://scenes/ui/tutorial_popup.tscn" id="25_tutorial"]
-[ext_resource type="PackedScene" uid="uid://2435o11bq1we" path="res://scenes/props/interactive/tutorial_sign.tscn" id="26_guide"]
+[ext_resource type="PackedScene" path="res://scenes/props/interactive/tutorial_sign.tscn" id="26_guide"]
 [ext_resource type="PackedScene" uid="uid://b38e7arjc60ia" path="res://scenes/props/stations/fridge.tscn" id="27_fridge"]
 [ext_resource type="PackedScene" path="res://scenes/props/interactive/prisoner_door.tscn" id="28_door"]
 [ext_resource type="Script" uid="uid://cofd22df30w8m" path="res://scripts/visuals/kitchen_visual_style.gd" id="99_visual_style"]
@@ -37,22 +37,22 @@
 [ext_resource type="Material" path="res://resources/materials/kitchen_floor_tiles.tres" id="floor_tiles_saved"]
 [ext_resource type="Script" uid="uid://d31rba4jpah0y" path="res://scripts/items/item_respawner.gd" id="item_respawner"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_roof_only"]
-size = Vector3(16.92, 0.256, 19.08)
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_hall_recovery"]
 size = Vector3(9.2, 9, 25.8)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_service_player_barrier"]
 size = Vector3(0.3, 3.5, 9.86)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_roof_only"]
+size = Vector3(16.92, 0.256, 19.08)
+
 [sub_resource type="Environment" id="Environment_wp4xf"]
 background_mode = 2
 sky = ExtResource("100_daylight_sky")
 ambient_light_source = 2
-ambient_light_color = Color(0.88, 0.92, 0.96, 1)
+ambient_light_color = Color(0.77, 0.8, 0.88, 1)
 ambient_light_sky_contribution = 0.0
-ambient_light_energy = 0.384
+ambient_light_energy = 0.48
 reflected_light_source = 1
 
 [sub_resource type="Resource" id="Resource_test_wave"]
@@ -69,31 +69,31 @@ script = ExtResource("item_respawner")
 [node name="RespawnPoint" type="Marker3D" parent="ItemRespawner" unique_id=1898464896]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 2.5, -1)
 
-[node name="RecoveryArea" type="Area3D" parent="ItemRespawner"]
-position = Vector3(-11.15, 4, 0)
+[node name="RecoveryArea" type="Area3D" parent="ItemRespawner" unique_id=169395378]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.15, 4, 0)
 collision_layer = 0
 collision_mask = 3
 monitorable = false
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="ItemRespawner/RecoveryArea"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ItemRespawner/RecoveryArea" unique_id=676250550]
 shape = SubResource("BoxShape3D_hall_recovery")
 
 [node name="Environment" type="Node3D" parent="." unique_id=1545067222]
 
-[node name="ServiceWindowPlayerBarrier" type="StaticBody3D" parent="Environment"]
-position = Vector3(-6.38, 2.8, 1.81)
+[node name="ServiceWindowPlayerBarrier" type="StaticBody3D" parent="Environment" unique_id=2046200883]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.38, 2.8, 1.81)
 collision_layer = 8
 collision_mask = 0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/ServiceWindowPlayerBarrier"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/ServiceWindowPlayerBarrier" unique_id=184961964]
 shape = SubResource("BoxShape3D_service_player_barrier")
 
 [node name="QuackCook_Kitchen" parent="Environment" unique_id=2070259630 instance=ExtResource("15_jkv2x")]
 
-[node name="Part_025" parent="Environment/QuackCook_Kitchen" index="22" unique_id=1653422431]
+[node name="Part_025" parent="Environment/QuackCook_Kitchen" index="22" unique_id=1492324131]
 material_override = ExtResource("floor_tiles_saved")
 
-[node name="RoofCollision" type="StaticBody3D" parent="Environment/QuackCook_Kitchen/Roof_Removable_Slab" index="0" unique_id=1635935972]
+[node name="RoofCollision" type="StaticBody3D" parent="Environment/QuackCook_Kitchen/Roof_Removable_Slab" parent_id_path=PackedInt32Array(2070259630, 836019991) index="0" unique_id=1635935972]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/QuackCook_Kitchen/Roof_Removable_Slab/RoofCollision" unique_id=131838335]
 shape = SubResource("BoxShape3D_roof_only")
@@ -130,12 +130,13 @@ transform = Transform3D(-0.041702878, 0, 0.9991301, 0, 1, 0, -0.9991301, 0, -0.0
 
 [node name="KitchenRoomLight" type="SpotLight3D" parent="Environment/RoomLighting" unique_id=1745323825]
 transform = Transform3D(1, 0, 0, 0, 7.54979e-08, 1, 0, -1, 7.54979e-08, 1.7, 6, 0)
-light_color = Color(1, 0.98, 0.95, 1)
-light_energy = 0.466
+light_color = Color(1, 0.94, 0.87, 1)
+light_energy = 0.74
 shadow_enabled = true
 shadow_bias = 1.0
 shadow_normal_bias = 2.0
-shadow_opacity = 0.0
+shadow_opacity = 0.18
+shadow_blur = 2.0
 spot_range = 15.306865
 spot_attenuation = 0.3
 spot_angle = 88.0
@@ -143,12 +144,13 @@ spot_angle_attenuation = 0.15
 
 [node name="HallRoomLight" type="SpotLight3D" parent="Environment/RoomLighting" unique_id=2111752991]
 transform = Transform3D(1, 0, 0, 0, 7.54979e-08, 1, 0, -1, 7.54979e-08, -11.1, 6, 0)
-light_color = Color(1, 0.98, 0.95, 1)
-light_energy = 0.149
+light_color = Color(0.91, 0.95, 1, 1)
+light_energy = 0.52
 shadow_enabled = true
 shadow_bias = 1.0
 shadow_normal_bias = 2.0
-shadow_opacity = 0.0
+shadow_opacity = 0.18
+shadow_blur = 2.0
 spot_range = 16.483944
 spot_attenuation = 0.3
 spot_angle = 89.99
@@ -221,7 +223,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5051677, 2.3132632, 7.62677
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0045948, 2.2294044, -0.3062191)
 
 [node name="Tray2" parent="Items" unique_id=368534350 instance=ExtResource("10_tqoya")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.177362, 2.4231215, 0.041291833)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.177362, 2.6398783, 0.041291833)
+
+[node name="Tray3" parent="Items" unique_id=1684544032 instance=ExtResource("10_tqoya")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0636982, 3.147458, 0)
 
 [node name="Queue" type="Node3D" parent="." unique_id=1488808904]
 
@@ -286,7 +291,7 @@ use_navigation = true
 
 [node name="UI" type="Node" parent="." unique_id=1597701673]
 
-[node name="ServiceHUD" parent="UI" instance=ExtResource("19_hud")]
+[node name="ServiceHUD" parent="UI" unique_id=2033211714 instance=ExtResource("19_hud")]
 
 [node name="DaySummary" parent="UI" unique_id=249709876 instance=ExtResource("23_summary")]
 

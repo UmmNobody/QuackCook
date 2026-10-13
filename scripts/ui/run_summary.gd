@@ -1,6 +1,10 @@
 extends Control
 
+const SummaryReveal = preload("res://scripts/ui/summary_reveal.gd")
+var _reveal := SummaryReveal.new()
+
 func _ready() -> void:
+	add_child(_reveal)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	var totals: Dictionary = GameManager.run_totals
 	%Day.text = str(totals.get("day", 0))
@@ -9,4 +13,4 @@ func _ready() -> void:
 	%Unconscious.text = str(totals.get("unconscious", 0))
 	%Retry.pressed.connect(GameManager.restart_run)
 	%MainMenu.pressed.connect(GameManager.return_to_menu)
-	%Retry.grab_focus()
+	_reveal.play($Center/Panel/Margin/Content, %Retry)

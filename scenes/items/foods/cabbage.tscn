@@ -59,7 +59,7 @@ visible = false
 mesh = SubResource("CylinderMesh_51f4i")
 
 [node name="CutMesh" type="MeshInstance3D" parent="Meshes" unique_id=689006197]
-transform = Transform3D(0.9, 0, 0, 0, 2, 0, 0, 0, 0.9, 0, 0.09952694, 0)
+transform = Transform3D(0.9, 0, 0, 0, 2, 0, 0, 0, 0.9, 0, 0.05449617, 0)
 mesh = ExtResource("4_5wquc")
 
 [node name="OutlineMesh" type="MeshInstance3D" parent="Meshes/CutMesh" unique_id=1766835103]

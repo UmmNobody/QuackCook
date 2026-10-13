@@ -61,10 +61,11 @@ func style_mesh(mesh: MeshInstance3D) -> void:
 				material.set_shader_parameter("normal_strength", source.normal_scale)
 			material.set_shader_parameter("use_rim", false)
 			material.set_shader_parameter("use_pattern", false)
+			material.set_shader_parameter("use_stepped", false)
 			material.set_shader_parameter("steps", 3.0)
 			material.set_shader_parameter("step_smoothness", 0.22)
-			material.set_shader_parameter("shadow_tint", Color("afb9d1"))
-			material.set_shader_parameter("shadow_tint_amount", 0.25)
+			material.set_shader_parameter("shadow_tint", Color("a1a8b8"))
+			material.set_shader_parameter("shadow_tint_amount", 0.20)
 			material.next_pass = source.next_pass
 			_materials[key] = material
 		var styled: ShaderMaterial = _materials[key]
@@ -84,7 +85,7 @@ func style_mesh(mesh: MeshInstance3D) -> void:
 				var outline = StandardMaterial3D.new()
 				outline.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 				outline.cull_mode = BaseMaterial3D.CULL_FRONT
-				outline.albedo_color = Color("30343f")
+				outline.albedo_color = Color("49413f")
 				outline.grow = true
 				outline.grow_amount = 0.008 / maxf(mesh.global_basis.get_scale().abs().x, 0.05)
 				copy.next_pass = outline
