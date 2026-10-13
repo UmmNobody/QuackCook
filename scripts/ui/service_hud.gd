@@ -54,6 +54,7 @@ func _process(_delta: float) -> void:
 	var tick := "%s:%d" % [mode, seconds]
 	if tick == _last_tick: return
 	_last_tick = tick
+	AudioManager.cue("clock-ticking", self, false, randf_range(0.94, 1.06))
 	%Seconds.text = str(seconds)
 	%CountdownCaption.tooltip_text = mode
 	countdown.show()

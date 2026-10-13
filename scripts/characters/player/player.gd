@@ -93,6 +93,7 @@ func take_damage(amount: float, source: Node3D = null) -> bool:
 	if not is_finite(amount) or amount <= 0.0 or unconscious or invulnerability_remaining > 0.0 or get_tree().paused: return false
 	var direction := _away_from(source)
 	health = maxf(0.0, health - amount)
+	AudioManager.hurt(self, false)
 	invulnerability_remaining = invulnerability_duration
 	knockback_velocity = direction * hit_push_speed
 	_start_hit_turn()
@@ -179,6 +180,7 @@ func _recover() -> bool:
 	unconscious = false
 	stun_remaining = 0.0
 	health = max_health
+	AudioManager.hurt(self, false)
 	invulnerability_remaining = invulnerability_duration
 	camera.transform = _standing_camera
 	camera.rotation.x = _look_pitch
@@ -251,6 +253,7 @@ func try_dash(direction: Vector3) -> bool:
 		direction = -head.global_basis.z
 		direction.y = 0.0
 	_dash_direction = direction.normalized()
+	AudioManager.cue("dash", self)
 	dash_remaining = dash_duration
 	dash_cooldown_remaining = dash_cooldown
 	return true

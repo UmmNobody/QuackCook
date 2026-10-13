@@ -45,6 +45,7 @@ func _physics_process(delta: float) -> void:
 			needed = true
 	if needed:
 		_clear_time = 0.0
+		if not motion.target_open: AudioManager.cue("door_slam", self, true)
 		motion.set_open(true)
 	else:
 		_clear_time += delta

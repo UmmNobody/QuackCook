@@ -1,12 +1,14 @@
 [gd_scene format=3 uid="uid://c1qd66pxfyv5k"]
-[ext_resource type="Script" path="res://scripts/ui/settings_panel.gd" id="script"]
-[ext_resource type="Theme" path="res://resources/themes/menu_card_theme.tres" id="theme"]
-[ext_resource type="Texture2D" path="res://assets/textures/ui/menu_background.png" id="background"]
-[ext_resource type="Script" path="res://scripts/ui/report_fit.gd" id="fit"]
-[ext_resource type="Texture2D" path="res://assets/textures/ui/reports/brush.svg" id="brush"]
-[ext_resource type="Texture2D" path="res://assets/textures/ui/reports/back.svg" id="back"]
-[node name="SettingsPanel" type="Control"]
-layout_mode = 1
+
+[ext_resource type="Texture2D" uid="uid://obh3qubvhvtp" path="res://assets/textures/ui/menu_background2.png" id="3_ea4bf"]
+[ext_resource type="Texture2D" uid="uid://byc8ffm3trreo" path="res://assets/textures/ui/reports/back.svg" id="back"]
+[ext_resource type="Texture2D" uid="uid://vcgabttufufd" path="res://assets/textures/ui/reports/brush.svg" id="brush"]
+[ext_resource type="Script" uid="uid://baksjq7ns107k" path="res://scripts/ui/report_fit.gd" id="fit"]
+[ext_resource type="Script" uid="uid://b3hufrivpe732" path="res://scripts/ui/settings_panel.gd" id="script"]
+[ext_resource type="Theme" uid="uid://wg6otsl07xob" path="res://resources/themes/menu_card_theme.tres" id="theme"]
+
+[node name="SettingsPanel" type="Control" unique_id=1833720593]
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -15,7 +17,7 @@ grow_vertical = 2
 theme = ExtResource("theme")
 script = ExtResource("script")
 
-[node name="Background" type="TextureRect" parent="."]
+[node name="Background" type="TextureRect" parent="." unique_id=44841819]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -23,11 +25,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("background")
+texture = ExtResource("3_ea4bf")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="Shade" type="ColorRect" parent="."]
+[node name="Shade" type="ColorRect" parent="." unique_id=1991280606]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -35,9 +37,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.10, 0.12, 0.17, 0.68)
+color = Color(0.1, 0.12, 0.17, 0.68)
 
-[node name="Center" type="Control" parent="."]
+[node name="Center" type="Control" parent="." unique_id=508626592]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -47,144 +49,146 @@ grow_vertical = 2
 script = ExtResource("fit")
 design_size = Vector2(860, 720)
 
-[node name="Panel" type="PanelContainer" parent="Center"]
-offset_right = 860.0
-offset_bottom = 720.0
+[node name="Panel" type="PanelContainer" parent="Center" unique_id=607545199]
+layout_mode = 0
+offset_left = 222.22464
+offset_top = 20.0
+offset_right = 1082.2246
+offset_bottom = 759.0
+scale = Vector2(0.8227334, 0.8227334)
 
-[node name="Margin" type="MarginContainer" parent="Center/Panel"]
+[node name="Margin" type="MarginContainer" parent="Center/Panel" unique_id=856843261]
 layout_mode = 2
 theme_override_constants/margin_left = 40
-theme_override_constants/margin_right = 40
 theme_override_constants/margin_top = 42
+theme_override_constants/margin_right = 40
 theme_override_constants/margin_bottom = 36
 
-[node name="Content" type="VBoxContainer" parent="Center/Panel/Margin"]
+[node name="Content" type="VBoxContainer" parent="Center/Panel/Margin" unique_id=255414424]
 layout_mode = 2
 theme_override_constants/separation = 14
 
-[node name="Eyebrow" type="Label" parent="Center/Panel/Margin/Content"]
+[node name="Eyebrow" type="Label" parent="Center/Panel/Margin/Content" unique_id=507182402]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.59, 0.53, 0.47, 1)
+theme_override_font_sizes/font_size = 18
 text = "QUACK COOK  /  PREFERENCES"
 
-[node name="Title" type="Label" parent="Center/Panel/Margin/Content"]
+[node name="Title" type="Label" parent="Center/Panel/Margin/Content" unique_id=1844732842]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 54
 theme_override_colors/font_color = Color(0.15, 0.12, 0.13, 1)
+theme_override_font_sizes/font_size = 54
 text = "Settings"
 
-[node name="Divider" type="TextureRect" parent="Center/Panel/Margin/Content"]
+[node name="Divider" type="TextureRect" parent="Center/Panel/Margin/Content" unique_id=1889119391]
 custom_minimum_size = Vector2(0, 18)
 layout_mode = 2
 mouse_filter = 2
 texture = ExtResource("brush")
 expand_mode = 1
 
-[node name="MouseRow" type="HBoxContainer" parent="Center/Panel/Margin/Content"]
+[node name="MouseRow" type="HBoxContainer" parent="Center/Panel/Margin/Content" unique_id=1321512895]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 
-[node name="MouseCaption" type="Label" parent="Center/Panel/Margin/Content/MouseRow"]
+[node name="MouseCaption" type="Label" parent="Center/Panel/Margin/Content/MouseRow" unique_id=120099967]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Mouse sensitivity"
 
-[node name="MouseValue" type="Label" parent="Center/Panel/Margin/Content/MouseRow"]
+[node name="MouseValue" type="Label" parent="Center/Panel/Margin/Content/MouseRow" unique_id=957776483]
 unique_name_in_owner = true
-layout_mode = 2
 custom_minimum_size = Vector2(126, 0)
+layout_mode = 2
 theme_type_variation = &"Score"
 theme_override_font_sizes/font_size = 24
 text = "1.00x"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Mouse" type="HSlider" parent="Center/Panel/Margin/Content"]
+[node name="Mouse" type="HSlider" parent="Center/Panel/Margin/Content" unique_id=1891375623]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 mouse_default_cursor_shape = 2
 min_value = 0.2
-max_value = 3
+max_value = 3.0
 step = 0.05
 value = 1.0
 
-[node name="SFXRow" type="HBoxContainer" parent="Center/Panel/Margin/Content"]
+[node name="SFXRow" type="HBoxContainer" parent="Center/Panel/Margin/Content" unique_id=1146553402]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 
-[node name="SFXCaption" type="Label" parent="Center/Panel/Margin/Content/SFXRow"]
+[node name="SFXCaption" type="Label" parent="Center/Panel/Margin/Content/SFXRow" unique_id=102303273]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Sound effects"
 
-[node name="SFXValue" type="Label" parent="Center/Panel/Margin/Content/SFXRow"]
+[node name="SFXValue" type="Label" parent="Center/Panel/Margin/Content/SFXRow" unique_id=1861637943]
 unique_name_in_owner = true
-layout_mode = 2
 custom_minimum_size = Vector2(126, 0)
+layout_mode = 2
 theme_type_variation = &"Score"
 theme_override_font_sizes/font_size = 24
 text = "100%"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SFX" type="HSlider" parent="Center/Panel/Margin/Content"]
+[node name="SFX" type="HSlider" parent="Center/Panel/Margin/Content" unique_id=1308644960]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 mouse_default_cursor_shape = 2
-min_value = 0
-max_value = 1
+max_value = 1.0
 step = 0.01
 value = 1.0
 
-[node name="MusicRow" type="HBoxContainer" parent="Center/Panel/Margin/Content"]
+[node name="MusicRow" type="HBoxContainer" parent="Center/Panel/Margin/Content" unique_id=985728242]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 
-[node name="MusicCaption" type="Label" parent="Center/Panel/Margin/Content/MusicRow"]
+[node name="MusicCaption" type="Label" parent="Center/Panel/Margin/Content/MusicRow" unique_id=1210914515]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Background music"
 
-[node name="MusicValue" type="Label" parent="Center/Panel/Margin/Content/MusicRow"]
+[node name="MusicValue" type="Label" parent="Center/Panel/Margin/Content/MusicRow" unique_id=192350448]
 unique_name_in_owner = true
-layout_mode = 2
 custom_minimum_size = Vector2(126, 0)
+layout_mode = 2
 theme_type_variation = &"Score"
 theme_override_font_sizes/font_size = 24
 text = "100%"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Music" type="HSlider" parent="Center/Panel/Margin/Content"]
+[node name="Music" type="HSlider" parent="Center/Panel/Margin/Content" unique_id=74364572]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 mouse_default_cursor_shape = 2
-min_value = 0
-max_value = 1
+max_value = 1.0
 step = 0.01
 value = 1.0
 
-[node name="BottomSpacer" type="Control" parent="Center/Panel/Margin/Content"]
+[node name="BottomSpacer" type="Control" parent="Center/Panel/Margin/Content" unique_id=1211521657]
 custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="Back" type="Button" parent="Center/Panel/Margin/Content"]
+[node name="Back" type="Button" parent="Center/Panel/Margin/Content" unique_id=779759917]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "BACK"
-alignment = 0
 icon = ExtResource("back")
+alignment = 0
 icon_alignment = 2
 expand_icon = true

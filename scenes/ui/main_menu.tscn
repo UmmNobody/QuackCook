@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c5ujn8xayauw4" path="res://scripts/ui/main_menu.gd" id="1"]
 [ext_resource type="Theme" uid="uid://bttyh5y327fpf" path="res://resources/themes/summary_theme.tres" id="2"]
-[ext_resource type="Texture2D" uid="uid://di88153mwdoj1" path="res://assets/textures/ui/menu_background.png" id="3_x2yvf"]
+[ext_resource type="Texture2D" uid="uid://obh3qubvhvtp" path="res://assets/textures/ui/menu_background2.png" id="3_x2yvf"]
 [ext_resource type="Script" uid="uid://c00r5xaioiy25" path="res://scripts/ui/menu_hover_button.gd" id="hover"]
 [ext_resource type="Texture2D" uid="uid://cu45wkiee5gna" path="res://assets/icon/QuackCookLogoV2.png" id="logo"]
 
@@ -28,11 +28,10 @@ theme = ExtResource("2")
 script = ExtResource("1")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=1058411005]
-visible = false
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
-scale = Vector2(0.45, 0.45)
+scale = Vector2(0.6, 0.6)
 texture = ExtResource("3_x2yvf")
 
 [node name="LeftFade" type="TextureRect" parent="." unique_id=2135701742]

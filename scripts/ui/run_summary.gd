@@ -4,6 +4,7 @@ const SummaryReveal = preload("res://scripts/ui/summary_reveal.gd")
 var _reveal := SummaryReveal.new()
 
 func _ready() -> void:
+	AudioManager.cue("gameover", self)
 	add_child(_reveal)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	var totals: Dictionary = GameManager.run_totals

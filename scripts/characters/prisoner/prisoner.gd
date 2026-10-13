@@ -123,6 +123,7 @@ func can_open_kitchen_door() -> bool:
 
 func take_damage(amount: float, source: Node3D = null) -> void:
 	if amount <= 0 or is_incapacitated() or is_queued_for_deletion(): return
+	AudioManager.hurt(self)
 	health = maxf(0.0, health - amount)
 	health_changed.emit(health, max_health)
 	visuals.play_hit_feedback(health > 0.0)
@@ -326,6 +327,7 @@ func begin_anger(points: Array[Vector3], target: Node3D, reason: String) -> void
 	state = State.THROWING_TRAY if has_serving_tray() else State.ENTERING_COMBAT
 	
 	if state == State.ENTERING_COMBAT:
+		if anger_reason == "Patience exhausted": AudioManager.cue("quack_angry", self, true)
 		visuals.set_combat_hands(true)
 		
 	_update_display()
@@ -335,6 +337,7 @@ func _throw_serving_tray() -> void:
 	if not has_serving_tray():
 		return
 		
+	if anger_reason == "Patience exhausted": AudioManager.cue("quack_angry", self, true)
 	var throw_velocity: Vector3 = visuals.global_basis.z.normalized() * tray_throw_forward_speed + Vector3.UP * tray_throw_up_speed
 	thrown_tray = serving_tray.throw_into_scene(get_parent(), throw_velocity, discarded_tray_lifetime)
 	serving_tray = null

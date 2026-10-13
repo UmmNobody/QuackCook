@@ -74,6 +74,7 @@ func interact_with(held_item: Node, player_head: Node) -> bool:
 		player_head.drop_object()
 		food.queue_free()
 	current_servings += servings_per_refill
+	AudioManager.cue("put_item", self, true)
 	return true
 
 ## Called by this well's button now; later the serving system can use the result.

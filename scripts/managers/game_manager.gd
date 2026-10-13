@@ -57,6 +57,7 @@ var _generation: int = 0
 
 func register_kitchen(owner_node: Node3D, wave_spawner: Node) -> bool:
 	if is_instance_valid(layout) or QueueManager.layout_owner != owner_node or not is_instance_valid(wave_spawner): return false
+	AudioManager.stop_music()
 	layout = owner_node
 	spawner = wave_spawner
 	spawner.prisoner_spawned.connect(_on_prisoner_spawned)

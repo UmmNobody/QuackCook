@@ -22,7 +22,7 @@ func run() -> void:
 	current_scene = stage
 	var actor = spawn([FoodItem.Type.WATER, FoodItem.Type.RICE, FoodItem.Type.CHICKEN, FoodItem.Type.MIXED_VEG, FoodItem.Type.CHICKEN])
 	check(not actor.has_node("Info") and actor.has_node("FoodIcon/Patience"), "Overhead display has food icon and patience bar without old text")
-	check(actor.find_children("*", "Sprite3D", true, false).size() == 1, "One overhead food sprite per prisoner")
+	check(actor.find_children("*", "Sprite3D", true, false).size() == 2, "Food sprite and separate background per prisoner")
 	check(actor.food_icon.billboard == BaseMaterial3D.BILLBOARD_ENABLED and not actor.food_icon.shaded, "Icon faces camera and stays readable without scene lighting")
 	check(actor.food_icon.visible and actor.food_icon.texture == actor.chicken_icon, "Unsorted multi-food order starts at first needed queue station")
 	actor.give_serving_tray()
@@ -33,6 +33,7 @@ func run() -> void:
 		actor.receive_food(food)
 		check(not actor.needs_food(food), "Serving fulfills food %d" % food)
 	check(actor.complete() and not actor.food_icon.visible and actor.food_icon.texture == null, "Completed order hides icon immediately")
+	check(not actor.get_node("FoodIcon/IconBackground").is_visible_in_tree(), "Background hides with fulfilled, angry, unconscious, or departing order")
 	actor.queue_free()
 	await frames(2)
 	actor = spawn([FoodItem.Type.WATER, FoodItem.Type.RICE])
@@ -46,6 +47,7 @@ func run() -> void:
 	var route: Array[Vector3] = []
 	actor.begin_anger(route, null, "Wrong food")
 	check(not actor.food_icon.visible, "Angry prisoner no longer displays a food request")
+	check(not actor.get_node("FoodIcon/IconBackground").is_visible_in_tree(), "Background hides with fulfilled, angry, unconscious, or departing order")
 	actor.queue_free()
 	await frames(2)
 	actor = spawn([FoodItem.Type.MIXED_VEG])
@@ -53,6 +55,7 @@ func run() -> void:
 	check(actor.is_incapacitated() and not actor.food_icon.visible, "Lethal damage hides icon")
 	await frames(3)
 	check(is_instance_valid(actor.ragdoll), "Ragdoll still starts without removed label nodes")
+	check(not actor.get_node("FoodIcon/IconBackground").is_visible_in_tree(), "Background hides with fulfilled, angry, unconscious, or departing order")
 	actor.queue_free()
 	await frames(2)
 	actor = spawn([])
@@ -62,6 +65,7 @@ func run() -> void:
 	check(actor.food_icon.texture == actor.water_icon and actor.food_icon.visible, "Reconfiguring an existing prisoner updates icon immediately")
 	actor.begin_exit(Vector3.ZERO)
 	check(not actor.food_icon.visible, "Departing prisoner hides icon")
+	check(not actor.get_node("FoodIcon/IconBackground").is_visible_in_tree(), "Background hides with fulfilled, angry, unconscious, or departing order")
 	actor.queue_free()
 	await frames(2)
 	# Optional visual fixture: render all four supplied icons over actual prisoners.

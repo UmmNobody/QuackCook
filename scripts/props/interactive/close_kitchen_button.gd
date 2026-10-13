@@ -30,7 +30,7 @@ func interact_with(_item: Node, player_head: Node) -> bool:
 	if get_tree().paused: return true
 	if player_head != null and player_head.has_method("interaction_allowed") and not player_head.interaction_allowed(): return true
 	if GameManager.state == GameManager.State.PREPARING:
-		GameManager.open_kitchen()
+		if GameManager.open_kitchen(): AudioManager.cue("lever1", self, true)
 	else:
-		GameManager.finish_service()
+		if not GameManager.finish_service().is_empty(): AudioManager.cue("lever2", self, true)
 	return true

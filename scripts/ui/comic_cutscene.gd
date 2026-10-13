@@ -19,8 +19,11 @@ var _animating := false
 var _ended := false
 var _hold_elapsed := 0.0
 var _input_guard := 0.2
+var _sound_generation := 0
+var _panel_voices: Array[Node] = []
 
 func _ready() -> void:
+	AudioManager.stop_music()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	for page in pages.get_children():
 		if not page is Control: continue
@@ -64,6 +67,7 @@ func _reveal(index: int) -> void:
 	panel.position = _rest_positions[index] + Vector2(0, slide_distance)
 	panel.modulate.a = 0.0
 	panel.show()
+	_play_panel_sound(panel)
 	_animating = true
 	_hold_elapsed = 0.0
 	_tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
@@ -108,6 +112,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func finish() -> void:
 	if _ended: return
 	_ended = true
+	_stop_panel_sound()
 	if _tween: _tween.kill()
 	auto_button.disabled = true
 	skip_button.disabled = true
@@ -115,3 +120,23 @@ func finish() -> void:
 
 func _exit_tree() -> void:
 	if _tween: _tween.kill()
+
+func _stop_panel_sound() -> void:
+	_sound_generation += 1
+	for voice in _panel_voices:
+		if is_instance_valid(voice):
+			voice.stop()
+			voice.queue_free()
+	_panel_voices.clear()
+
+func _play_panel_sound(panel: Control) -> void:
+	_stop_panel_sound()
+	var key := str(panel.get_meta("sound", ""))
+	if not key.is_empty():
+		_panel_voices.append(AudioManager.cue(key, self))
+	var second := str(panel.get_meta("second_sound", ""))
+	if second.is_empty(): return
+	var generation := _sound_generation
+	await get_tree().create_timer(float(panel.get_meta("second_sound_delay", 1.5)), false).timeout
+	if _ended or generation != _sound_generation or not is_inside_tree(): return
+	_panel_voices.append(AudioManager.cue(second, self))

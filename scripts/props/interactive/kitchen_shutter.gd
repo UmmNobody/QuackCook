@@ -36,6 +36,7 @@ func _sync_kitchen_state() -> void:
 	var should_open := GameManager.state == GameManager.State.SERVING
 	if should_open == target_open: return
 	target_open = should_open
+	AudioManager.cue("slidingdoor", self)
 	var start := 0.0 if target_open else opened_time
 	_end_time = opened_time if target_open else _clip.length
 	# Next day can begin before closing finishes (including zero preparation).

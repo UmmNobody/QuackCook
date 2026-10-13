@@ -8,6 +8,7 @@ extends Control
 @onready var prompt: Label = %Prompt
 
 func _ready() -> void:
+	AudioManager.play_menu_music()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	continue_button.disabled = not GameManager.has_checkpoint()
 	continue_button._animate()

@@ -7,8 +7,12 @@
 [ext_resource type="ArrayMesh" uid="uid://de34w70km0wum" path="res://resources/meshes/Chicken_Cooked.tres" id="4_qwuem"]
 [ext_resource type="Material" uid="uid://v0mnupsurftt" path="res://resources/materials/outline_material.tres" id="5_qwuem"]
 [ext_resource type="ArrayMesh" uid="uid://2eoc0mao7lc8" path="res://resources/meshes/LettuceCarrot_Cooked_Square.tres" id="7_jpl5i"]
+[ext_resource type="Texture2D" uid="uid://nx2q2te1xej4" path="res://assets/icon/chicken_icon.png" id="7_v0f0t"]
 [ext_resource type="ArrayMesh" uid="uid://dg6yeekrxv164" path="res://resources/meshes/Rice_Square.tres" id="8_vuiq4"]
+[ext_resource type="Texture2D" uid="uid://cctwts1avdo8l" path="res://assets/icon/mixveg_icon.png" id="9_2wrjo"]
 [ext_resource type="ArrayMesh" uid="uid://bwp2078r45jrc" path="res://resources/meshes/water_legacy.tres" id="9_7yxn2"]
+[ext_resource type="Texture2D" uid="uid://bxl0lju2wnpsv" path="res://assets/icon/rice_icon.png" id="11_5oyia"]
+[ext_resource type="Texture2D" uid="uid://bl6lyx288wuss" path="res://assets/icon/water_icon.png" id="13_3s2wu"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_e24ud"]
 _surfaces = [{
@@ -131,7 +135,7 @@ transform = Transform3D(0.8469195, 0.07698101, 0.5261192, -0.19451101, 0.9657366
 mesh = ExtResource("4_qwuem")
 
 [node name="CountLabel" type="Label3D" parent="ChickenWell" unique_id=1465106622]
-transform = Transform3D(1, 0, 0, 0, -4.3711392e-08, 1, 0, -1, -4.3711392e-08, 0, 0.13, 0.85)
+transform = Transform3D(1, 0, 0, 0, -4.3711392e-08, 1, 0, -1, -4.3711392e-08, 0.09387088, 0.13, 0.85)
 pixel_size = 0.004
 text = "0/4"
 font_size = 42
@@ -154,6 +158,10 @@ transform = Transform3D(0.99999994, 0, 0, 0, 1.0000001, 0, 0, 0, 1, 0, 0, 0)
 mesh = SubResource("ArrayMesh_vuiq4")
 surface_material_override/0 = ExtResource("5_qwuem")
 
+[node name="Sprite3D" type="Sprite3D" parent="ChickenWell" unique_id=1715555734]
+transform = Transform3D(0.2, 0, 0, 0, -8.742278e-09, 0.2, 0, -0.2, -8.742278e-09, -0.23836493, 0.13, 0.9065281)
+texture = ExtResource("7_v0f0t")
+
 [node name="VegetableWell" type="StaticBody3D" parent="." unique_id=1544202500 groups=["Focusable", "Interactable"]]
 transform = Transform3D(0.9, 0, 0, 0, 0.9, 0, 0, 0, 0.9, -0.77465296, 0.9988631, 0.005094826)
 script = ExtResource("1_well")
@@ -175,7 +183,7 @@ transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0, -0.034610152, 0)
 mesh = ExtResource("7_jpl5i")
 
 [node name="CountLabel" type="Label3D" parent="VegetableWell" unique_id=1892485222]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.13, 0.85)
+transform = Transform3D(1, 0, 0, 0, -4.3711392e-08, 1, 0, -1, -4.3711392e-08, 0.121959746, 0.13, 0.85)
 pixel_size = 0.004
 text = "0/4"
 font_size = 42
@@ -197,6 +205,10 @@ shape = SubResource("BoxShape3D_jpl5i")
 transform = Transform3D(0.99999994, 0, 0, 0, 1.0000001, 0, 0, 0, 1, 0, 0, 0)
 mesh = SubResource("ArrayMesh_vuiq4")
 surface_material_override/0 = ExtResource("5_qwuem")
+
+[node name="Sprite3D" type="Sprite3D" parent="VegetableWell" unique_id=2105986268]
+transform = Transform3D(0.2, 0, 0, 0, -8.742278e-09, 0.2, 0, -0.2, -8.742278e-09, -0.25189364, 0.13, 0.87583655)
+texture = ExtResource("9_2wrjo")
 
 [node name="RiceWell" type="StaticBody3D" parent="." unique_id=1541935615 groups=["Focusable", "Interactable"]]
 transform = Transform3D(0.9, 0, 0, 0, 0.9, 0, 0, 0, 0.9, 0.8568815, 0.9988631, 0.005094826)
@@ -221,7 +233,7 @@ transform = Transform3D(1.5, 0, 0, 0, 3.214, 0, 0, 0, 1.5, 0, -0.10764015, 0)
 mesh = ExtResource("8_vuiq4")
 
 [node name="CountLabel" type="Label3D" parent="RiceWell" unique_id=1499238164]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.13, 0.85)
+transform = Transform3D(1, 0, 0, 0, -4.3711392e-08, 1, 0, -1, -4.3711392e-08, 0.14591718, 0.13, 0.85)
 pixel_size = 0.004
 text = "0/4"
 font_size = 42
@@ -244,6 +256,10 @@ transform = Transform3D(0.99999994, 0, 0, 0, 1.0000001, 0, 0, 0, 1, 0, 0, 0)
 mesh = SubResource("ArrayMesh_vuiq4")
 surface_material_override/0 = ExtResource("5_qwuem")
 
+[node name="Sprite3D" type="Sprite3D" parent="RiceWell" unique_id=1197906193]
+transform = Transform3D(0.2, 0, 0, 0, -8.742278e-09, 0.2, 0, -0.2, -8.742278e-09, -0.21229154, 0.13, 0.87583673)
+texture = ExtResource("11_5oyia")
+
 [node name="WaterWell" type="StaticBody3D" parent="." unique_id=1785436539 groups=["Focusable", "Interactable"]]
 transform = Transform3D(0.9, 0, 0, 0, 0.9, 0, 0, 0, 0.9, 2.4139702, 0.9988631, 0.005094826)
 script = ExtResource("1_well")
@@ -264,7 +280,7 @@ mesh = SubResource("ArrayMesh_7yxn2")
 surface_material_override/0 = ExtResource("5_qwuem")
 
 [node name="CountLabel" type="Label3D" parent="WaterWell" unique_id=1179295672]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.13, 0.85)
+transform = Transform3D(1, 0, 0, 0, -4.3711392e-08, 1, 0, -1, -4.3711392e-08, 0.14397573, 0.13, 0.85)
 pixel_size = 0.004
 text = "0/4"
 font_size = 42
@@ -312,3 +328,7 @@ shape = SubResource("BoxShape3D_jpl5i")
 transform = Transform3D(0.99999994, 0, 0, 0, 1.0000001, 0, 0, 0, 1, 0, 0, 0)
 mesh = SubResource("ArrayMesh_vuiq4")
 surface_material_override/0 = ExtResource("5_qwuem")
+
+[node name="Sprite3D" type="Sprite3D" parent="WaterWell" unique_id=441340342]
+transform = Transform3D(0.2, 0, 0, 0, -8.742278e-09, 0.2, 0, -0.2, -8.742278e-09, -0.18176699, 0.13, 0.87583673)
+texture = ExtResource("13_3s2wu")

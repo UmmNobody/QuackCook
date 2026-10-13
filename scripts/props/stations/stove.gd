@@ -12,6 +12,8 @@ class_name Stove
 var player: Node3D = null
 var current_cookware: Cookware = null
 var _progress_fill: StyleBoxFlat
+var _cooking_sound := ""
+@onready var cooking_audio: AudioStreamPlayer3D = $CookingAudio
 
 func _ready() -> void:
 	_progress_fill = StyleBoxFlat.new()
@@ -81,10 +83,12 @@ func _setup_cooking_ui() -> void:
 	else:
 		_hide_cooking_ui()
 	_update_fire()
+	_update_cooking_sound()
 
 func _hide_cooking_ui() -> void:
 	cooking_ui_3d.visible = false
 	fire.set_active(false)
+	_set_cooking_sound("")
 
 func _update_fire() -> void:
 	var cooking := is_instance_valid(current_cookware) and current_cookware.is_on_stove
@@ -109,3 +113,21 @@ func _on_snap_area_body_entered(body: Node3D) -> void:
 			return
 			
 		place_cookware(cookware)
+
+func _update_cooking_sound() -> void:
+	var key := ""
+	if is_instance_valid(current_cookware) and current_cookware.is_on_stove and is_instance_valid(current_cookware.current_food):
+		var food := current_cookware.current_food
+		if food.current_state == FoodItem.State.BURNT:
+			key = "burning"
+		elif current_cookware is Pan:
+			key = "frying"
+	_set_cooking_sound(key)
+
+func _set_cooking_sound(key: String) -> void:
+	if key == _cooking_sound: return
+	_cooking_sound = key
+	cooking_audio.stop()
+	if not key.is_empty():
+		cooking_audio.stream = AudioManager.loop_stream(key)
+		cooking_audio.play()

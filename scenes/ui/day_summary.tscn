@@ -50,11 +50,11 @@ script = ExtResource("fit")
 
 [node name="Panel" type="PanelContainer" parent="Summary/Center" unique_id=529568494]
 layout_mode = 0
-offset_left = 186.5
+offset_left = 219.37625
 offset_top = 20.0
-offset_right = 1006.5
+offset_right = 1039.3762
 offset_bottom = 719.0
-scale = Vector2(0.95, 0.95)
+scale = Vector2(0.86981404, 0.86981404)
 
 [node name="Margin" type="MarginContainer" parent="Summary/Center/Panel" unique_id=545289174]
 layout_mode = 2

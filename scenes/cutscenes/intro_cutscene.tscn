@@ -60,6 +60,8 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="Start1" type="TextureRect" parent="ComicBoard/Pages/Page1" unique_id=1589278024]
+metadata/sound = "noti"
+
 layout_mode = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
@@ -69,6 +71,8 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Start2" type="TextureRect" parent="ComicBoard/Pages/Page1" unique_id=185446918]
+metadata/sound = "door1"
+
 layout_mode = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
@@ -78,6 +82,8 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Start3" type="TextureRect" parent="ComicBoard/Pages/Page1" unique_id=2122445878]
+metadata/sound = "gun"
+
 layout_mode = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
@@ -87,6 +93,8 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Start4" type="TextureRect" parent="ComicBoard/Pages/Page1" unique_id=1298410008]
+metadata/sound = "handcuff"
+
 layout_mode = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
@@ -106,6 +114,10 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="Start5" type="TextureRect" parent="ComicBoard/Pages/Page2" unique_id=2145303792]
+metadata/sound = "judge"
+metadata/second_sound = "quack_double"
+metadata/second_sound_delay = 1.5
+
 layout_mode = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
@@ -115,6 +127,8 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Start6" type="TextureRect" parent="ComicBoard/Pages/Page2" unique_id=10703478]
+metadata/sound = "quack_angry"
+
 layout_mode = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
@@ -124,6 +138,8 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Start7" type="TextureRect" parent="ComicBoard/Pages/Page2" unique_id=1210902786]
+metadata/sound = "shirt"
+
 layout_mode = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
@@ -133,6 +149,8 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Start8" type="TextureRect" parent="ComicBoard/Pages/Page2" unique_id=876933927]
+metadata/sound = "shirt"
+
 layout_mode = 0
 offset_right = 1920.0
 offset_bottom = 1080.0

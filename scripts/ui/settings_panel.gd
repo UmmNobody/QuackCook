@@ -6,6 +6,8 @@ func _ready() -> void:
 	$Background.visible = show_menu_background
 	%Mouse.value_changed.connect(AppSettings.set_mouse_sensitivity)
 	%SFX.value_changed.connect(AppSettings.set_sfx_volume)
+	%SFX.drag_ended.connect(_preview_sfx)
+	%SFX.gui_input.connect(_sfx_keyboard_release)
 	%Music.value_changed.connect(AppSettings.set_music_volume)
 	%Back.pressed.connect(func(): back_requested.emit())
 	AppSettings.changed.connect(_refresh)
@@ -21,3 +23,10 @@ func _refresh() -> void:
 
 func focus_first() -> void:
 	%Mouse.grab_focus()
+
+func _preview_sfx(changed_value: bool) -> void:
+	if changed_value: AudioManager.cue("quack1", self)
+
+func _sfx_keyboard_release(event: InputEvent) -> void:
+	if event is InputEventKey and not event.pressed and event.keycode in [KEY_LEFT, KEY_RIGHT, KEY_HOME, KEY_END]:
+		AudioManager.cue("quack1", self)

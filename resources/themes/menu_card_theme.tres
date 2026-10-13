@@ -1,8 +1,8 @@
-[gd_resource type="Theme" format=3]
-[ext_resource type="Texture2D" path="res://assets/textures/ui/reports/slider_knob.svg" id="knob"]
+[gd_resource type="Theme" format=3 uid="uid://wg6otsl07xob"]
 
 [ext_resource type="Texture2D" uid="uid://dl8hod181a73y" path="res://assets/textures/ui/reports/dash.svg" id="dash"]
 [ext_resource type="FontFile" uid="uid://dapna80ow2fku" path="res://assets/font/TitanOne-Regular.ttf" id="font"]
+[ext_resource type="Texture2D" uid="uid://b4vj7nslginf8" path="res://assets/textures/ui/reports/slider_knob.svg" id="knob"]
 [ext_resource type="Texture2D" uid="uid://bxo37ooxsplr" path="res://assets/textures/ui/reports/paper.svg" id="paper"]
 
 [sub_resource type="StyleBoxFlat" id="Dark"]
@@ -44,10 +44,26 @@ corner_radius_bottom_left = 5
 [sub_resource type="StyleBoxTexture" id="Dash"]
 texture = ExtResource("dash")
 
+[sub_resource type="StyleBoxFlat" id="SliderFill"]
+content_margin_top = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.94, 0.64, 0.28, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="SliderTrack"]
+content_margin_top = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.77, 0.69, 0.59, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
 [sub_resource type="StyleBoxLine" id="Line"]
 color = Color(0.8, 0.71, 0.61, 0.65)
-
-
 
 [sub_resource type="StyleBoxTexture" id="Paper"]
 texture = ExtResource("paper")
@@ -66,23 +82,6 @@ corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
-
-[sub_resource type="StyleBoxFlat" id="SliderTrack"]
-bg_color = Color(0.77, 0.69, 0.59, 1)
-content_margin_top = 5.0
-content_margin_bottom = 5.0
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_left = 5
-corner_radius_bottom_right = 5
-[sub_resource type="StyleBoxFlat" id="SliderFill"]
-bg_color = Color(0.94, 0.64, 0.28, 1)
-content_margin_top = 5.0
-content_margin_bottom = 5.0
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_left = 5
-corner_radius_bottom_right = 5
 
 [resource]
 default_font = ExtResource("font")
@@ -111,6 +110,12 @@ Footer/base_type = &"PanelContainer"
 Footer/styles/panel = SubResource("Dark")
 HBoxContainer/constants/separation = 20
 HSeparator/styles/separator = SubResource("Dash")
+HSlider/icons/grabber = ExtResource("knob")
+HSlider/icons/grabber_disabled = ExtResource("knob")
+HSlider/icons/grabber_highlight = ExtResource("knob")
+HSlider/styles/grabber_area = SubResource("SliderFill")
+HSlider/styles/grabber_area_highlight = SubResource("SliderFill")
+HSlider/styles/slider = SubResource("SliderTrack")
 Label/colors/font_color = Color(0.38, 0.33, 0.3, 1)
 Leader/base_type = &"HSeparator"
 Leader/styles/separator = SubResource("Line")
@@ -120,9 +125,3 @@ Score/colors/font_color = Color(0.23, 0.13, 0.09, 1)
 Score/font_sizes/font_size = 30
 Score/styles/normal = SubResource("Score")
 VBoxContainer/constants/separation = 12
-HSlider/styles/slider = SubResource("SliderTrack")
-HSlider/styles/grabber_area = SubResource("SliderFill")
-HSlider/styles/grabber_area_highlight = SubResource("SliderFill")
-HSlider/icons/grabber = ExtResource("knob")
-HSlider/icons/grabber_highlight = ExtResource("knob")
-HSlider/icons/grabber_disabled = ExtResource("knob")

@@ -3,10 +3,11 @@
 [ext_resource type="Script" uid="uid://bp184ugv1w3ip" path="res://scripts/characters/prisoner/prisoner.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://bdifaup3l3e2r" path="res://assets/models/characters/prisoner.glb" id="2"]
 [ext_resource type="Script" uid="uid://k0cp1m1ugo7y" path="res://scripts/characters/prisoner/prisoner_visual.gd" id="3"]
-[ext_resource type="Texture2D" uid="uid://gg06qrwcjrwi" path="res://assets/icon/chicken_icon.png" id="icon_chicken"]
-[ext_resource type="Texture2D" uid="uid://ckdqb8bvgy35e" path="res://assets/icon/rice_icon.png" id="icon_rice"]
-[ext_resource type="Texture2D" uid="uid://dnnows6r5o374" path="res://assets/icon/mixveg_icon.png" id="icon_vegetables"]
-[ext_resource type="Texture2D" uid="uid://cqscrgikk4wdy" path="res://assets/icon/water_icon.png" id="icon_water"]
+[ext_resource type="Texture2D" uid="uid://b63ye0qdkaibg" path="res://assets/icon/background_icon.png" id="icon_background"]
+[ext_resource type="Texture2D" uid="uid://nx2q2te1xej4" path="res://assets/icon/chicken_icon.png" id="icon_chicken"]
+[ext_resource type="Texture2D" uid="uid://bxl0lju2wnpsv" path="res://assets/icon/rice_icon.png" id="icon_rice"]
+[ext_resource type="Texture2D" uid="uid://cctwts1avdo8l" path="res://assets/icon/mixveg_icon.png" id="icon_vegetables"]
+[ext_resource type="Texture2D" uid="uid://bl6lyx288wuss" path="res://assets/icon/water_icon.png" id="icon_water"]
 [ext_resource type="Script" uid="uid://fk43uddmv1vc" path="res://scripts/characters/prisoner/prisoner_patience_bar.gd" id="patience_script"]
 
 [sub_resource type="CapsuleShape3D" id="Body"]
@@ -34,6 +35,10 @@ size = Vector2(0.1, 0.68)
 collision_layer = 4
 collision_mask = 5
 script = ExtResource("1")
+chase_speed = 3.5
+attack_damage = 25.0
+attack_range = 1.5
+attack_interval = 0.6
 chicken_icon = ExtResource("icon_chicken")
 vegetables_icon = ExtResource("icon_vegetables")
 rice_icon = ExtResource("icon_rice")
@@ -73,6 +78,13 @@ cast_shadow = 0
 pixel_size = 0.003
 billboard = 1
 texture = ExtResource("icon_chicken")
+
+[node name="IconBackground" type="Sprite3D" parent="FoodIcon" unique_id=285664645]
+cast_shadow = 0
+pixel_size = 0.003
+billboard = 1
+render_priority = -1
+texture = ExtResource("icon_background")
 
 [node name="Patience" type="Node3D" parent="FoodIcon" unique_id=594676413]
 script = ExtResource("patience_script")

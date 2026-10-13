@@ -222,6 +222,7 @@ func throw_object(force: float) -> void:
 	if object.has_method("get_throw_bodies"): bodies.assign(object.get_throw_bodies())
 	elif object is RigidBody3D: bodies.append(object)
 	ThrowImpact.ensure(object).arm(player, throw_damage_per_speed, bodies, throw_vector)
+	AudioManager.cue("throw_item", self)
 	
 	if object.has_method("throw"):
 		object.throw(throw_vector)
