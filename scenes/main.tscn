@@ -34,6 +34,7 @@
 [ext_resource type="Sky" uid="uid://db6aykvxipbv4" path="res://resources/visuals/kitchen_daylight_sky.tres" id="100_daylight_sky"]
 [ext_resource type="Script" uid="uid://uetxswv6mjk4" path="res://scripts/props/interactive/kitchen_shutter.gd" id="101_shutter"]
 [ext_resource type="PackedScene" path="res://scenes/world/quackcook_exterior_hall.tscn" id="102_exterior_hall"]
+[ext_resource type="PackedScene" path="res://scenes/characters/police_dancer.tscn" id="103_police_dancer"]
 [ext_resource type="Material" path="res://resources/materials/kitchen_floor_tiles.tres" id="floor_tiles_saved"]
 [ext_resource type="Script" uid="uid://d31rba4jpah0y" path="res://scripts/items/item_respawner.gd" id="item_respawner"]
 
@@ -92,6 +93,9 @@ shape = SubResource("BoxShape3D_service_player_barrier")
 
 [node name="Part_025" parent="Environment/QuackCook_Kitchen" index="22" unique_id=1492324131]
 material_override = ExtResource("floor_tiles_saved")
+
+[node name="Shutter_Rectangular_Panel" parent="Environment/QuackCook_Kitchen/Manual_Roller_Shutter_ROOT" parent_id_path=PackedInt32Array(2070259630, 401898410) index="2" unique_id=100616449]
+transform = Transform3D(1.01, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.22000001)
 
 [node name="RoofCollision" type="StaticBody3D" parent="Environment/QuackCook_Kitchen/Roof_Removable_Slab" parent_id_path=PackedInt32Array(2070259630, 836019991) index="0" unique_id=1635935972]
 
@@ -155,6 +159,9 @@ spot_range = 16.483944
 spot_attenuation = 0.3
 spot_angle = 89.99
 spot_angle_attenuation = 0.15
+
+[node name="PoliceDancer" parent="Environment" unique_id=1600640731 instance=ExtResource("103_police_dancer")]
+transform = Transform3D(0.5, 0, 0.86602545, 0, 1, 0, -0.86602545, 0, 0.5, -12.181044, 1.9218664, -4.1851907)
 
 [node name="Actors" type="Node3D" parent="." unique_id=695234059]
 

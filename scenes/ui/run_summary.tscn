@@ -1,142 +1,245 @@
 [gd_scene format=3 uid="uid://tv1o122xiw0e"]
 
-[ext_resource type="Script" uid="uid://c1v3ejdy5qc7s" path="res://scripts/ui/run_summary.gd" id="1"]
-[ext_resource type="Theme" uid="uid://bttyh5y327fpf" path="res://resources/themes/summary_theme.tres" id="2"]
-[ext_resource type="Texture2D" uid="uid://bvn1nvaceo7rg" path="res://assets/textures/ui/background.png" id="3_3ittw"]
+[ext_resource type="Script" path="res://scripts/ui/run_summary.gd" id="script"]
+[ext_resource type="Theme" path="res://resources/themes/report_theme.tres" id="theme"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/background.png" id="background"]
+[ext_resource type="Script" path="res://scripts/ui/report_fit.gd" id="fit"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/reports/brush.svg" id="brush"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/reports/served.svg" id="served"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/reports/missed.svg" id="missed"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/reports/target.svg" id="target"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/reports/day.svg" id="day"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/reports/subdued.svg" id="subdued"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/reports/unconscious.svg" id="unconscious"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/reports/flag.svg" id="flag"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/reports/arrow.svg" id="arrow"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jkg1p"]
-bg_color = Color(0, 0, 0, 0.84313726)
-
-[node name="RunSummary" type="Control" unique_id=441146479]
-layout_mode = 3
+[node name="RunSummary" type="Control"]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("2")
-script = ExtResource("1")
+theme = ExtResource("theme")
+script = ExtResource("script")
 
-[node name="Center" type="CenterContainer" parent="." unique_id=1696170520]
-layout_mode = 0
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("background")
+expand_mode = 1
+stretch_mode = 6
 
-[node name="TextureRect" type="TextureRect" parent="Center" unique_id=1546376674]
+[node name="Center" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("fit")
+design_size = Vector2(820, 740)
+
+[node name="Panel" type="PanelContainer" parent="Center"]
+offset_right = 820.0
+offset_bottom = 740.0
+
+[node name="Margin" type="MarginContainer" parent="Center/Panel"]
 layout_mode = 2
-texture = ExtResource("3_3ittw")
+theme_override_constants/margin_left = 52
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 52
+theme_override_constants/margin_bottom = 44
 
-[node name="Panel" type="PanelContainer" parent="Center" unique_id=833422104]
-custom_minimum_size = Vector2(620, 0)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_jkg1p")
-
-[node name="Margin" type="MarginContainer" parent="Center/Panel" unique_id=303212855]
-layout_mode = 2
-theme_override_constants/margin_left = 40
-theme_override_constants/margin_top = 36
-theme_override_constants/margin_right = 40
-theme_override_constants/margin_bottom = 36
-
-[node name="Content" type="VBoxContainer" parent="Center/Panel/Margin" unique_id=438087695]
+[node name="Content" type="VBoxContainer" parent="Center/Panel/Margin"]
 layout_mode = 2
 
-[node name="Eyebrow" type="Label" parent="Center/Panel/Margin/Content" unique_id=1529239838]
+[node name="Eyebrow" type="Label" parent="Center/Panel/Margin/Content"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
-text = "FINAL REPORT"
-
-[node name="Title" type="Label" parent="Center/Panel/Margin/Content" unique_id=441968458]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 42
-text = "GAME OVER"
-
-[node name="Divider" type="HSeparator" parent="Center/Panel/Margin/Content" unique_id=1708754659]
-layout_mode = 2
-
-[node name="DayRow" type="HBoxContainer" parent="Center/Panel/Margin/Content" unique_id=1339782435]
-layout_mode = 2
-
-[node name="DayCaption" type="Label" parent="Center/Panel/Margin/Content/DayRow" unique_id=1588819152]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.59, 0.53, 0.47, 1)
+text = "QUACK COOK  /  FINAL REPORT"
+
+[node name="Title" type="Label" parent="Center/Panel/Margin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 58
+theme_override_colors/font_color = Color(0.15, 0.12, 0.13, 1)
+text = "Game over"
+
+[node name="Underline" type="TextureRect" parent="Center/Panel/Margin/Content"]
+custom_minimum_size = Vector2(0, 17)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("brush")
+expand_mode = 1
+
+[node name="DayRow" type="HBoxContainer" parent="Center/Panel/Margin/Content"]
+custom_minimum_size = Vector2(0, 66)
+layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="Center/Panel/Margin/Content/DayRow"]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("day")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Caption" type="Label" parent="Center/Panel/Margin/Content/DayRow"]
+layout_mode = 2
 text = "Furthest day reached"
+theme_override_font_sizes/font_size = 22
 
-[node name="Day" type="Label" parent="Center/Panel/Margin/Content/DayRow" unique_id=173036845]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 26
-text = "0"
-
-[node name="ServedRow" type="HBoxContainer" parent="Center/Panel/Margin/Content" unique_id=1438459686]
-layout_mode = 2
-
-[node name="ServedCaption" type="Label" parent="Center/Panel/Margin/Content/ServedRow" unique_id=2063386542]
-unique_name_in_owner = true
+[node name="Leader" type="HSeparator" parent="Center/Panel/Margin/Content/DayRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 20
+size_flags_vertical = 4
+theme_type_variation = &"Leader"
+
+[node name="Day" type="Label" parent="Center/Panel/Margin/Content/DayRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(116, 48)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"Score"
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ServedRow" type="HBoxContainer" parent="Center/Panel/Margin/Content"]
+custom_minimum_size = Vector2(0, 66)
+layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="Center/Panel/Margin/Content/ServedRow"]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("served")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Caption" type="Label" parent="Center/Panel/Margin/Content/ServedRow"]
+layout_mode = 2
 text = "Successfully served"
+theme_override_font_sizes/font_size = 22
 
-[node name="Served" type="Label" parent="Center/Panel/Margin/Content/ServedRow" unique_id=573698952]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 26
-text = "0"
-
-[node name="SubduedRow" type="HBoxContainer" parent="Center/Panel/Margin/Content" unique_id=1033651718]
-layout_mode = 2
-
-[node name="SubduedCaption" type="Label" parent="Center/Panel/Margin/Content/SubduedRow" unique_id=482371694]
-unique_name_in_owner = true
+[node name="Leader" type="HSeparator" parent="Center/Panel/Margin/Content/ServedRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 20
+size_flags_vertical = 4
+theme_type_variation = &"Leader"
+
+[node name="Served" type="Label" parent="Center/Panel/Margin/Content/ServedRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(116, 48)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"Score"
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SubduedRow" type="HBoxContainer" parent="Center/Panel/Margin/Content"]
+custom_minimum_size = Vector2(0, 66)
+layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="Center/Panel/Margin/Content/SubduedRow"]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("subdued")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Caption" type="Label" parent="Center/Panel/Margin/Content/SubduedRow"]
+layout_mode = 2
 text = "Prisoners subdued"
+theme_override_font_sizes/font_size = 22
 
-[node name="Subdued" type="Label" parent="Center/Panel/Margin/Content/SubduedRow" unique_id=1695177628]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 26
-text = "0"
-
-[node name="UnconsciousRow" type="HBoxContainer" parent="Center/Panel/Margin/Content" unique_id=765155871]
-layout_mode = 2
-
-[node name="UnconsciousCaption" type="Label" parent="Center/Panel/Margin/Content/UnconsciousRow" unique_id=1965927625]
-unique_name_in_owner = true
+[node name="Leader" type="HSeparator" parent="Center/Panel/Margin/Content/SubduedRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 20
-text = "Times knocked out"
+size_flags_vertical = 4
+theme_type_variation = &"Leader"
 
-[node name="Unconscious" type="Label" parent="Center/Panel/Margin/Content/UnconsciousRow" unique_id=2129348334]
+[node name="Subdued" type="Label" parent="Center/Panel/Margin/Content/SubduedRow"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(116, 48)
 layout_mode = 2
-theme_override_font_sizes/font_size = 26
+size_flags_vertical = 4
+theme_type_variation = &"Score"
 text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="BottomDivider" type="HSeparator" parent="Center/Panel/Margin/Content" unique_id=1212888397]
+[node name="UnconsciousRow" type="HBoxContainer" parent="Center/Panel/Margin/Content"]
+custom_minimum_size = Vector2(0, 66)
 layout_mode = 2
 
-[node name="Retry" type="Button" parent="Center/Panel/Margin/Content" unique_id=432404864]
+[node name="Icon" type="TextureRect" parent="Center/Panel/Margin/Content/UnconsciousRow"]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("unconscious")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Caption" type="Label" parent="Center/Panel/Margin/Content/UnconsciousRow"]
+layout_mode = 2
+text = "Times knocked out"
+theme_override_font_sizes/font_size = 22
+
+[node name="Leader" type="HSeparator" parent="Center/Panel/Margin/Content/UnconsciousRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_type_variation = &"Leader"
+
+[node name="Unconscious" type="Label" parent="Center/Panel/Margin/Content/UnconsciousRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(116, 48)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"Score"
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BottomDivider" type="HSeparator" parent="Center/Panel/Margin/Content"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Retry" type="Button" parent="Center/Panel/Margin/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 66)
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "PLAY AGAIN"
 alignment = 0
+icon = ExtResource("arrow")
+icon_alignment = 2
+expand_icon = true
 
-[node name="MainMenu" type="Button" parent="Center/Panel/Margin/Content" unique_id=1133743131]
+[node name="MainMenu" type="Button" parent="Center/Panel/Margin/Content"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 66)
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "MAIN MENU"
 alignment = 0
+icon = ExtResource("arrow")
+icon_alignment = 2
+expand_icon = true

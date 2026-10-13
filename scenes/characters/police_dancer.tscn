@@ -1,0 +1,17 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://assets/models/characters/police.glb" id="1_model"]
+[ext_resource type="Script" path="res://scripts/characters/police_dancer.gd" id="2_script"]
+
+[node name="PoliceDancer" type="Node3D"]
+script = ExtResource("2_script")
+
+[node name="Police" parent="." instance=ExtResource("1_model")]
+
+[node name="Hand_Hold_L" parent="Police/ROOT/Armature/Skeleton3D" index="7"]
+visible = false
+
+[node name="Hand_Hold_R" parent="Police/ROOT/Armature/Skeleton3D" index="8"]
+visible = false
+
+[editable path="Police"]

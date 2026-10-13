@@ -12,10 +12,12 @@ func play(content: Control, initial_focus: Control) -> void:
 		if child is Control and not child is Separator:
 			_items.append(child)
 			child.modulate.a = 0.0
-			if child is BaseButton:
-				_buttons[child] = child.disabled
-				child.disabled = true
-				child.release_focus()
+			var buttons: Array[Node] = child.find_children("*", "BaseButton", true, false)
+			if child is BaseButton: buttons.append(child)
+			for button in buttons:
+				_buttons[button] = button.disabled
+				button.disabled = true
+				button.release_focus()
 	# Always process: the daily report is displayed while gameplay is paused.
 	_tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS).set_parallel(true)
 	for index in _items.size():

@@ -1,19 +1,22 @@
 [gd_scene format=3 uid="uid://cw3wreof2oyti"]
 
-[ext_resource type="Script" uid="uid://bc2ipa5y5cnm3" path="res://scripts/ui/day_summary.gd" id="1"]
-[ext_resource type="Theme" uid="uid://bttyh5y327fpf" path="res://resources/themes/summary_theme.tres" id="2"]
-[ext_resource type="Texture2D" uid="uid://ctve3pb0bws1p" path="res://assets/icon/nextpage_icon.png" id="3_arrow"]
-[ext_resource type="Texture2D" uid="uid://bvn1nvaceo7rg" path="res://assets/textures/ui/background.png" id="3_c3gol"]
+[ext_resource type="Texture2D" uid="uid://q8htqkao1kcm" path="res://assets/textures/ui/reports/arrow.svg" id="arrow"]
+[ext_resource type="Texture2D" uid="uid://bvn1nvaceo7rg" path="res://assets/textures/ui/background.png" id="background"]
+[ext_resource type="Texture2D" uid="uid://vcgabttufufd" path="res://assets/textures/ui/reports/brush.svg" id="brush"]
+[ext_resource type="Script" uid="uid://baksjq7ns107k" path="res://scripts/ui/report_fit.gd" id="fit"]
+[ext_resource type="Texture2D" uid="uid://5gdnnbecn4kn" path="res://assets/textures/ui/reports/flag.svg" id="flag"]
+[ext_resource type="Texture2D" uid="uid://o45j6r8ygmae" path="res://assets/textures/ui/reports/missed.svg" id="missed"]
+[ext_resource type="Script" uid="uid://bc2ipa5y5cnm3" path="res://scripts/ui/day_summary.gd" id="script"]
+[ext_resource type="Texture2D" uid="uid://dk1u5qn2gb1qy" path="res://assets/textures/ui/reports/served.svg" id="served"]
+[ext_resource type="Texture2D" uid="uid://bgxqu62gvq1w0" path="res://assets/textures/ui/reports/target.svg" id="target"]
+[ext_resource type="Theme" uid="uid://ctnvyc4j5h33f" path="res://resources/themes/report_theme.tres" id="theme"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vaxrk"]
-bg_color = Color(0, 0, 0, 0.84313726)
-
-[node name="DaySummary" type="CanvasLayer" unique_id=625124701]
+[node name="DaySummary" type="CanvasLayer" unique_id=1134556914]
 process_mode = 3
 layer = 20
-script = ExtResource("1")
+script = ExtResource("script")
 
-[node name="Summary" type="Control" parent="." unique_id=1225127884]
+[node name="Summary" type="Control" parent="." unique_id=1525015128]
 unique_name_in_owner = true
 visible = false
 layout_mode = 3
@@ -22,125 +25,209 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("2")
+theme = ExtResource("theme")
 
-[node name="TextureRect" type="TextureRect" parent="Summary" unique_id=590617836]
-layout_mode = 0
-offset_right = 1920.0
-offset_bottom = 1080.0
-scale = Vector2(0.6, 0.6)
-texture = ExtResource("3_c3gol")
-
-[node name="Center" type="CenterContainer" parent="Summary" unique_id=308355729]
+[node name="Background" type="TextureRect" parent="Summary" unique_id=947580148]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("background")
+expand_mode = 1
+stretch_mode = 6
 
-[node name="Panel" type="PanelContainer" parent="Summary/Center" unique_id=823029386]
-custom_minimum_size = Vector2(520, 0)
+[node name="Center" type="Control" parent="Summary" unique_id=400562269]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("fit")
+
+[node name="Panel" type="PanelContainer" parent="Summary/Center" unique_id=529568494]
+layout_mode = 0
+offset_left = 186.5
+offset_top = 20.0
+offset_right = 1006.5
+offset_bottom = 719.0
+scale = Vector2(0.95, 0.95)
+
+[node name="Margin" type="MarginContainer" parent="Summary/Center/Panel" unique_id=545289174]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_vaxrk")
+theme_override_constants/margin_left = 52
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 52
+theme_override_constants/margin_bottom = 44
 
-[node name="Margin" type="MarginContainer" parent="Summary/Center/Panel" unique_id=559935958]
-layout_mode = 2
-theme_override_constants/margin_left = 32
-theme_override_constants/margin_top = 32
-theme_override_constants/margin_right = 32
-theme_override_constants/margin_bottom = 32
-
-[node name="Content" type="VBoxContainer" parent="Summary/Center/Panel/Margin" unique_id=1937636163]
+[node name="Content" type="VBoxContainer" parent="Summary/Center/Panel/Margin" unique_id=568092105]
 layout_mode = 2
 
-[node name="Day" type="Label" parent="Summary/Center/Panel/Margin/Content" unique_id=1340477035]
+[node name="Day" type="Label" parent="Summary/Center/Panel/Margin/Content" unique_id=411459459]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.72, 0.72, 0.72, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.59, 0.53, 0.47, 1)
+theme_override_font_sizes/font_size = 20
 text = "DAY 01  /  DAILY REPORT"
 
-[node name="Title" type="Label" parent="Summary/Center/Panel/Margin/Content" unique_id=1014776511]
+[node name="Title" type="Label" parent="Summary/Center/Panel/Margin/Content" unique_id=725579820]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.96, 0.96, 1)
-theme_override_font_sizes/font_size = 32
+theme_override_colors/font_color = Color(0.15, 0.12, 0.13, 1)
+theme_override_font_sizes/font_size = 58
 text = "Kitchen closed"
 
-[node name="TopDivider" type="HSeparator" parent="Summary/Center/Panel/Margin/Content" unique_id=873574993]
-custom_minimum_size = Vector2(0, 1)
+[node name="Underline" type="TextureRect" parent="Summary/Center/Panel/Margin/Content" unique_id=1855304536]
+custom_minimum_size = Vector2(0, 17)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("brush")
+expand_mode = 1
+
+[node name="ServedRow" type="HBoxContainer" parent="Summary/Center/Panel/Margin/Content" unique_id=244157714]
+custom_minimum_size = Vector2(0, 66)
 layout_mode = 2
 
-[node name="ServedRow" type="HBoxContainer" parent="Summary/Center/Panel/Margin/Content" unique_id=1005874742]
+[node name="Icon" type="TextureRect" parent="Summary/Center/Panel/Margin/Content/ServedRow" unique_id=575797606]
+custom_minimum_size = Vector2(56, 56)
 layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("served")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="Caption" type="Label" parent="Summary/Center/Panel/Margin/Content/ServedRow" unique_id=522977744]
+[node name="Caption" type="Label" parent="Summary/Center/Panel/Margin/Content/ServedRow" unique_id=1421657003]
 layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.72, 0.72, 0.72, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 22
 text = "Successfully served"
 
-[node name="Served" type="Label" parent="Summary/Center/Panel/Margin/Content/ServedRow" unique_id=1588944039]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.96, 0.96, 1)
-theme_override_font_sizes/font_size = 24
-text = "0"
-
-[node name="MissedRow" type="HBoxContainer" parent="Summary/Center/Panel/Margin/Content" unique_id=1819662706]
-layout_mode = 2
-
-[node name="Caption" type="Label" parent="Summary/Center/Panel/Margin/Content/MissedRow" unique_id=1687480043]
+[node name="Leader" type="HSeparator" parent="Summary/Center/Panel/Margin/Content/ServedRow" unique_id=1419595006]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.72, 0.72, 0.72, 1)
-theme_override_font_sizes/font_size = 18
+size_flags_vertical = 4
+theme_type_variation = &"Leader"
+
+[node name="Served" type="Label" parent="Summary/Center/Panel/Margin/Content/ServedRow" unique_id=2012416415]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(116, 48)
+layout_mode = 2
+theme_type_variation = &"Score"
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MissedRow" type="HBoxContainer" parent="Summary/Center/Panel/Margin/Content" unique_id=1313251461]
+custom_minimum_size = Vector2(0, 66)
+layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="Summary/Center/Panel/Margin/Content/MissedRow" unique_id=889114732]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("missed")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Caption" type="Label" parent="Summary/Center/Panel/Margin/Content/MissedRow" unique_id=215060499]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
 text = "Not served"
 
-[node name="Missed" type="Label" parent="Summary/Center/Panel/Margin/Content/MissedRow" unique_id=228980325]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.96, 0.96, 1)
-theme_override_font_sizes/font_size = 24
-text = "0"
-
-[node name="TargetRow" type="HBoxContainer" parent="Summary/Center/Panel/Margin/Content" unique_id=1143610557]
-layout_mode = 2
-
-[node name="Caption" type="Label" parent="Summary/Center/Panel/Margin/Content/TargetRow" unique_id=1002119069]
+[node name="Leader" type="HSeparator" parent="Summary/Center/Panel/Margin/Content/MissedRow" unique_id=661641398]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.72, 0.72, 0.72, 1)
-theme_override_font_sizes/font_size = 18
+size_flags_vertical = 4
+theme_type_variation = &"Leader"
+
+[node name="Missed" type="Label" parent="Summary/Center/Panel/Margin/Content/MissedRow" unique_id=1431134208]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(116, 48)
+layout_mode = 2
+theme_type_variation = &"Score"
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TargetRow" type="HBoxContainer" parent="Summary/Center/Panel/Margin/Content" unique_id=131407761]
+custom_minimum_size = Vector2(0, 66)
+layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="Summary/Center/Panel/Margin/Content/TargetRow" unique_id=874394523]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("target")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Caption" type="Label" parent="Summary/Center/Panel/Margin/Content/TargetRow" unique_id=1337638220]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
 text = "Daily target"
 
-[node name="Target" type="Label" parent="Summary/Center/Panel/Margin/Content/TargetRow" unique_id=1828735187]
-unique_name_in_owner = true
+[node name="Leader" type="HSeparator" parent="Summary/Center/Panel/Margin/Content/TargetRow" unique_id=1512057062]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.96, 0.96, 1)
-theme_override_font_sizes/font_size = 24
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_type_variation = &"Leader"
+
+[node name="Target" type="Label" parent="Summary/Center/Panel/Margin/Content/TargetRow" unique_id=1370249027]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(116, 48)
+layout_mode = 2
+theme_type_variation = &"Score"
 text = "0 / 4"
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="BottomDivider" type="HSeparator" parent="Summary/Center/Panel/Margin/Content" unique_id=2056370312]
-custom_minimum_size = Vector2(0, 1)
+[node name="BottomDivider" type="HSeparator" parent="Summary/Center/Panel/Margin/Content" unique_id=1108842055]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Footer" type="PanelContainer" parent="Summary/Center/Panel/Margin/Content" unique_id=1267666504]
+custom_minimum_size = Vector2(0, 112)
+layout_mode = 2
+theme_type_variation = &"Footer"
+
+[node name="Body" type="HBoxContainer" parent="Summary/Center/Panel/Margin/Content/Footer" unique_id=2067718803]
 layout_mode = 2
 
-[node name="Result" type="Label" parent="Summary/Center/Panel/Margin/Content" unique_id=1856863638]
+[node name="Flag" type="TextureRect" parent="Summary/Center/Panel/Margin/Content/Footer/Body" unique_id=173206359]
+custom_minimum_size = Vector2(54, 54)
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+texture = ExtResource("flag")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Labels" type="VBoxContainer" parent="Summary/Center/Panel/Margin/Content/Footer/Body" unique_id=986592832]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Result" type="Label" parent="Summary/Center/Panel/Margin/Content/Footer/Body/Labels" unique_id=1572394360]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.94, 0.94, 0.94, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.98, 0.91, 0.8, 1)
+theme_override_font_sizes/font_size = 31
 text = "Target reached"
 
-[node name="Continue" type="Button" parent="Summary/Center/Panel/Margin/Content" unique_id=1352770815]
+[node name="Continue" type="Button" parent="Summary/Center/Panel/Margin/Content/Footer/Body/Labels" unique_id=1875291920]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 52)
+custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 mouse_default_cursor_shape = 2
+theme_type_variation = &"ContinueAction"
 text = "Start day 2"
-icon = ExtResource("3_arrow")
+icon = ExtResource("arrow")
 alignment = 0
 icon_alignment = 2
 expand_icon = true

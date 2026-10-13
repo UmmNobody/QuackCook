@@ -1,7 +1,9 @@
 extends Control
 signal back_requested
+@export var show_menu_background := true
 
 func _ready() -> void:
+	$Background.visible = show_menu_background
 	%Mouse.value_changed.connect(AppSettings.set_mouse_sensitivity)
 	%SFX.value_changed.connect(AppSettings.set_sfx_volume)
 	%Music.value_changed.connect(AppSettings.set_music_volume)

@@ -1,6 +1,6 @@
 [gd_scene format=3]
 [ext_resource type="Script" path="res://scripts/ui/menu_page.gd" id="1"]
-[ext_resource type="Theme" path="res://resources/themes/summary_theme.tres" id="2"]
+[ext_resource type="Theme" path="res://resources/themes/menu_card_theme.tres" id="2"]
 [ext_resource type="PackedScene" path="res://scenes/ui/settings_panel.tscn" id="3"]
 [node name="SettingsPage" type="Control"]
 anchors_preset = 15

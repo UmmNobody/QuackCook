@@ -1,77 +1,181 @@
 [gd_scene format=3 uid="uid://beclyxjesrnaq"]
-
-[ext_resource type="Script" uid="uid://bgi1iunehb7as" path="res://scripts/ui/menu_page.gd" id="1"]
-[ext_resource type="Theme" uid="uid://bttyh5y327fpf" path="res://resources/themes/summary_theme.tres" id="2"]
-[ext_resource type="Texture2D" uid="uid://bvn1nvaceo7rg" path="res://assets/textures/ui/background.png" id="3_pqmjv"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e5ls7"]
-bg_color = Color(0, 0, 0, 0.84313726)
-
-[node name="Credits" type="Control" unique_id=1391260391]
-layout_mode = 3
+[ext_resource type="Script" path="res://scripts/ui/menu_page.gd" id="script"]
+[ext_resource type="Theme" path="res://resources/themes/menu_card_theme.tres" id="theme"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/menu_background.png" id="background"]
+[ext_resource type="Script" path="res://scripts/ui/report_fit.gd" id="fit"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/reports/brush.svg" id="brush"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/reports/back.svg" id="back"]
+[node name="Credits" type="Control"]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("2")
-script = ExtResource("1")
+theme = ExtResource("theme")
+script = ExtResource("script")
 
-[node name="TextureRect" type="TextureRect" parent="." unique_id=1299687626]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-scale = Vector2(0.6, 0.6)
-texture = ExtResource("3_pqmjv")
-
-[node name="Center" type="CenterContainer" parent="." unique_id=1462875574]
-layout_mode = 0
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("background")
+expand_mode = 1
+stretch_mode = 6
 
-[node name="Panel" type="PanelContainer" parent="Center" unique_id=1075609776]
-custom_minimum_size = Vector2(620, 0)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_e5ls7")
+[node name="Shade" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.10, 0.12, 0.17, 0.68)
 
-[node name="Margin" type="MarginContainer" parent="Center/Panel" unique_id=1178731932]
+[node name="Center" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("fit")
+design_size = Vector2(980, 680)
+
+[node name="Panel" type="PanelContainer" parent="Center"]
+offset_right = 980.0
+offset_bottom = 720.0
+
+[node name="Margin" type="MarginContainer" parent="Center/Panel"]
 layout_mode = 2
 theme_override_constants/margin_left = 40
-theme_override_constants/margin_top = 36
 theme_override_constants/margin_right = 40
+theme_override_constants/margin_top = 42
 theme_override_constants/margin_bottom = 36
 
-[node name="Content" type="VBoxContainer" parent="Center/Panel/Margin" unique_id=1451437272]
+[node name="Content" type="VBoxContainer" parent="Center/Panel/Margin"]
 layout_mode = 2
+theme_override_constants/separation = 14
 
-[node name="Title" type="Label" parent="Center/Panel/Margin/Content" unique_id=2108444566]
+[node name="Eyebrow" type="Label" parent="Center/Panel/Margin/Content"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.59, 0.53, 0.47, 1)
+text = "QUACK COOK  /  THE TEAM"
+
+[node name="Title" type="Label" parent="Center/Panel/Margin/Content"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 36
-text = "CREDITS"
+theme_override_font_sizes/font_size = 54
+theme_override_colors/font_color = Color(0.15, 0.12, 0.13, 1)
+text = "Meet the crew"
 
-[node name="Divider" type="HSeparator" parent="Center/Panel/Margin/Content" unique_id=1171841295]
+[node name="Divider" type="TextureRect" parent="Center/Panel/Margin/Content"]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("brush")
+expand_mode = 1
+
+[node name="ContentPlaceholder" type="VBoxContainer" parent="Center/Panel/Margin/Content"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 18
+
+[node name="Member1" type="HBoxContainer" parent="Center/Panel/Margin/Content/ContentPlaceholder"]
+custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 
-[node name="ContentPlaceholder" type="Control" parent="Center/Panel/Margin/Content" unique_id=776366865]
-custom_minimum_size = Vector2(0, 240)
+[node name="Name" type="Label" parent="Center/Panel/Margin/Content/ContentPlaceholder/Member1"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 22
+text = "Naphat Thongon"
+
+[node name="StudentID" type="Label" parent="Center/Panel/Margin/Content/ContentPlaceholder/Member1"]
+layout_mode = 2
+custom_minimum_size = Vector2(220, 0)
+theme_type_variation = &"Score"
+theme_override_font_sizes/font_size = 22
+text = "683380073-8"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Member2" type="HBoxContainer" parent="Center/Panel/Margin/Content/ContentPlaceholder"]
+custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 
-[node name="Title" type="Label" parent="Center/Panel/Margin/Content/ContentPlaceholder" unique_id=1436258549]
-layout_mode = 0
-theme_override_constants/line_spacing = 16
-theme_override_font_sizes/font_size = 26
-text = "Naphat Thongon                      683380073-8
-Ratchanon Ruengcharat    683380094-0
-Bannarot Porndonko           683380301-1
-Natthawat Tanphibool        683380075-4"
+[node name="Name" type="Label" parent="Center/Panel/Margin/Content/ContentPlaceholder/Member2"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 22
+text = "Ratchanon Ruengcharat"
 
-[node name="Back" type="Button" parent="Center/Panel/Margin/Content" unique_id=1327052080]
+[node name="StudentID" type="Label" parent="Center/Panel/Margin/Content/ContentPlaceholder/Member2"]
+layout_mode = 2
+custom_minimum_size = Vector2(220, 0)
+theme_type_variation = &"Score"
+theme_override_font_sizes/font_size = 22
+text = "683380094-0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Member3" type="HBoxContainer" parent="Center/Panel/Margin/Content/ContentPlaceholder"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+
+[node name="Name" type="Label" parent="Center/Panel/Margin/Content/ContentPlaceholder/Member3"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 22
+text = "Bannarot Porndonko"
+
+[node name="StudentID" type="Label" parent="Center/Panel/Margin/Content/ContentPlaceholder/Member3"]
+layout_mode = 2
+custom_minimum_size = Vector2(220, 0)
+theme_type_variation = &"Score"
+theme_override_font_sizes/font_size = 22
+text = "683380301-1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Member4" type="HBoxContainer" parent="Center/Panel/Margin/Content/ContentPlaceholder"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+
+[node name="Name" type="Label" parent="Center/Panel/Margin/Content/ContentPlaceholder/Member4"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 22
+text = "Natthawat Tanphibool"
+
+[node name="StudentID" type="Label" parent="Center/Panel/Margin/Content/ContentPlaceholder/Member4"]
+layout_mode = 2
+custom_minimum_size = Vector2(220, 0)
+theme_type_variation = &"Score"
+theme_override_font_sizes/font_size = 22
+text = "683380075-4"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BottomSpacer" type="Control" parent="Center/Panel/Margin/Content"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="Back" type="Button" parent="Center/Panel/Margin/Content"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "BACK"
 alignment = 0
+icon = ExtResource("back")
+icon_alignment = 2
+expand_icon = true

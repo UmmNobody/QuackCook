@@ -1,7 +1,10 @@
 [gd_scene format=3]
 [ext_resource type="Script" path="res://scripts/ui/pause_menu.gd" id="1"]
-[ext_resource type="Theme" path="res://resources/themes/summary_theme.tres" id="2"]
+[ext_resource type="Theme" path="res://resources/themes/menu_card_theme.tres" id="2"]
 [ext_resource type="PackedScene" path="res://scenes/ui/settings_panel.tscn" id="3"]
+[ext_resource type="Script" path="res://scripts/ui/report_fit.gd" id="fit"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/reports/brush.svg" id="brush"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/reports/arrow.svg" id="arrow"]
 [node name="PauseMenu" type="CanvasLayer"]
 process_mode = 3
 layer = 30
@@ -29,16 +32,18 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0, 0, 0, 0.75)
-[node name="Center" type="CenterContainer" parent="Screen/Home"]
+color = Color(0.10, 0.12, 0.17, 0.68)
+[node name="Center" type="Control" parent="Screen/Home"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("fit")
+design_size = Vector2(820, 660)
 [node name="Panel" type="PanelContainer" parent="Screen/Home/Center"]
-custom_minimum_size = Vector2(620, 0)
-layout_mode = 2
+offset_right = 820.0
+offset_bottom = 660.0
 [node name="Margin" type="MarginContainer" parent="Screen/Home/Center/Panel"]
 layout_mode = 2
 theme_override_constants/margin_left = 40
@@ -47,39 +52,65 @@ theme_override_constants/margin_top = 36
 theme_override_constants/margin_bottom = 36
 [node name="Content" type="VBoxContainer" parent="Screen/Home/Center/Panel/Margin"]
 layout_mode = 2
+theme_override_constants/separation = 16
+[node name="Eyebrow" type="Label" parent="Screen/Home/Center/Panel/Margin/Content"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.59, 0.53, 0.47, 1)
+text = "QUACK COOK  /  TAKE A BREAK"
 [node name="Title" type="Label" parent="Screen/Home/Center/Panel/Margin/Content"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 36
-text = "PAUSED"
-[node name="Divider" type="HSeparator" parent="Screen/Home/Center/Panel/Margin/Content"]
+theme_override_font_sizes/font_size = 54
+theme_override_colors/font_color = Color(0.15, 0.12, 0.13, 1)
+text = "Paused"
+[node name="Divider" type="TextureRect" parent="Screen/Home/Center/Panel/Margin/Content"]
 layout_mode = 2
+custom_minimum_size = Vector2(0, 18)
+mouse_filter = 2
+texture = ExtResource("brush")
+expand_mode = 1
 [node name="Checkpoint" type="Label" parent="Screen/Home/Center/Panel/Margin/Content"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 17
-text = "Day 1"
+theme_override_font_sizes/font_size = 20
+size_flags_vertical = 3
+text = "DAY 1 / SESSION CHECKPOINT\nContinue with a fresh kitchen."
+vertical_alignment = 1
 [node name="Resume" type="Button" parent="Screen/Home/Center/Panel/Margin/Content"]
 unique_name_in_owner = true
 layout_mode = 2
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 68)
 mouse_default_cursor_shape = 2
 alignment = 0
+icon = ExtResource("arrow")
+icon_alignment = 2
+expand_icon = true
+theme_override_constants/icon_max_width = 48
 text = "RESUME"
 [node name="Settings" type="Button" parent="Screen/Home/Center/Panel/Margin/Content"]
 unique_name_in_owner = true
 layout_mode = 2
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 68)
 mouse_default_cursor_shape = 2
 alignment = 0
+icon = ExtResource("arrow")
+icon_alignment = 2
+expand_icon = true
+theme_override_constants/icon_max_width = 48
 text = "SETTINGS"
 [node name="Exit" type="Button" parent="Screen/Home/Center/Panel/Margin/Content"]
 unique_name_in_owner = true
 layout_mode = 2
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 68)
 mouse_default_cursor_shape = 2
 alignment = 0
+icon = ExtResource("arrow")
+icon_alignment = 2
+expand_icon = true
+theme_override_constants/icon_max_width = 48
 text = "SAVE & MAIN MENU"
 [node name="SettingsPanel" parent="Screen" instance=ExtResource("3")]
+show_menu_background = false
 unique_name_in_owner = true
 visible = false

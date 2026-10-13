@@ -3,8 +3,8 @@ extends CanvasLayer
 const SummaryReveal = preload("res://scripts/ui/summary_reveal.gd")
 var _reveal := SummaryReveal.new()
 
-@export var success_color: Color = Color("f0f0f0")
-@export var failure_color: Color = Color("ff5050")
+@export var success_color: Color = Color("fae8cc")
+@export var failure_color: Color = Color("ffb18e")
 @onready var screen: Control = %Summary
 @onready var day_label: Label = %Day
 @onready var title_label: Label = %Title
