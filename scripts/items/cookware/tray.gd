@@ -48,7 +48,7 @@ func can_accept_food(food: FoodItem) -> bool:
 		return false
 	if current_food != null:
 		return can_combine(current_food, food)
-	if food.current_state == FoodItem.State.COOKED:
+	if food.current_state in [FoodItem.State.COOKED, FoodItem.State.BURNT]:
 		return true
 	if food.current_state == FoodItem.State.CUT and (food.item_type == FoodItem.Type.CARROT or food.item_type == FoodItem.Type.CABBAGE):
 		return true

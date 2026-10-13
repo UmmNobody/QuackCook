@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://blbnjt7idrvs4"]
+
+[ext_resource type="Script" uid="uid://cn3kas17xj670" path="res://scripts/effects/throw_trail.gd" id="1"]
+
+[sub_resource type="StandardMaterial3D" id="WhiteTrail"]
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+
+[node name="ThrowTrail" type="MeshInstance3D" unique_id=140861167]
+top_level = true
+visible = false
+material_override = SubResource("WhiteTrail")
+cast_shadow = 0
+script = ExtResource("1")
+width = 0.15000000000000002

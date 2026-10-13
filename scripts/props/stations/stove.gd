@@ -11,8 +11,12 @@ class_name Stove
 
 var player: Node3D = null
 var current_cookware: Cookware = null
+var _progress_fill: StyleBoxFlat
 
 func _ready() -> void:
+	_progress_fill = StyleBoxFlat.new()
+	_progress_fill.bg_color = Color(0.15, 0.8, 0.25)
+	progress_bar.add_theme_stylebox_override("fill", _progress_fill)
 	player = get_tree().get_first_node_in_group("Player")
 	if player and player.head:
 		player.head.object_focused.connect(_set_selected)
@@ -65,6 +69,14 @@ func _setup_cooking_ui() -> void:
 		var food := current_cookware.current_food
 		progress_bar.max_value = food.cook_duration
 		progress_bar.value = food.cook_progress
+		_progress_fill.bg_color = Color(0.15, 0.8, 0.25)
+		if food.current_state == FoodItem.State.COOKED: progress_bar.value = progress_bar.max_value
+		if food.current_state == FoodItem.State.COOKED and food.burn_grace_elapsed >= food.burn_grace_seconds:
+			progress_bar.value = food.burn_progress
+			_progress_fill.bg_color = Color(0.95, 0.12, 0.06)
+		elif food.current_state == FoodItem.State.BURNT:
+			progress_bar.value = progress_bar.max_value
+			_progress_fill.bg_color = Color.BLACK
 		cooking_ui_3d.visible = true
 	else:
 		_hide_cooking_ui()
@@ -83,13 +95,8 @@ func _physics_process(delta: float) -> void:
 	if current_cookware and current_cookware.current_food:
 		var food := current_cookware.current_food
 		
-		if food.can_be_cooked():
-			food.add_cook_progress(delta)
-			progress_bar.value = food.cook_progress
-			
-			if not cooking_ui_3d.visible:
-				_setup_cooking_ui()
-	_update_fire()
+		food.apply_heat(delta)
+	_setup_cooking_ui()
 
 func _on_snap_area_body_entered(body: Node3D) -> void:
 	if body is Cookware:

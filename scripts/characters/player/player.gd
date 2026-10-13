@@ -84,7 +84,7 @@ func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func can_control() -> bool:
-	return controls_enabled and not unconscious and not get_tree().paused
+	return not SceneTransition.busy and controls_enabled and not unconscious and not get_tree().paused
 
 func is_incapacitated() -> bool:
 	return unconscious
@@ -239,8 +239,8 @@ func _update_health_ui() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if not can_control(): return
 	if event is InputEventMouseMotion:
-		head.rotate_y(-event.relative.x * SENSITIVITY)
-		_look_pitch = clampf(_look_pitch - event.relative.y * SENSITIVITY, deg_to_rad(-80), deg_to_rad(60))
+		head.rotate_y(-event.relative.x * SENSITIVITY * AppSettings.mouse_sensitivity)
+		_look_pitch = clampf(_look_pitch - event.relative.y * SENSITIVITY * AppSettings.mouse_sensitivity, deg_to_rad(-80), deg_to_rad(60))
 
 func try_dash(direction: Vector3) -> bool:
 	if not can_control() or dash_remaining > 0.0 or dash_cooldown_remaining > 0.0:

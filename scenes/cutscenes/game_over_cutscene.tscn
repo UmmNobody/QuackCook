@@ -1,0 +1,154 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/game_over_cutscene.gd" id="1_script"]
+[ext_resource type="Theme" path="res://resources/themes/summary_theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" path="res://assets/textures/cutscene/over1.png" id="panel1"]
+[ext_resource type="Texture2D" path="res://assets/textures/cutscene/over2.png" id="panel2"]
+[ext_resource type="Texture2D" path="res://assets/textures/cutscene/over3.png" id="panel3"]
+[ext_resource type="Texture2D" path="res://assets/textures/cutscene/over4.png" id="panel4"]
+[ext_resource type="Texture2D" path="res://assets/textures/cutscene/over5.png" id="panel5"]
+[ext_resource type="Texture2D" path="res://assets/textures/cutscene/over6.png" id="panel6"]
+
+[node name="GameOverCutscene" type="Control" unique_id=74521310]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_script")
+
+[node name="Background" type="ColorRect" parent="." unique_id=1193570676]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="ComicBoard" type="Control" parent="." unique_id=1988421333]
+unique_name_in_owner = true
+clip_contents = true
+anchors_preset = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+
+[node name="Pages" type="Control" parent="ComicBoard" unique_id=1440384705]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Page1" type="Control" parent="ComicBoard/Pages" unique_id=1421844863]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Over1" type="TextureRect" parent="ComicBoard/Pages/Page1" unique_id=1589278024]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+texture = ExtResource("panel1")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Over2" type="TextureRect" parent="ComicBoard/Pages/Page1" unique_id=185446918]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+texture = ExtResource("panel2")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Over3" type="TextureRect" parent="ComicBoard/Pages/Page1" unique_id=2122445878]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+texture = ExtResource("panel3")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Over4" type="TextureRect" parent="ComicBoard/Pages/Page1" unique_id=1298410008]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+texture = ExtResource("panel4")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Page2" type="Control" parent="ComicBoard/Pages" unique_id=1468221892]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Over5" type="TextureRect" parent="ComicBoard/Pages/Page2" unique_id=2145303792]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+texture = ExtResource("panel5")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Over6" type="TextureRect" parent="ComicBoard/Pages/Page2" unique_id=10703478]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+texture = ExtResource("panel6")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Toolbar" type="HBoxContainer" parent="." unique_id=1566480622]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -338.0
+offset_top = 20.0
+offset_right = -24.0
+offset_bottom = 64.0
+grow_horizontal = 0
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="AutoPlay" type="Button" parent="Toolbar" unique_id=1925926717]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.35)
+custom_minimum_size = Vector2(214, 44)
+layout_mode = 2
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 1)
+toggle_mode = true
+text = "AUTO PLAY: OFF"
+flat = true
+
+[node name="Skip" type="Button" parent="Toolbar" unique_id=209047744]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(88, 44)
+layout_mode = 2
+text = "SKIP"
+flat = true
+

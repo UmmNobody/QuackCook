@@ -11,6 +11,7 @@ var still_time: float = 0.0
 var launch_generation: int = 0
 var sampled_velocities: Dictionary = {}
 var hit_speeds: Dictionary = {}
+var trail: MeshInstance3D
 
 static func ensure(item: Node) -> Node:
 	var impact = item.get_node_or_null("ThrowImpact")
@@ -45,8 +46,14 @@ func arm(source: Node3D, multiplier: float, collision_bodies: Array[PhysicsBody3
 			var callback: Callable = _on_body_entered.bind(body)
 			if not body.body_entered.is_connected(callback): body.body_entered.connect(callback)
 	set_physics_process(true)
+	if not bodies.is_empty():
+		if not is_instance_valid(trail):
+			trail = preload("res://scenes/effects/throw_trail.tscn").instantiate()
+			get_parent().add_child(trail)
+		trail.start(bodies[0])
 
 func disarm() -> void:
+	if is_instance_valid(trail): trail.stop()
 	armed = false
 	launch_generation += 1
 	for body in bodies:
@@ -76,6 +83,11 @@ func _report_contact(body: Node, generation: int, impact_speed: float) -> void:
 	hit_targets[id] = true
 	hit_speeds[id] = impact_speed
 	target.take_damage(impact_speed * damage_per_speed, thrower)
+	var item := get_parent()
+	var food: FoodItem = item as FoodItem
+	if item is Cookware or item is Tray: food = item.current_food
+	if is_instance_valid(food) and food.is_burning() and target.has_method("ignite"):
+		target.ignite(thrower)
 
 func _physics_process(delta: float) -> void:
 	if not armed: return

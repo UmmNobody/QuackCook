@@ -30,6 +30,7 @@ func capture(filename: String) -> void:
 
 func run() -> void:
 	game = root.get_node("GameManager")
+	root.get_node("SceneTransition").duration = 0.0
 	# Delay timing is covered separately by summary_delay_scenarios.gd.
 	game.summary_delay_seconds = 0.0
 	game.tutorial_seen = true # First-time onboarding is covered by tutorial_scenarios.
@@ -109,6 +110,7 @@ func run() -> void:
 	var stock: int = queue.wells[3].current_servings
 	close_button.interact_with(pan, head)
 	check(game.state == game.State.SUMMARY and paused, "Closing opens a paused summary without changing scene")
+	await until(func(): return not game.summary_pending, 30)
 	check(current_scene.get_instance_id() == scene_id and summary_ui.screen.visible, "Summary overlays the existing kitchen")
 	check(summary_ui.served_label.text == "2" and summary_ui.missed_label.text == "1" and summary_ui.target_label.text == "2 / 2", "Report shows served, unserved and quota")
 	check(game.last_summary.target_met and summary_ui.continue_button.text.contains("2"), "Successful report offers day two")
@@ -153,15 +155,16 @@ func run() -> void:
 	angry.take_damage(10000, player)
 	await advance(4)
 	close_button.interact_with(null, head)
-	check(game.state == game.State.SUMMARY and not game.last_summary.target_met, "Failed day first shows a report")
-	check(summary_ui.missed_label.text == "5" and summary_ui.continue_button.text.contains("Game Over"), "Failure report counts every unserved prisoner")
+	check(not game.last_summary.target_met and not summary_ui.screen.visible, "Failed day does not display daily report")
+	check(game.last_summary.not_served == 5, "Failure still records every unserved prisoner")
 	check(not game.next_day() and game.current_day == 2, "Failed quota cannot advance to another day")
-	await capture("summary_fail")
-	summary_ui.continue_button.pressed.emit()
-	check(await until(func(): return current_scene != null and current_scene.name == "GameOver", 30), "Failure confirmation changes to Game Over scene")
+	check(await until(func(): return current_scene != null and current_scene.name == "GameOverCutscene", 30), "Failure automatically changes to Game Over cutscene")
 	check(not paused and game.state == game.State.GAME_OVER and game.last_summary.day == 2, "Game Over retains report and unpauses the menu")
 	check(queue.layout_owner == null and game.layout == null, "Game Over clears old scene references")
 	await capture("game_over")
+	await until(func(): return not root.get_node("SceneTransition").busy and not game._transition_pending, 30)
+	current_scene.skip_button.pressed.emit()
+	await until(func(): return current_scene != null and current_scene.name == "RunSummary" and not root.get_node("SceneTransition").busy and not game._transition_pending, 30)
 	current_scene.find_child("Retry", true, false).pressed.emit()
 	check(await until(func(): return current_scene != null and current_scene.name == "Main" and game.state == game.State.PREPARING, 60), "Try again loads a fresh playable kitchen")
 	check(game.current_day == 1 and game.config.prisoner_count == 6 and game.served_count == 0 and not paused, "Retry resets the run to day one")

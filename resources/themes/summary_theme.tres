@@ -1,5 +1,7 @@
 [gd_resource type="Theme" format=3 uid="uid://bttyh5y327fpf"]
 
+[ext_resource type="FontFile" uid="uid://dapna80ow2fku" path="res://assets/font/TitanOne-Regular.ttf" id="font_ui"]
+
 [sub_resource type="StyleBoxFlat" id="Focus"]
 draw_center = false
 border_width_bottom = 1
@@ -25,6 +27,7 @@ color = Color(1, 1, 1, 0.25)
 bg_color = Color(0, 0, 0, 0.94)
 
 [resource]
+default_font = ExtResource("font_ui")
 default_font_size = 18
 Button/colors/font_color = Color(0.9, 0.9, 0.9, 1)
 Button/colors/font_focus_color = Color(1, 1, 1, 1)

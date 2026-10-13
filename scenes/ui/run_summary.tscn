@@ -1,0 +1,116 @@
+[gd_scene format=3]
+[ext_resource type="Script" path="res://scripts/ui/run_summary.gd" id="1"]
+[ext_resource type="Theme" path="res://resources/themes/summary_theme.tres" id="2"]
+[node name="RunSummary" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2")
+script = ExtResource("1")
+[node name="Background" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+[node name="Center" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+[node name="Panel" type="PanelContainer" parent="Center"]
+custom_minimum_size = Vector2(620, 0)
+layout_mode = 2
+[node name="Margin" type="MarginContainer" parent="Center/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_top = 36
+theme_override_constants/margin_bottom = 36
+[node name="Content" type="VBoxContainer" parent="Center/Panel/Margin"]
+layout_mode = 2
+[node name="Eyebrow" type="Label" parent="Center/Panel/Margin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "FINAL REPORT"
+[node name="Title" type="Label" parent="Center/Panel/Margin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 42
+text = "GAME OVER"
+[node name="Divider" type="HSeparator" parent="Center/Panel/Margin/Content"]
+layout_mode = 2
+[node name="DayRow" type="HBoxContainer" parent="Center/Panel/Margin/Content"]
+layout_mode = 2
+[node name="DayCaption" type="Label" parent="Center/Panel/Margin/Content/DayRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Furthest day reached"
+size_flags_horizontal = 3
+[node name="Day" type="Label" parent="Center/Panel/Margin/Content/DayRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "0"
+[node name="ServedRow" type="HBoxContainer" parent="Center/Panel/Margin/Content"]
+layout_mode = 2
+[node name="ServedCaption" type="Label" parent="Center/Panel/Margin/Content/ServedRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Successfully served"
+size_flags_horizontal = 3
+[node name="Served" type="Label" parent="Center/Panel/Margin/Content/ServedRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "0"
+[node name="SubduedRow" type="HBoxContainer" parent="Center/Panel/Margin/Content"]
+layout_mode = 2
+[node name="SubduedCaption" type="Label" parent="Center/Panel/Margin/Content/SubduedRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Prisoners subdued"
+size_flags_horizontal = 3
+[node name="Subdued" type="Label" parent="Center/Panel/Margin/Content/SubduedRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "0"
+[node name="UnconsciousRow" type="HBoxContainer" parent="Center/Panel/Margin/Content"]
+layout_mode = 2
+[node name="UnconsciousCaption" type="Label" parent="Center/Panel/Margin/Content/UnconsciousRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Times knocked out"
+size_flags_horizontal = 3
+[node name="Unconscious" type="Label" parent="Center/Panel/Margin/Content/UnconsciousRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "0"
+[node name="BottomDivider" type="HSeparator" parent="Center/Panel/Margin/Content"]
+layout_mode = 2
+[node name="Retry" type="Button" parent="Center/Panel/Margin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 50)
+mouse_default_cursor_shape = 2
+alignment = 0
+text = "PLAY AGAIN"
+[node name="MainMenu" type="Button" parent="Center/Panel/Margin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 50)
+mouse_default_cursor_shape = 2
+alignment = 0
+text = "MAIN MENU"

@@ -7,11 +7,38 @@
 [ext_resource type="PackedScene" uid="uid://cpgqgrtrk5e5e" path="res://assets/models/characters/Player_Duck.glb" id="5_duck"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vviyk"]
-height = 2.1899414
+height = 1.9719238
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_blur"]
 shader = ExtResource("4_blur")
 shader_parameter/radius = 6.0
+
+[sub_resource type="StyleBoxFlat" id="HealthTrack"]
+bg_color = Color(0.06, 0.025, 0.025, 0.85)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_left = 16
+corner_radius_bottom_right = 16
+
+[sub_resource type="StyleBoxFlat" id="HealthFill"]
+bg_color = Color(0.87, 0.16, 0.20, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_left = 16
+corner_radius_bottom_right = 16
+
+[sub_resource type="StyleBoxFlat" id="HealthBorder"]
+bg_color = Color(0, 0, 0, 0)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_left = 16
+corner_radius_bottom_right = 16
+draw_center = false
+border_color = Color(1, 1, 1, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
 
 [node name="Player" type="CharacterBody3D" unique_id=1634674887 groups=["Player"]]
 collision_mask = 13
@@ -26,7 +53,7 @@ hit_turn_max_degrees = 20.0
 transform = Transform3D(-1.45, 0, -1.2676303e-07, 0, 1.45, 0, 1.2676303e-07, 0, -1.45, 0, -1, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=447218761]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0949707, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.014038086, 0)
 shape = SubResource("CapsuleShape3D_vviyk")
 
 [node name="Head" type="Node3D" parent="." unique_id=15131838]
@@ -75,7 +102,7 @@ anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 24.0
-offset_top = -48.0
+offset_top = -56.0
 offset_right = 264.0
 offset_bottom = -24.0
 grow_vertical = 0
@@ -83,14 +110,23 @@ mouse_filter = 2
 value = 100.0
 show_percentage = false
 
+theme_override_styles/background = SubResource("HealthTrack")
+theme_override_styles/fill = SubResource("HealthFill")
+
+[node name="Border" type="Panel" parent="HealthHUD/HealthBar"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("HealthBorder")
+
 [node name="HealthLabel" type="Label" parent="HealthHUD" unique_id=1013673787]
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 24.0
-offset_top = -78.0
+offset_top = -86.0
 offset_right = 264.0
-offset_bottom = -50.0
+offset_bottom = -58.0
 grow_vertical = 0
 theme_override_font_sizes/font_size = 20
 text = "HP 100 / 100"

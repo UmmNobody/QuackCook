@@ -109,6 +109,15 @@ func _ready() -> void:
 func is_incapacitated() -> bool:
 	return state == State.INCAPACITATED
 
+func ignite(source: Node3D = null) -> void:
+	if is_incapacitated() or is_queued_for_deletion(): return
+	var status := get_node_or_null("BurnStatus")
+	if status == null:
+		status = preload("res://scripts/combat/burn_status.gd").new()
+		status.name = "BurnStatus"
+		add_child(status)
+	status.ignite(source)
+
 func can_open_kitchen_door() -> bool:
 	return state == State.ANGRY_EXIT and not kitchen_door_passed
 
@@ -128,6 +137,8 @@ func take_damage(amount: float, source: Node3D = null) -> void:
 
 func _incapacitate() -> void:
 	state = State.INCAPACITATED
+	var burn_status := get_node_or_null("BurnStatus")
+	if burn_status != null: burn_status.extinguish()
 	attack_in_progress = false
 	attack_timer = 0.0
 	velocity = Vector3.ZERO

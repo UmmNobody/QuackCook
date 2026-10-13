@@ -15,7 +15,7 @@
 [ext_resource type="Script" uid="uid://doje62yyy27cu" path="res://scripts/queue/kitchen_queue.gd" id="16_queue"]
 [ext_resource type="Script" uid="uid://dbqggxjiwlwj3" path="res://scripts/queue/prisoner_spawner.gd" id="17_spawner"]
 [ext_resource type="Script" uid="uid://c0apgnn8hvlxp" path="res://scripts/resources/service_wave_config.gd" id="18_config"]
-[ext_resource type="Script" uid="uid://cj2v4fgolx81m" path="res://scripts/ui/service_hud.gd" id="19_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/service_hud.tscn" id="19_hud"]
 [ext_resource type="NavigationMesh" uid="uid://uvb0nmo0x4xr" path="res://resources/navigation/kitchen_navigation.tres" id="20_nav"]
 [ext_resource type="Script" uid="uid://jqt610exul3x" path="res://scripts/resources/day_progression.gd" id="21_progression"]
 [ext_resource type="PackedScene" uid="uid://dlv3vmxfbvyw4" path="res://scenes/props/food_sources/rice_foodbox.tscn" id="21_yc10j"]
@@ -27,7 +27,7 @@
 [ext_resource type="PackedScene" uid="uid://cnbul82g2v04k" path="res://scenes/props/food_sources/cabbage_foodbox.tscn" id="24_y6deb"]
 [ext_resource type="PackedScene" uid="uid://b2aoeosuhu4fq" path="res://scenes/props/food_sources/chicken_foodbox.tscn" id="25_og1vs"]
 [ext_resource type="PackedScene" path="res://scenes/ui/tutorial_popup.tscn" id="25_tutorial"]
-[ext_resource type="PackedScene" path="res://scenes/props/interactive/tutorial_sign.tscn" id="26_guide"]
+[ext_resource type="PackedScene" uid="uid://2435o11bq1we" path="res://scenes/props/interactive/tutorial_sign.tscn" id="26_guide"]
 [ext_resource type="PackedScene" uid="uid://b38e7arjc60ia" path="res://scenes/props/stations/fridge.tscn" id="27_fridge"]
 [ext_resource type="PackedScene" path="res://scenes/props/interactive/prisoner_door.tscn" id="28_door"]
 [ext_resource type="Script" uid="uid://cofd22df30w8m" path="res://scripts/visuals/kitchen_visual_style.gd" id="99_visual_style"]
@@ -39,6 +39,12 @@
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_roof_only"]
 size = Vector3(16.92, 0.256, 19.08)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hall_recovery"]
+size = Vector3(9.2, 9, 25.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_service_player_barrier"]
+size = Vector3(0.3, 3.5, 9.86)
 
 [sub_resource type="Environment" id="Environment_wp4xf"]
 background_mode = 2
@@ -63,14 +69,31 @@ script = ExtResource("item_respawner")
 [node name="RespawnPoint" type="Marker3D" parent="ItemRespawner" unique_id=1898464896]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 2.5, -1)
 
+[node name="RecoveryArea" type="Area3D" parent="ItemRespawner"]
+position = Vector3(-11.15, 4, 0)
+collision_layer = 0
+collision_mask = 3
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ItemRespawner/RecoveryArea"]
+shape = SubResource("BoxShape3D_hall_recovery")
+
 [node name="Environment" type="Node3D" parent="." unique_id=1545067222]
+
+[node name="ServiceWindowPlayerBarrier" type="StaticBody3D" parent="Environment"]
+position = Vector3(-6.38, 2.8, 1.81)
+collision_layer = 8
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/ServiceWindowPlayerBarrier"]
+shape = SubResource("BoxShape3D_service_player_barrier")
 
 [node name="QuackCook_Kitchen" parent="Environment" unique_id=2070259630 instance=ExtResource("15_jkv2x")]
 
-[node name="Part_025" parent="Environment/QuackCook_Kitchen" index="22" unique_id=1492324131]
+[node name="Part_025" parent="Environment/QuackCook_Kitchen" index="22" unique_id=1653422431]
 material_override = ExtResource("floor_tiles_saved")
 
-[node name="RoofCollision" type="StaticBody3D" parent="Environment/QuackCook_Kitchen/Roof_Removable_Slab" parent_id_path=PackedInt32Array(2070259630, 836019991) index="0" unique_id=1635935972]
+[node name="RoofCollision" type="StaticBody3D" parent="Environment/QuackCook_Kitchen/Roof_Removable_Slab" index="0" unique_id=1635935972]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/QuackCook_Kitchen/Roof_Removable_Slab/RoofCollision" unique_id=131838335]
 shape = SubResource("BoxShape3D_roof_only")
@@ -263,27 +286,7 @@ use_navigation = true
 
 [node name="UI" type="Node" parent="." unique_id=1597701673]
 
-[node name="ServiceHUD" type="CanvasLayer" parent="UI" unique_id=1694842605]
-script = ExtResource("19_hud")
-
-[node name="Status" type="Label" parent="UI/ServiceHUD" unique_id=67608483]
-offset_left = 24.0
-offset_top = 20.0
-offset_right = 560.0
-offset_bottom = 80.0
-theme_override_font_sizes/font_size = 22
-
-[node name="Crosshair" type="Label" parent="UI/ServiceHUD" unique_id=76609412]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -5.0
-offset_top = -14.0
-offset_right = 5.0
-offset_bottom = 14.0
-text = "+"
+[node name="ServiceHUD" parent="UI" instance=ExtResource("19_hud")]
 
 [node name="DaySummary" parent="UI" unique_id=249709876 instance=ExtResource("23_summary")]
 

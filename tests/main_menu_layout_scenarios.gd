@@ -11,7 +11,7 @@ func pointer_at(position: Vector2) -> void:
 	var motion := InputEventMouseMotion.new()
 	motion.position = position
 	motion.global_position = position
-	root.push_input(motion)
+	root.push_input(motion, true)
 func shot(name: String) -> void:
 	if DisplayServer.get_name() == "headless": return
 	await RenderingServer.frame_post_draw
@@ -41,6 +41,9 @@ func run() -> void:
 	menu.get_node("Home/Credit").pressed.emit()
 	check(current_scene == menu, "Placeholder buttons do not change scene")
 	menu.start_button.pressed.emit()
+	await frames(30)
+	check(current_scene.name == "IntroCutscene", "NewGame opens the intro")
+	current_scene.skip_button.pressed.emit()
 	await frames(30)
 	check(current_scene.name == "Main" and game.current_day == 1, "NewGame starts day one")
 	game.return_to_menu()

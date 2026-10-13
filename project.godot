@@ -17,6 +17,9 @@ config/icon="res://assets/textures/ui/icon.svg"
 
 [autoload]
 
+SceneTransition="*res://scenes/ui/scene_transition.tscn"
+AppSettings="*res://scripts/managers/app_settings.gd"
+AudioManager="*res://scenes/audio/audio_manager.tscn"
 QueueManager="*res://scripts/managers/queue_manager.gd"
 GameManager="*res://scripts/managers/game_manager.gd"
 
@@ -36,6 +39,10 @@ Fryable=""
 Cuttable=""
 Trash=""
 Boilable=""
+
+[gui]
+
+theme/custom_font="res://assets/font/TitanOne-Regular.ttf"
 
 [input]
 

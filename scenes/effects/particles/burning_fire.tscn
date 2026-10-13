@@ -1,0 +1,51 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/effects/stove_fire.gd" id="1_fire"]
+
+[sub_resource type="StandardMaterial3D" id="Material_flame"]
+shading_mode = 0
+vertex_color_use_as_albedo = true
+cull_mode = 2
+
+[sub_resource type="CylinderMesh" id="Mesh_flame"]
+material = SubResource("Material_flame")
+top_radius = 0.0
+bottom_radius = 0.09
+height = 0.35
+radial_segments = 4
+rings = 1
+
+[sub_resource type="Gradient" id="Gradient_flame"]
+offsets = PackedFloat32Array(0, 0.35, 0.8, 1)
+colors = PackedColorArray(1, 0.85, 0.18, 1, 1, 0.52, 0.035, 1, 1, 0.2, 0.015, 1, 0.75, 0.09, 0.01, 1)
+
+[sub_resource type="Curve" id="Curve_size"]
+_data = [Vector2(0, 0.45), 0.0, 0.0, 0, 0, Vector2(0.25, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.02), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[node name="BurningFire" type="CPUParticles3D"]
+visible = false
+cast_shadow = 0
+emitting = false
+amount = 32
+lifetime = 0.7
+preprocess = 0.7
+randomness = 0.4
+local_coords = true
+fixed_fps = 30
+mesh = SubResource("Mesh_flame")
+emission_shape = 3
+emission_ring_axis = Vector3(0, 1, 0)
+emission_ring_height = 0.015
+emission_ring_radius = 0.56
+emission_ring_inner_radius = 0.43
+direction = Vector3(0, 1, 0)
+spread = 12.0
+gravity = Vector3(0, 0.25, 0)
+initial_velocity_min = 0.5
+initial_velocity_max = 1.0
+scale_amount_min = 0.65
+scale_amount_max = 1.25
+scale_amount_curve = SubResource("Curve_size")
+color_ramp = SubResource("Gradient_flame")
+script = ExtResource("1_fire")

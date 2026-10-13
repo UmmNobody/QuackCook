@@ -38,6 +38,8 @@ func run() -> void:
 	change_scene_to_file("res://scenes/ui/main_menu.tscn")
 	await until(func(): return current_scene != null and current_scene.name == "MainMenu")
 	current_scene.start_button.pressed.emit()
+	await until(func(): return current_scene != null and current_scene.name == "IntroCutscene")
+	current_scene.skip_button.pressed.emit()
 	check(await until(func(): return game.tutorial_open), "First Start opens tutorial automatically")
 	var room := current_scene
 	var guide = room.get_node("UI/TutorialPopup")
@@ -142,6 +144,8 @@ func run() -> void:
 	await until(func(): return current_scene != null and current_scene.name == "MainMenu")
 	current_scene.start_button.pressed.emit()
 	current_scene.new_button.pressed.emit()
+	await until(func(): return current_scene != null and current_scene.name == "IntroCutscene")
+	current_scene.skip_button.pressed.emit()
 	await until(func(): return current_scene != null and current_scene.name == "Main" and game.state == game.State.PREPARING)
 	check(not game.tutorial_open and game.current_day == 1, "New game in same application session does not repeat tutorial")
 	game.return_to_menu()

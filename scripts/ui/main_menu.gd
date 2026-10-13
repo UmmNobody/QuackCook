@@ -16,6 +16,9 @@ func _ready() -> void:
 	continue_button.pressed.connect(_launch.bind(true))
 	new_button.pressed.connect(_launch.bind(false))
 	cancel_button.pressed.connect(_cancel)
+	%Setting.pressed.connect(func(): GameManager.open_menu_page("settings_page"))
+	%Credit.pressed.connect(func(): GameManager.open_menu_page("credits"))
+	%BestDay.text = "BEST DAY  /  %02d" % GameManager.best_day
 
 func _start_pressed() -> void:
 	if GameManager.has_checkpoint():

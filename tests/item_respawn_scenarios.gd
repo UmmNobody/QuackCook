@@ -15,6 +15,8 @@ func run() -> void:
 	root.add_child(room)
 	current_scene = room
 	var recovery = room.get_node("ItemRespawner")
+	# Detailed item preservation checks use zero delay; hall tests cover real timing.
+	recovery.respawn_delay = 0.0
 	await frames(4)
 	var hit = room.get_world_3d().direct_space_state.intersect_ray(PhysicsRayQueryParameters3D.create(recovery.respawn_point.global_position, recovery.respawn_point.global_position + Vector3.DOWN * 2, 1))
 	check(not hit.is_empty() and absf(hit.position.y - 1.83076) < 0.02, "Marker sits above the central kitchen table")

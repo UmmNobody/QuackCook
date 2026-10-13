@@ -34,6 +34,7 @@ func _ready() -> void:
 	player = get_parent()
 
 func interaction_allowed() -> bool:
+	if SceneTransition.busy: return false
 	if get_tree().paused: return false
 	return not is_instance_valid(player) or not player.has_method("is_incapacitated") or not player.is_incapacitated()
 

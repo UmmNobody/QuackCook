@@ -1,0 +1,41 @@
+[gd_scene load_steps=8 format=3]
+[ext_resource type="Script" path="res://scripts/managers/scene_transition.gd" id="1"]
+[ext_resource type="Shader" path="res://shaders/transition.gdshader" id="2"]
+[sub_resource type="Gradient" id="Diagonal"]
+colors = PackedColorArray(0, 0, 0, 1, 1, 1, 1, 1)
+[sub_resource type="GradientTexture2D" id="Sweep"]
+gradient = SubResource("Diagonal")
+width = 256
+height = 256
+fill_to = Vector2(1, 1)
+[sub_resource type="Gradient" id="Circle"]
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+[sub_resource type="GradientTexture2D" id="Dots"]
+gradient = SubResource("Circle")
+width = 128
+height = 128
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+[sub_resource type="ShaderMaterial" id="Wipe"]
+shader = ExtResource("2")
+shader_parameter/base_color = Color(0, 0, 0, 1)
+shader_parameter/node_resolution = Vector2(1920, 1080)
+shader_parameter/factor = 0.0
+shader_parameter/width = 0.5
+shader_parameter/gradient_texture = SubResource("Sweep")
+shader_parameter/shape_texture = SubResource("Dots")
+shader_parameter/shape_tiling = 16.0
+shader_parameter/shape_feathering = 0.02
+[node name="SceneTransition" type="CanvasLayer"]
+process_mode = 3
+layer = 100
+script = ExtResource("1")
+[node name="Curtain" type="ColorRect" parent="."]
+visible = false
+material = SubResource("Wipe")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2

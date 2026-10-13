@@ -14,9 +14,19 @@ signal tutorial_changed(open: bool)
 enum State { IDLE, PREPARING, SERVING, SUMMARY, GAME_OVER }
 const WaveConfig = preload("res://scripts/resources/service_wave_config.gd")
 const Progression = preload("res://scripts/resources/day_progression.gd")
+const INTRO_SCENE := "res://scenes/cutscenes/intro_cutscene.tscn"
+var _intro_active := false
+var best_day: int = 0
+var run_totals: Dictionary = {"day": 0, "served": 0, "subdued": 0, "unconscious": 0}
+var _resume_totals := false
+var _subdued_ids: Dictionary = {}
+var _run_serial: int = 0
 
-@export_file("*.tscn") var game_over_scene_path: String = "res://scenes/ui/game_over.tscn"
+@export_file("*.tscn") var game_over_scene_path: String = "res://scenes/cutscenes/game_over_cutscene.tscn"
 @export_range(0.0, 10.0) var summary_delay_seconds: float = 3.0
+@export_range(0.0, 60.0) var auto_close_seconds: float = 10.0
+## Negative means no closing countdown is active.
+var auto_close_remaining: float = -1.0
 var summary_pending: bool = false
 var current_day: int = 0
 var last_summary: Dictionary = {}
@@ -59,6 +69,7 @@ func unregister_kitchen(owner_node: Node) -> void:
 	if owner_node != layout: return
 	_generation += 1
 	summary_pending = false
+	auto_close_remaining = -1.0
 	if is_instance_valid(spawner):
 		spawner.cancel_wave()
 		if spawner.prisoner_spawned.is_connected(_on_prisoner_spawned): spawner.prisoner_spawned.disconnect(_on_prisoner_spawned)
@@ -86,7 +97,11 @@ func start_registered_run(first_day: Resource, difficulty: Resource = null) -> b
 	_pending_start_day = 1
 	_transition_pending = false
 	var started := start_run(first_day, difficulty, day)
-	if started and not tutorial_seen: open_tutorial()
+	if started:
+		var player := get_tree().get_first_node_in_group("Player")
+		if player != null and not player.unconscious_started.is_connected(_record_player_ko):
+			player.unconscious_started.connect(_record_player_ko)
+		if not tutorial_seen: open_tutorial()
 	return started
 
 func start_run(first_day: Resource, difficulty: Resource = null, starting_day: int = 1) -> bool:
@@ -94,6 +109,11 @@ func start_run(first_day: Resource, difficulty: Resource = null, starting_day: i
 	if difficulty != null and not difficulty is Progression: return false
 	_first_day = first_day.duplicate()
 	_progression = difficulty.duplicate() if difficulty != null else Progression.new()
+	if not _resume_totals:
+		_run_serial += 1
+		run_totals = {"day": 0, "served": 0, "subdued": 0, "unconscious": 0}
+		_subdued_ids.clear()
+	_resume_totals = false
 	current_day = maxi(1, starting_day)
 	run_active = true
 	last_summary.clear()
@@ -102,6 +122,7 @@ func start_run(first_day: Resource, difficulty: Resource = null, starting_day: i
 		current_day = 0
 		return false
 	checkpoint_day = current_day
+	_record_day()
 	day_started.emit(current_day)
 	return true
 
@@ -111,6 +132,7 @@ func start_service(settings: Resource) -> bool:
 	if not settings is WaveConfig or not settings.is_valid(): return false
 	# Snapshot the input so later Inspector changes cannot alter an active session.
 	config = settings.duplicate()
+	auto_close_remaining = -1.0
 	_generation += 1
 	_outcomes.clear()
 	spawned_count = 0
@@ -131,6 +153,22 @@ func start_service(settings: Resource) -> bool:
 	return true
 
 func _process(delta: float) -> void:
+	if get_tree().paused or _transition_pending or SceneTransition.busy: return
+	if state == State.SERVING:
+		if not can_close_kitchen():
+			if auto_close_remaining >= 0.0:
+				auto_close_remaining = -1.0
+				session_changed.emit()
+			return
+		if auto_close_remaining < 0.0:
+			auto_close_remaining = auto_close_seconds
+		else:
+			auto_close_remaining = maxf(0.0, auto_close_remaining - delta)
+		if auto_close_remaining <= 0.0:
+			finish_service()
+		else:
+			session_changed.emit()
+		return
 	if state != State.PREPARING: return
 	preparation_remaining = maxf(0.0, preparation_remaining - delta)
 	if preparation_remaining <= 0.0: _begin_service()
@@ -165,6 +203,7 @@ func _on_prisoner_spawned(actor: Node3D) -> void:
 	actor.service_completed.connect(_record_success.bind(id, _generation), CONNECT_ONE_SHOT)
 	actor.anger_started.connect(_record_failure.bind(id, _generation), CONNECT_ONE_SHOT)
 	actor.incapacitated.connect(_record_failure.bind(id, _generation), CONNECT_ONE_SHOT)
+	actor.incapacitated.connect(_record_subdued.bind(id, _run_serial), CONNECT_ONE_SHOT)
 	actor.tree_exited.connect(_record_failure.bind(id, _generation), CONNECT_ONE_SHOT)
 	session_changed.emit()
 
@@ -172,6 +211,7 @@ func _record_success(id: int, generation: int) -> void:
 	if generation != _generation or _outcomes.get(id) != "pending": return
 	_outcomes[id] = "served"
 	served_count += 1
+	if run_active: run_totals.served += 1
 	session_changed.emit()
 
 func _record_failure(id: int, generation: int) -> void:
@@ -208,6 +248,7 @@ func get_service_summary() -> Dictionary:
 func finish_service() -> Dictionary:
 	if not can_close_kitchen(): return {}
 	var summary := get_service_summary()
+	auto_close_remaining = -1.0
 	_generation += 1
 	spawner.cancel_wave() # Release old corpse tracking without deleting the bodies.
 	state = State.SUMMARY if run_active else State.IDLE
@@ -229,9 +270,17 @@ func _open_summary_after_delay(generation: int) -> void:
 	if summary_delay_seconds > 0.0:
 		await get_tree().create_timer(summary_delay_seconds, true).timeout
 	if generation != _generation or not summary_pending or state != State.SUMMARY or not is_instance_valid(layout) or _transition_pending: return
-	summary_pending = false
+	# Failed days go straight to the comic; only successful days show a report.
+	if not last_summary.get("target_met", false):
+		summary_pending = false
+		_transition_pending = true
+		_enter_game_over.call_deferred()
+		return
+	if not await SceneTransition.cover(): return
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	summary_opened.emit(last_summary.duplicate(true))
+	await SceneTransition.reveal()
+	summary_pending = false
 
 func next_day() -> bool:
 	if summary_pending: return false
@@ -246,56 +295,95 @@ func next_day() -> bool:
 	_resume_world()
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	checkpoint_day = current_day
+	_record_day()
 	day_started.emit(current_day)
 	return true
 
 func confirm_summary() -> void:
-	if summary_pending: return
+	if SceneTransition.busy or summary_pending: return
 	if state != State.SUMMARY or _transition_pending or pause_menu_open: return
 	if last_summary.get("target_met", false):
-		next_day()
+		_advance_day_with_transition()
 	else:
 		_transition_pending = true
 		_enter_game_over.call_deferred()
 
 func _enter_game_over() -> void:
+	if not await SceneTransition.cover():
+		_transition_pending = false
+		return
 	_changing_to_game_over = true
 	var error := get_tree().change_scene_to_file(game_over_scene_path)
 	if error != OK:
 		_changing_to_game_over = false
 		_transition_pending = false
 		push_error("Could not load Game Over scene: " + error_string(error))
+		await SceneTransition.reveal()
 		return
 	state = State.GAME_OVER
 	_resume_world()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	await SceneTransition.reveal()
 	_transition_pending = false
 
 func restart_run() -> void:
-	if state != State.GAME_OVER or _transition_pending: return
+	if state != State.GAME_OVER or _transition_pending or SceneTransition.busy: return
 	_transition_pending = true
 	_restart_run.call_deferred()
 
 func _restart_run() -> void:
+	_resume_totals = false
 	_load_kitchen(1)
 
 func has_checkpoint() -> bool:
 	return checkpoint_day > 0
 
 func launch_from_menu(continue_previous: bool = false) -> bool:
-	if is_instance_valid(layout) or _transition_pending or state not in [State.IDLE, State.GAME_OVER]: return false
+	if is_instance_valid(layout) or SceneTransition.busy or _transition_pending or _intro_active or state not in [State.IDLE, State.GAME_OVER]: return false
 	if continue_previous and not has_checkpoint(): return false
 	_transition_pending = true
-	_load_kitchen.call_deferred(checkpoint_day if continue_previous else 1)
+	_resume_totals = continue_previous
+	if continue_previous:
+		_load_kitchen.call_deferred(checkpoint_day)
+	else:
+		_open_intro_cutscene.call_deferred()
+	return true
+
+func _open_intro_cutscene() -> void:
+	if not await SceneTransition.cover():
+		_transition_pending = false
+		return
+	var error := get_tree().change_scene_to_file(INTRO_SCENE)
+	_transition_pending = false
+	if error != OK:
+		push_error("Could not open intro cutscene: " + error_string(error))
+		await SceneTransition.reveal()
+		return
+	_intro_active = true
+	_changing_to_game_over = false
+	state = State.IDLE
+	_resume_world()
+	await SceneTransition.reveal()
+
+func finish_intro_cutscene(owner_node: Node) -> bool:
+	if _transition_pending or is_instance_valid(layout): return false
+	if get_tree().current_scene != owner_node or owner_node.scene_file_path != INTRO_SCENE: return false
+	_transition_pending = true
+	_intro_active = false
+	_load_kitchen.call_deferred(1)
 	return true
 
 func _load_kitchen(day: int) -> void:
+	if not await SceneTransition.cover():
+		_transition_pending = false
+		return
 	_pending_start_day = maxi(1, day)
 	var error := get_tree().change_scene_to_file("res://scenes/main.tscn")
 	if error != OK:
 		_pending_start_day = 1
 		_transition_pending = false
 		push_error("Could not restart kitchen: " + error_string(error))
+		await SceneTransition.reveal()
 		return
 	_changing_to_game_over = false
 	state = State.IDLE
@@ -303,10 +391,11 @@ func _load_kitchen(day: int) -> void:
 	last_summary.clear()
 	run_active = false
 	_resume_world()
+	await SceneTransition.reveal()
 	# Keep the transition guarded until kitchen_queue consumes the pending day.
 
 func toggle_pause_menu() -> void:
-	if summary_pending: return
+	if SceneTransition.busy or summary_pending: return
 	# Esc dismisses the topmost modal; it must not also open settings.
 	if tutorial_open:
 		close_tutorial()
@@ -325,7 +414,7 @@ func toggle_pause_menu() -> void:
 	pause_menu_changed.emit(pause_menu_open)
 
 func return_to_menu() -> bool:
-	if _transition_pending: return false
+	if SceneTransition.busy or _transition_pending: return false
 	if not is_instance_valid(layout) and state != State.GAME_OVER: return false
 	if run_active:
 		if state == State.SUMMARY:
@@ -337,10 +426,14 @@ func return_to_menu() -> bool:
 	return true
 
 func _return_to_menu() -> void:
+	if not await SceneTransition.cover():
+		_transition_pending = false
+		return
 	var error := get_tree().change_scene_to_file("res://scenes/ui/main_menu.tscn")
 	if error != OK:
 		_transition_pending = false
 		push_error("Could not open main menu: " + error_string(error))
+		await SceneTransition.reveal()
 		return
 	_changing_to_game_over = false
 	state = State.IDLE
@@ -350,6 +443,7 @@ func _return_to_menu() -> void:
 	_resume_world()
 	_transition_pending = false
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	await SceneTransition.reveal()
 
 func _resume_world() -> void:
 	if _owns_pause or pause_menu_open or tutorial_open:
@@ -384,3 +478,50 @@ func close_tutorial() -> void:
 	get_tree().paused = _owns_pause or pause_menu_open
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if get_tree().paused else Input.MOUSE_MODE_CAPTURED
 	tutorial_changed.emit(false)
+
+func _record_day() -> void:
+	run_totals.day = maxi(int(run_totals.day), current_day)
+	best_day = maxi(best_day, current_day)
+
+func _record_subdued(id: int, serial: int) -> void:
+	if not run_active or serial != _run_serial or _subdued_ids.has(id): return
+	_subdued_ids[id] = true
+	run_totals.subdued += 1
+
+func _record_player_ko() -> void:
+	if run_active: run_totals.unconscious += 1
+
+func _advance_day_with_transition() -> void:
+	if not await SceneTransition.cover(): return
+	next_day()
+	await SceneTransition.reveal()
+
+## Only the current Game Over comic can finish into the final report.
+func show_run_summary(owner_node: Node) -> void:
+	if _transition_pending or state != State.GAME_OVER or get_tree().current_scene != owner_node: return
+	_transition_pending = true
+	_show_run_summary.call_deferred()
+
+func _show_run_summary() -> void:
+	if not await SceneTransition.cover():
+		_transition_pending = false
+		return
+	var error := get_tree().change_scene_to_file("res://scenes/ui/run_summary.tscn")
+	if error != OK: push_error("Could not open final report: " + error_string(error))
+	await SceneTransition.reveal()
+	_transition_pending = false
+
+func open_menu_page(page: String) -> void:
+	if SceneTransition.busy or _transition_pending or is_instance_valid(layout) or _intro_active: return
+	if page not in ["settings_page", "credits", "main_menu"]: return
+	_transition_pending = true
+	_change_menu_page.call_deferred(page)
+
+func _change_menu_page(page: String) -> void:
+	if not await SceneTransition.cover():
+		_transition_pending = false
+		return
+	var error := get_tree().change_scene_to_file("res://scenes/ui/%s.tscn" % page)
+	if error != OK: push_error("Could not open menu page: " + error_string(error))
+	await SceneTransition.reveal()
+	_transition_pending = false
