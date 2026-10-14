@@ -15,6 +15,7 @@ enum State { IDLE, PREPARING, SERVING, SUMMARY, GAME_OVER }
 const WaveConfig = preload("res://scripts/resources/service_wave_config.gd")
 const Progression = preload("res://scripts/resources/day_progression.gd")
 const INTRO_SCENE := "res://scenes/cutscenes/intro_cutscene.tscn"
+const LOADING_SCENE := "res://scenes/ui/loading_scene.tscn"
 var _intro_active := false
 var best_day: int = 0
 var run_totals: Dictionary = {"day": 0, "served": 0, "subdued": 0, "unconscious": 0}
@@ -379,11 +380,11 @@ func _load_kitchen(day: int) -> void:
 		_transition_pending = false
 		return
 	_pending_start_day = maxi(1, day)
-	var error := get_tree().change_scene_to_file("res://scenes/main.tscn")
+	var error := get_tree().change_scene_to_file(LOADING_SCENE)
 	if error != OK:
 		_pending_start_day = 1
 		_transition_pending = false
-		push_error("Could not restart kitchen: " + error_string(error))
+		push_error("Could not open loading screen: " + error_string(error))
 		await SceneTransition.reveal()
 		return
 	_changing_to_game_over = false
@@ -392,8 +393,32 @@ func _load_kitchen(day: int) -> void:
 	last_summary.clear()
 	run_active = false
 	_resume_world()
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	AudioManager.stop_music()
 	await SceneTransition.reveal()
+	var loading := get_tree().current_scene
+	if loading != null and loading.scene_file_path == LOADING_SCENE:
+		loading.start_loading()
 	# Keep the transition guarded until kitchen_queue consumes the pending day.
+
+## The loader keeps resources alive until the PackedScene has entered the tree.
+func complete_kitchen_load(owner_node: Node, packed: PackedScene) -> void:
+	if not _transition_pending or get_tree().current_scene != owner_node or owner_node.scene_file_path != LOADING_SCENE: return
+	if packed == null or not await SceneTransition.cover(): return
+	var error := get_tree().change_scene_to_packed(packed)
+	if error != OK:
+		owner_node.show_error("Could not open the kitchen. Please return to the menu and try again.")
+		await SceneTransition.reveal()
+		return
+	# Set state before the kitchen's deferred start_registered_run executes.
+	state = State.IDLE
+	await SceneTransition.reveal()
+
+func cancel_kitchen_loading(owner_node: Node) -> void:
+	if SceneTransition.busy or get_tree().current_scene != owner_node or owner_node.scene_file_path != LOADING_SCENE: return
+	_pending_start_day = 1
+	_intro_active = false
+	_return_to_menu.call_deferred()
 
 func toggle_pause_menu() -> void:
 	if SceneTransition.busy or summary_pending: return
